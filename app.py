@@ -479,6 +479,65 @@ if st.session_state.get("character_created", False) and st.session_state.charact
             st.markdown('</div>', unsafe_allow_html=True)  # конец секции
 
         # --- Характер ---
+        with st.container():
+            st.markdown('<div class="section">', unsafe_allow_html=True)
+            st.markdown('<div class="section-title" style="text-align:left;">Характер персонажа</div>', unsafe_allow_html=True)
+        
+            mbti_params = [
+                {
+                    "key": "mbti_ei",
+                    "label": "Экстраверт — Интроверт",
+                    "left": "Экстраверт",
+                    "right": "Интроверт",
+                    "color": "#6a11cb"
+                },
+                {
+                    "key": "mbti_ns",
+                    "label": "Реалист — Мечтатель",
+                    "left": "Реалист",
+                    "right": "Мечтатель",
+                    "color": "#2196F3"
+                },
+                {
+                    "key": "mbti_tf",
+                    "label": "Рациональный — Эмоциональный",
+                    "left": "Рациональный",
+                    "right": "Эмоциональный",
+                    "color": "#FF9800"
+                },
+                {
+                    "key": "mbti_jp",
+                    "label": "Структурный — Спонтанный",
+                    "left": "Структурный",
+                    "right": "Спонтанный",
+                    "color": "#4CAF50"
+                },
+            ]
+            # Инициализация по умолчанию (1-5, 3 = середина)
+            for p in mbti_params:
+                if p["key"] not in st.session_state.char_settings:
+                    st.session_state.char_settings[p["key"]] = 3
+        
+            for param in mbti_params:
+                val = st.slider(
+                    f"{param['label']}",
+                    min_value=1, max_value=5, value=st.session_state.char_settings[param["key"]],
+                    key=f"slider_{param['key']}",
+                    help=f"{param['left']} ←→ {param['right']}",
+                    label_visibility="visible"
+                )
+                st.session_state.char_settings[param["key"]] = val
+                # красивое отображение полюсов под слайдером
+                st.markdown(
+                    f'''
+                    <div style="display:flex; justify-content:space-between; color:#666; font-size:0.97rem; margin-top:-18px; margin-bottom:10px;">
+                        <span>{param["left"]}</span>
+                        <span>{param["right"]}</span>
+                    </div>
+                    ''', unsafe_allow_html=True
+                )
+            st.markdown('</div>', unsafe_allow_html=True)
+
         def get_trait_text(val, left, right):
             if val == 1:
                 return f"крайний {left.lower()}"
@@ -491,178 +550,6 @@ if st.session_state.get("character_created", False) and st.session_state.charact
             else:
                 return f"крайний {right.lower()}"
 
-        if "mbti_ei" not in st.session_state:
-            st.session_state["mbti_ei"] = 3
-        if "mbti_ns" not in st.session_state:
-            st.session_state["mbti_ns"] = 3
-        if "mbti_tf" not in st.session_state:
-            st.session_state["mbti_tf"] = 3
-        if "mbti_jp" not in st.session_state:
-            st.session_state["mbti_jp"] = 3
-    
-        with st.container():
-            st.markdown('<div class="section">', unsafe_allow_html=True)
-            st.markdown('<div class="section-title" style="text-align:left;">Характер персонажа</div>', unsafe_allow_html=True)
-        
-            if "mbti_ei" not in st.session_state:
-                st.session_state["mbti_ei"] = 3
-            if "mbti_ns" not in st.session_state:
-                st.session_state["mbti_ns"] = 3
-            if "mbti_tf" not in st.session_state:
-                st.session_state["mbti_tf"] = 3
-            if "mbti_jp" not in st.session_state:
-                st.session_state["mbti_jp"] = 3
-        
-            # Экстраверт vs Интроверт
-            st.markdown('<div class="slider-header" style="text-align:left;">Экстраверт vs Интроверт</div>', unsafe_allow_html=True)
-            st.session_state["mbti_ei"] = st.radio(
-                "",
-                [1, 2, 3, 4, 5],
-                index=st.session_state["mbti_ei"] - 1,
-                key="mbti_ei_radio",
-                horizontal=True,
-                format_func=lambda x: f"{x} {'✅' if x == st.session_state['mbti_ei'] else ''}"
-            )
-            st.markdown(
-                '''
-                <div style="display:flex; justify-content:space-between; color:#666; font-size:0.97rem; margin-top:-10px; margin-bottom:18px;">
-                    <span>Экстраверт</span>
-                    <span>Интроверт</span>
-                </div>
-                ''', unsafe_allow_html=True
-            )
-        
-            # Аналогично для всех других шкал:
-            st.markdown('<div class="slider-header" style="text-align:left;">Реалист vs Мечтатель</div>', unsafe_allow_html=True)
-            st.session_state["mbti_ns"] = st.radio(
-                "",
-                [1, 2, 3, 4, 5],
-                index=st.session_state["mbti_ns"] - 1,
-                key="mbti_ns_radio",
-                horizontal=True,
-                format_func=lambda x: f"{x} {'✅' if x == st.session_state['mbti_ns'] else ''}"
-            )
-            st.markdown(
-                '''
-                <div style="display:flex; justify-content:space-between; color:#666; font-size:0.97rem; margin-top:-10px; margin-bottom:18px;">
-                    <span>Реалист</span>
-                    <span>Мечтатель</span>
-                </div>
-                ''', unsafe_allow_html=True
-            )
-        
-            st.markdown('<div class="slider-header" style="text-align:left;">Рациональный vs Эмоциональный</div>', unsafe_allow_html=True)
-            st.session_state["mbti_tf"] = st.radio(
-                "",
-                [1, 2, 3, 4, 5],
-                index=st.session_state["mbti_tf"] - 1,
-                key="mbti_tf_radio",
-                horizontal=True,
-                format_func=lambda x: f"{x} {'✅' if x == st.session_state['mbti_tf'] else ''}"
-            )
-            st.markdown(
-                '''
-                <div style="display:flex; justify-content:space-between; color:#666; font-size:0.97rem; margin-top:-10px; margin-bottom:18px;">
-                    <span>Рациональный</span>
-                    <span>Эмоциональный</span>
-                </div>
-                ''', unsafe_allow_html=True
-            )
-        
-            st.markdown('<div class="slider-header" style="text-align:left;">Структурный vs Спонтанный</div>', unsafe_allow_html=True)
-            st.session_state["mbti_jp"] = st.radio(
-                "",
-                [1, 2, 3, 4, 5],
-                index=st.session_state["mbti_jp"] - 1,
-                key="mbti_jp_radio",
-                horizontal=True,
-                format_func=lambda x: f"{x} {'✅' if x == st.session_state['mbti_jp'] else ''}"
-            )
-            st.markdown(
-                '''
-                <div style="display:flex; justify-content:space-between; color:#666; font-size:0.97rem; margin-top:-10px; margin-bottom:18px;">
-                    <span>Структурный</span>
-                    <span>Спонтанный</span>
-                </div>
-                ''', unsafe_allow_html=True
-            )
-        
-            st.markdown('</div>', unsafe_allow_html=True)
-
-            # --- Рациональный vs Эмоциональный ---
-            st.markdown('<div class="slider-header" style="text-align:left;">Рациональный vs Эмоциональный</div>', unsafe_allow_html=True)
-            cols = st.columns(5)
-            for i in range(1, 6):
-                with cols[i-1]:
-                    selected = st.session_state["mbti_tf"] == i
-                    label = f"{i}{' ✅' if selected else ''}"
-                    btn = st.button(label, key=f"mbti_tf_{i}", use_container_width=True)
-                    if btn:
-                        st.session_state["mbti_tf"] = i
-                        st.rerun()
-                    st.markdown(
-                        f"""
-                        <style>
-                        [data-testid="stButton"] button#mbti_tf_{i} {{
-                            min-width:48px !important;
-                            max-width:100%;
-                            font-size: 1.15rem;
-                            font-weight: 700;
-                            border-radius: 20px;
-                            border: 2px solid #fff;
-                            {"background: linear-gradient(145deg, #FF9800, #fff); color: white; box-shadow: 0 4px 16px #FF980040;" if selected else "background: #fff; color: #FF9800; font-weight: 500; border: 2px solid #eee;" }
-                            margin-bottom: 4px;
-                        }}
-                        </style>
-                        """,
-                        unsafe_allow_html=True,
-                    )
-            st.markdown(
-                '''
-                <div style="display:flex; justify-content:space-between; color:#666; font-size:0.97rem; margin-top:-10px; margin-bottom:18px;">
-                    <span>Рациональный</span>
-                    <span>Эмоциональный</span>
-                </div>
-                ''', unsafe_allow_html=True
-            )
-        
-            # --- Структурный vs Спонтанный ---
-            st.markdown('<div class="slider-header" style="text-align:left;">Структурный vs Спонтанный</div>', unsafe_allow_html=True)
-            cols = st.columns(5)
-            for i in range(1, 6):
-                with cols[i-1]:
-                    selected = st.session_state["mbti_jp"] == i
-                    label = f"{i}{' ✅' if selected else ''}"
-                    btn = st.button(label, key=f"mbti_jp_{i}", use_container_width=True)
-                    if btn:
-                        st.session_state["mbti_jp"] = i
-                        st.rerun()
-                    st.markdown(
-                        f"""
-                        <style>
-                        [data-testid="stButton"] button#mbti_jp_{i} {{
-                            min-width:48px !important;
-                            max-width:100%;
-                            font-size: 1.15rem;
-                            font-weight: 700;
-                            border-radius: 20px;
-                            border: 2px solid #fff;
-                            {"background: linear-gradient(145deg, #4CAF50, #fff); color: white; box-shadow: 0 4px 16px #4CAF5040;" if selected else "background: #fff; color: #4CAF50; font-weight: 500; border: 2px solid #eee;" }
-                            margin-bottom: 4px;
-                        }}
-                        </style>
-                        """,
-                        unsafe_allow_html=True,
-                    )
-            st.markdown(
-                '''
-                <div style="display:flex; justify-content:space-between; color:#666; font-size:0.97rem; margin-top:-10px; margin-bottom:18px;">
-                    <span>Структурный</span>
-                    <span>Спонтанный</span>
-                </div>
-                ''', unsafe_allow_html=True
-            )
-            st.markdown('</div>', unsafe_allow_html=True)
 
         # --- Интересы (хобби/музыка) ---
         with st.container():
@@ -975,12 +862,13 @@ if st.session_state.get("personality_saved", False) or (
 
     # Текстовое описание характеристик
     mbti_traits = [
-        f"Экстраверсия: {get_trait_text(st.session_state.get('mbti_ei', 3), 'экстраверт', 'интроверт')}",
-        f"Мышление: {get_trait_text(st.session_state.get('mbti_ns', 3), 'реалист', 'мечтатель')}",
-        f"Эмоции: {get_trait_text(st.session_state.get('mbti_tf', 3), 'рациональный', 'эмоциональный')}",
-        f"Поведение: {get_trait_text(st.session_state.get('mbti_jp', 3), 'структурный', 'спонтанный')}",
+        f"Экстраверсия: {get_trait_text(st.session_state.char_settings['mbti_ei'], 'экстраверт', 'интроверт')}",
+        f"Мышление: {get_trait_text(st.session_state.char_settings['mbti_ns'], 'реалист', 'мечтатель')}",
+        f"Эмоции: {get_trait_text(st.session_state.char_settings['mbti_tf'], 'рациональный', 'эмоциональный')}",
+        f"Поведение: {get_trait_text(st.session_state.char_settings['mbti_jp'], 'структурный', 'спонтанный')}",
     ]
     mbti_text = ", ".join(mbti_traits) + f". Стиль общения: {st.session_state.char_settings.get('style', 'Дружелюбный').lower()}."
+
     
     # Форматирование настроек персонажа
     settings = st.session_state.char_settings
