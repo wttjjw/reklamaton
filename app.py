@@ -391,20 +391,6 @@ if st.session_state.form_saved and not st.session_state.character_created:
             st.rerun()
 
 # --- 5. Создание кастомного персонажа ---
-
-        def get_trait_text(val, left, right):
-            if val == 1:
-                return f"крайний {left.lower()}"
-            elif val == 2:
-                return f"скорее {left.lower()}"
-            elif val == 3:
-                return "сбалансированный"
-            elif val == 4:
-                return f"скорее {right.lower()}"
-            else:
-                return f"крайний {right.lower()}"
-
-
         if st.session_state.get("character_created", False) and st.session_state.character_type == "custom":
             if "personality_saved" not in st.session_state:
                 st.session_state.personality_saved = False
