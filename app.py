@@ -491,7 +491,15 @@ if st.session_state.get("character_created", False) and st.session_state.charact
             else:
                 return f"крайний {right.lower()}"
 
-
+        if "mbti_ei" not in st.session_state:
+            st.session_state["mbti_ei"] = 3
+        if "mbti_ns" not in st.session_state:
+            st.session_state["mbti_ns"] = 3
+        if "mbti_tf" not in st.session_state:
+            st.session_state["mbti_tf"] = 3
+        if "mbti_jp" not in st.session_state:
+            st.session_state["mbti_jp"] = 3
+    
         with st.container():
             st.markdown('<div class="section">', unsafe_allow_html=True)
             st.markdown('<div class="section-title" style="text-align:left;">Характер персонажа</div>', unsafe_allow_html=True)
