@@ -434,11 +434,11 @@ if st.session_state.get("character_created", False) and st.session_state.charact
 
             age_input = st.text_input(
                 "",
-                value=str(st.session_state.char_settings.get("age", 23)),
-                key="age_input_text"
+                value="",
+                key="age_input_text",
+                placeholder="Введите свой возраст"
             )
             
-            # Проверка и реакция на ввод
             error_msg = ""
             try:
                 age_val = int(age_input)
@@ -446,46 +446,54 @@ if st.session_state.get("character_created", False) and st.session_state.charact
                     error_msg = "Возраст должен быть от 18 до 100 лет."
                     age_val = ""
             except Exception:
-                error_msg = "Пожалуйста, введите число от 18 до 100."
+                if age_input != "":
+                    error_msg = "Пожалуйста, введите число от 18 до 100."
                 age_val = ""
             
             if age_val != "":
                 st.session_state.char_settings["age"] = age_val
             
+            # СТИЛЬ ПОД КНОПКУ + красивый placeholder:
             st.markdown(
                 """
                 <style>
                 input[type="text"][id^="age_input_text"] {
-                    text-align: center;
-                    font-size: 1.25rem;
-                    border-radius: 20px !important;
-                    border: 2px solid #eee !important;
                     background: #fff !important;
-                    color: #212529 !important;
-                    box-shadow: 0 4px 16px #6a11cb12 !important;
-                    outline: none !important;
-                    font-weight: 600 !important;
+                    color: #6A1B9A !important;
+                    border: 2px solid #eee !important;
+                    border-radius: 20px !important;
+                    font-size: 1.25rem !important;
+                    font-weight: 500 !important;
                     height: 56px !important;
-                    width: 100% !important;
-                    margin-top: 12px !important;
-                    margin-bottom: 10px !important;
+                    min-width: 160px !important;
+                    box-shadow: 0 4px 16px #6a11cb14 !important;
+                    outline: none !important;
                     padding-left: 0 !important;
                     padding-right: 0 !important;
+                    margin-top: 12px !important;
+                    margin-bottom: 10px !important;
                     transition: border 0.2s;
+                    text-align: center !important;
                     appearance: none !important;
                 }
                 input[type="text"][id^="age_input_text"]:focus {
                     border: 2px solid #6a11cb !important;
                     background: #f8f9fa !important;
                 }
+                input[type="text"][id^="age_input_text"]::placeholder {
+                    color: #bdbdbd !important;
+                    opacity: 1 !important;
+                    font-weight: 400 !important;
+                    font-size: 1.1rem !important;
+                }
                 </style>
                 """,
                 unsafe_allow_html=True
             )
-
             
             if error_msg:
                 st.info(error_msg)
+
 
 
             # Город
