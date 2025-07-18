@@ -391,6 +391,48 @@ if st.session_state.form_saved and not st.session_state.character_created:
             st.rerun()
 
 # --- 5. Создание кастомного персонажа ---
+
+    st.markdown(
+                """
+                <style>
+                .slider-header {
+                    margin-bottom: 8px !important;
+                }
+                input[type="text"][id^="age_input_text"] {
+                    background: #fff !important;
+                    color: #6A1B9A !important;
+                    border: 2px solid #eee !important;
+                    border-radius: 20px !important;
+                    font-size: 1.25rem !important;
+                    font-weight: 500 !important;
+                    height: 56px !important;
+                    width: 100% !important;
+                    box-shadow: 0 4px 16px #6a11cb12 !important;
+                    outline: none !important;
+                    padding: 0 20px !important;
+                    margin-top: 0 !important;
+                    margin-bottom: 10px !important;
+                    text-align: center !important;
+                    display: flex !important;
+                    align-items: center !important;
+                    justify-content: center !important;
+                }
+                input[type="text"][id^="age_input_text"]:focus {
+                    border: 2px solid #6a11cb !important;
+                    background: #f8f9fa !important;
+                }
+                input[type="text"][id^="age_input_text"]::placeholder {
+                    color: #bdbdbd !important;
+                    opacity: 1 !important;
+                    font-weight: 400 !important;
+                    font-size: 1.1rem !important;
+                }
+                </style>
+                """,
+                unsafe_allow_html=True
+            )
+
+
 if st.session_state.get("character_created", False) and st.session_state.character_type == "custom":
     if "personality_saved" not in st.session_state:
         st.session_state.personality_saved = False
@@ -430,45 +472,7 @@ if st.session_state.get("character_created", False) and st.session_state.charact
                     )
             
             # Возраст
-            st.markdown(
-                """
-                <style>
-                .slider-header {
-                    margin-bottom: 8px !important;
-                }
-                input[type="text"][id^="age_input_text"] {
-                    background: #fff !important;
-                    color: #6A1B9A !important;
-                    border: 2px solid #eee !important;
-                    border-radius: 20px !important;
-                    font-size: 1.25rem !important;
-                    font-weight: 500 !important;
-                    height: 56px !important;
-                    width: 100% !important;
-                    box-shadow: 0 4px 16px #6a11cb12 !important;
-                    outline: none !important;
-                    padding: 0 20px !important;
-                    margin-top: 0 !important;
-                    margin-bottom: 10px !important;
-                    text-align: center !important;
-                    display: flex !important;
-                    align-items: center !important;
-                    justify-content: center !important;
-                }
-                input[type="text"][id^="age_input_text"]:focus {
-                    border: 2px solid #6a11cb !important;
-                    background: #f8f9fa !important;
-                }
-                input[type="text"][id^="age_input_text"]::placeholder {
-                    color: #bdbdbd !important;
-                    opacity: 1 !important;
-                    font-weight: 400 !important;
-                    font-size: 1.1rem !important;
-                }
-                </style>
-                """,
-                unsafe_allow_html=True
-            )
+        
             
             st.markdown('<div class="slider-header" style="text-align:left;">Возраст</div>', unsafe_allow_html=True)
 
