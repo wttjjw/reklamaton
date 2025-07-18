@@ -492,7 +492,7 @@ if st.session_state.get("character_created", False) and st.session_state.charact
                 return f"крайний {right.lower()}"
 
 
-       with st.container():
+        with st.container():
             st.markdown('<div class="section">', unsafe_allow_html=True)
             st.markdown('<div class="section-title" style="text-align:left;">Характер персонажа</div>', unsafe_allow_html=True)
             char_params = [
