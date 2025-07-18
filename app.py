@@ -482,42 +482,46 @@ if st.session_state.get("character_created", False) and st.session_state.charact
         with st.container():
             st.markdown('<div class="section">', unsafe_allow_html=True)
             st.markdown('<div class="section-title" style="text-align:left;">Характер персонажа</div>', unsafe_allow_html=True)
-        
+            st.markdown(
+                '<div style="color:#666; font-size:1rem; margin-bottom:18px;">'
+                'Настройте характер вашего персонажа по четырём шкалам от 1 до 5. '
+                'Каждая шкала — это крайности определённой черты: выберите, насколько персонаж близок к одному или другому полюсу.'
+                '</div>',
+                unsafe_allow_html=True
+            )
+
             mbti_params = [
                 {
                     "key": "mbti_ei",
                     "label": "Экстраверт — Интроверт",
                     "left": "Экстраверт",
                     "right": "Интроверт",
-                    "color": "#6a11cb"
+                    "desc": "Экстраверт — легко идёт на контакт, любит общение и активные компании. Интроверт — предпочитает уединение и глубокие разговоры один на один.",
                 },
                 {
                     "key": "mbti_ns",
                     "label": "Реалист — Мечтатель",
                     "left": "Реалист",
                     "right": "Мечтатель",
-                    "color": "#2196F3"
+                    "desc": "Реалист — живёт здесь и сейчас, любит факты и конкретику. Мечтатель — часто уходит в фантазии, креативен и любит строить планы.",
                 },
                 {
                     "key": "mbti_tf",
                     "label": "Рациональный — Эмоциональный",
                     "left": "Рациональный",
                     "right": "Эмоциональный",
-                    "color": "#FF9800"
+                    "desc": "Рациональный — принимает решения с опорой на логику и аргументы. Эмоциональный — опирается на чувства, настроения и эмпатию.",
                 },
                 {
                     "key": "mbti_jp",
                     "label": "Структурный — Спонтанный",
                     "left": "Структурный",
                     "right": "Спонтанный",
-                    "color": "#4CAF50"
+                    "desc": "Структурный — любит планировать, придерживается расписания и порядка. Спонтанный — действует по настроению, открыт для новых идей и сюрпризов.",
                 },
             ]
+
             # Инициализация дефолтов
-            for p in mbti_params:
-                if p["key"] not in st.session_state.char_settings:
-                    st.session_state.char_settings[p["key"]] = 3
-        
             for param in mbti_params:
                 val = st.slider(
                     "",
@@ -528,13 +532,16 @@ if st.session_state.get("character_created", False) and st.session_state.charact
                 st.session_state.char_settings[param["key"]] = val
                 st.markdown(
                     f'''
-                    <div style="display:flex; justify-content:space-between; color:#888; font-size:1rem; margin-top:-12px; margin-bottom:12px;">
+                    <div style="display:flex; justify-content:space-between; color:#888; font-size:1rem; margin-top:-12px; margin-bottom:4px;">
                         <span>{param["left"]}</span>
                         <span>{param["right"]}</span>
                     </div>
+                    <div style="color:#888; font-size:0.95rem; margin-bottom:16px;">
+                        {param["desc"]}
+                    </div>
                     ''', unsafe_allow_html=True
                 )
-            st.markdown('</div>', unsafe_allow_html=True)
+
         
 
         def get_trait_text(val, left, right):
