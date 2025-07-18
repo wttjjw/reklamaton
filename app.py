@@ -392,171 +392,6 @@ if st.session_state.form_saved and not st.session_state.character_created:
 
 # --- 5. Создание кастомного персонажа ---
 
-
-
-if st.session_state.get("character_created", False) and st.session_state.character_type == "custom":
-    if "personality_saved" not in st.session_state:
-        st.session_state.personality_saved = False
-
-    if not st.session_state.personality_saved:
-        st.title("Создайте своего персонажа")
-
-        # --- Основные настройки ---
-
-
-        
-        with st.container():
-            st.markdown('<div class="section">', unsafe_allow_html=True)
-            st.markdown('<div class="section-title" style="text-align:left;">Основная информация</div>', unsafe_allow_html=True)
-
-            #  Пол
-            st.markdown('<div class="slider-header" style="text-align:left;">Пол персонажа</div>', unsafe_allow_html=True)
-            genders = ["Девушка", "Парень"]
-            cols = st.columns([1, 1])
-            for i, gender in enumerate(genders):
-                with cols[i]:
-                    selected = st.session_state.char_settings["gender"] == gender
-                    btn = st.button(gender, key=f"gender_{gender}", use_container_width=True)
-                    if btn:
-                        st.session_state.char_settings["gender"] = gender
-                        st.rerun()
-                    st.markdown(
-                        f"""
-                        <style>
-                        [data-testid="stButton"] button#{f"gender_{gender}".replace(' ', '_')} {{
-                            min-width:160px !important;
-                            max-width:100%;
-                            font-size: 1.25rem;
-                            white-space: nowrap;
-                            {"background: linear-gradient(145deg, #9C27B0, #6A1B9A); color: white; font-weight: 700; border-radius: 20px; border: 2px solid #fff;" if selected else "background: #fff; color: #6A1B9A; font-weight: 500; border-radius: 20px; border: 2px solid #eee;" }
-                        }}
-                        </style>
-                        """,
-                        unsafe_allow_html=True,
-                    )
-            
-            # Возраст
-            st.markdown('<div class="slider-header" style="text-align:left;">Возраст</div>', unsafe_allow_html=True)
-            ages = ["18-22", "23-27", "28-32", "33+"]
-            cols = st.columns(4)
-            for i, age in enumerate(ages):
-                with cols[i]:
-                    selected = st.session_state.char_settings["age"] == age
-                    btn = st.button(age, key=f"age_{age}", use_container_width=True)
-                    if btn:
-                        st.session_state.char_settings["age"] = age
-                        st.rerun()
-                    st.markdown(
-                        f"""
-                        <style>
-                        [data-testid="stButton"] button#{f"age_{age}".replace(' ', '_')} {{
-                            {"background: linear-gradient(145deg, #2196F3, #0D47A1); color: white; font-weight: 700; border-radius: 20px; border: 2px solid #fff; box-shadow: 0 4px 16px #2196F340; margin-bottom: 10px; min-width: 120px;" if selected else "background: #fff; color: #0D47A1; font-weight: 500; border-radius: 20px; border: 2px solid #eee; margin-bottom: 10px; min-width: 120px;" }
-                        }}
-                        </style>
-                        """, unsafe_allow_html=True,
-                    )
-        
-            # Город
-            st.markdown('<div class="slider-header" style="text-align:left;">Город</div>', unsafe_allow_html=True)
-            cities = ["Москва", "Санкт-Петербург", "Казань", "Сочи", "Екатеринбург", "Другой"]
-            cols = st.columns(3)
-            for i, city in enumerate(cities):
-                with cols[i % 3]:
-                    selected = st.session_state.char_settings["city"] == city
-                    btn = st.button(city, key=f"city_{city}", use_container_width=True)
-                    if btn:
-                        st.session_state.char_settings["city"] = city
-                        st.rerun()
-                    st.markdown(
-                        f"""
-                        <style>
-                        [data-testid="stButton"] button#{f"city_{city}".replace(' ', '_')} {{
-                            {"background: linear-gradient(145deg, #4CAF50, #2E7D32); color: white; font-weight: 700; border-radius: 20px; border: 2px solid #fff; box-shadow: 0 4px 16px #4CAF5040; margin-bottom: 10px; min-width: 120px;" if selected else "background: #fff; color: #1B5E20; font-weight: 500; border-radius: 20px; border: 2px solid #eee; margin-bottom: 10px; min-width: 120px;" }
-                        }}
-                        </style>
-                        """, unsafe_allow_html=True,
-                    )
-            st.markdown('</div>', unsafe_allow_html=True)  # конец секции
-
-        # --- Характер ---
-        with st.container():
-            st.markdown('<div class="section">', unsafe_allow_html=True)
-            st.markdown(
-                '<div class="section-title" style="text-align:left;">Характер персонажа</div>',
-                unsafe_allow_html=True
-            )
-            st.markdown(
-                '<div style="color:#666; font-size:1rem; margin-bottom:22px;">'
-                'Настройте характер по шкалам ниже: передвигайте ползунки, чтобы выбрать, к какому полюсу ближе ваш персонаж по каждой из четырёх черт.'
-                '</div>',
-                unsafe_allow_html=True
-            )
-        
-            mbti_params = [
-                {
-                    "key": "mbti_ei",
-                    "label": "Экстраверт — Интроверт",
-                    "left": "Экстраверт",
-                    "right": "Интроверт",
-                    "desc": "Экстраверт — быстро сходится с людьми, любит активное общение. Интроверт — ценит спокойствие и приватность, предпочитает узкий круг общения."
-                },
-                {
-                    "key": "mbti_ns",
-                    "label": "Реалист — Мечтатель",
-                    "left": "Реалист",
-                    "right": "Мечтатель",
-                    "desc": "Реалист — предпочитает факты и конкретику, опирается на опыт. Мечтатель — полон идей, любит фантазировать и строить планы."
-                },
-                {
-                    "key": "mbti_tf",
-                    "label": "Рациональный — Эмоциональный",
-                    "left": "Рациональный",
-                    "right": "Эмоциональный",
-                    "desc": "Рациональный — опирается на логику, решения принимает разумом. Эмоциональный — ориентируется на чувства, важна эмпатия и настроение."
-                },
-                {
-                    "key": "mbti_jp",
-                    "label": "Структурный — Спонтанный",
-                    "left": "Структурный",
-                    "right": "Спонтанный",
-                    "desc": "Структурный — любит порядок, планирование, организованность. Спонтанный — легко меняет планы, открыт новым идеям и сюрпризам."
-                },
-            ]
-            for p in mbti_params:
-                if p["key"] not in st.session_state.char_settings:
-                    st.session_state.char_settings[p["key"]] = 3
-        
-            for param in mbti_params:
-                val = st.session_state.char_settings[param["key"]]
-                # --- Вывод цифры выбранного значения ---
-                val = st.slider(
-                    "",
-                    min_value=1, max_value=5,
-                    value=st.session_state.char_settings[param["key"]],
-                    key=f"slider_{param['key']}",
-                    label_visibility="collapsed",
-                    step=1
-
-                )
-                st.session_state.char_settings[param["key"]] = val
-                st.markdown(
-                    f'''
-                    <div style="display:flex; justify-content:space-between; color:#666; font-size:1.08rem; font-weight:600; margin-top:-12px; margin-bottom:0px;">
-                        <span>{param["left"]}</span>
-                        <span>{param["right"]}</span>
-                    </div>
-                    <div style="color:#B0B0B0; font-size:0.97rem; margin-bottom:24px; margin-top:3px;">
-                        {param["desc"]}
-                    </div>
-                    ''',
-                    unsafe_allow_html=True
-                )
-            st.markdown('</div>', unsafe_allow_html=True)
-
-
-
-        
-
         def get_trait_text(val, left, right):
             if val == 1:
                 return f"крайний {left.lower()}"
@@ -570,194 +405,355 @@ if st.session_state.get("character_created", False) and st.session_state.charact
                 return f"крайний {right.lower()}"
 
 
-        # --- Интересы (хобби/музыка) ---
-        with st.container():
-            st.markdown('<div class="section">', unsafe_allow_html=True)
-            st.markdown('<div class="section-title" style="text-align:left;">Мне интересно</div>', unsafe_allow_html=True)
-
-            # Хобби
-            st.markdown('<div class="slider-header" style="text-align:left;">Хобби</div>', unsafe_allow_html=True)
-            hobbies_options = ["Кино", "Бег", "Комиксы", "Путешествия", "Фотография", "Кулинария", "Игры", "Чтение", "Йога"]
-            cols = st.columns(3)
-            for i, hobby in enumerate(hobbies_options):
-                with cols[i % 3]:
-                    selected = hobby in st.session_state.char_settings["hobbies"]
-                    btn = st.button(hobby + (" ✅" if selected else ""), key=f"hobby_{hobby}", use_container_width=True)
-                    if btn:
-                        if selected:
-                            st.session_state.char_settings["hobbies"].remove(hobby)
-                        else:
-                            st.session_state.char_settings["hobbies"].append(hobby)
-                        st.rerun()
-                    st.markdown(
-                        f"""
-                        <style>
-                        [data-testid="stButton"] button#{f"hobby_{hobby}".replace(' ', '_')} {{
-                            {"background: linear-gradient(145deg, #2196F3, #0D47A1); color: white; font-weight: 700; border-radius: 20px; border: 2px solid #fff; box-shadow: 0 4px 16px #2196F340; margin-bottom: 10px; min-width: 120px;" if selected else "background: #fff; color: #0D47A1; font-weight: 500; border-radius: 20px; border: 2px solid #eee; margin-bottom: 10px; min-width: 120px;" }
-                        }}
-                        </style>
-                        """, unsafe_allow_html=True,
+        if st.session_state.get("character_created", False) and st.session_state.character_type == "custom":
+            if "personality_saved" not in st.session_state:
+                st.session_state.personality_saved = False
+        
+            if not st.session_state.personality_saved:
+                st.title("Создайте своего персонажа")
+        
+                # --- Основная информация ---
+                st.markdown('<div class="section-title" style="text-align:left;">Основная информация</div>', unsafe_allow_html=True)
+        
+                #  Пол
+                st.markdown('<div class="slider-header" style="text-align:left;">Пол персонажа</div>', unsafe_allow_html=True)
+                genders = ["Девушка", "Парень"]
+                cols = st.columns([1, 1])
+                for i, gender in enumerate(genders):
+                    with cols[i]:
+                        selected = st.session_state.char_settings["gender"] == gender
+                        btn = st.button(gender, key=f"gender_{gender}", use_container_width=True)
+                        if btn:
+                            st.session_state.char_settings["gender"] = gender
+                            st.rerun()
+                        st.markdown(
+                            f"""
+                            <style>
+                            [data-testid="stButton"] button#{f"gender_{gender}".replace(' ', '_')} {{
+                                min-width:160px !important;
+                                max-width:100%;
+                                font-size: 1.25rem;
+                                white-space: nowrap;
+                                {"background: linear-gradient(145deg, #9C27B0, #6A1B9A); color: white; font-weight: 700; border-radius: 20px; border: 2px solid #fff;" if selected else "background: #fff; color: #6A1B9A; font-weight: 500; border-radius: 20px; border: 2px solid #eee;" }
+                            }}
+                            </style>
+                            """,
+                            unsafe_allow_html=True,
+                        )
+                
+                # Возраст
+                st.markdown('<div class="slider-header" style="text-align:left;">Возраст</div>', unsafe_allow_html=True)
+                ages = ["18-22", "23-27", "28-32", "33+"]
+                cols = st.columns(4)
+                for i, age in enumerate(ages):
+                    with cols[i]:
+                        selected = st.session_state.char_settings["age"] == age
+                        btn = st.button(age, key=f"age_{age}", use_container_width=True)
+                        if btn:
+                            st.session_state.char_settings["age"] = age
+                            st.rerun()
+                        st.markdown(
+                            f"""
+                            <style>
+                            [data-testid="stButton"] button#{f"age_{age}".replace(' ', '_')} {{
+                                {"background: linear-gradient(145deg, #2196F3, #0D47A1); color: white; font-weight: 700; border-radius: 20px; border: 2px solid #fff; box-shadow: 0 4px 16px #2196F340; margin-bottom: 10px; min-width: 120px;" if selected else "background: #fff; color: #0D47A1; font-weight: 500; border-radius: 20px; border: 2px solid #eee; margin-bottom: 10px; min-width: 120px;" }
+                            }}
+                            </style>
+                            """, unsafe_allow_html=True,
+                        )
+            
+                # Город
+                st.markdown('<div class="slider-header" style="text-align:left;">Город</div>', unsafe_allow_html=True)
+                cities = ["Москва", "Санкт-Петербург", "Казань", "Сочи", "Екатеринбург", "Другой"]
+                cols = st.columns(3)
+                for i, city in enumerate(cities):
+                    with cols[i % 3]:
+                        selected = st.session_state.char_settings["city"] == city
+                        btn = st.button(city, key=f"city_{city}", use_container_width=True)
+                        if btn:
+                            st.session_state.char_settings["city"] = city
+                            st.rerun()
+                        st.markdown(
+                            f"""
+                            <style>
+                            [data-testid="stButton"] button#{f"city_{city}".replace(' ', '_')} {{
+                                {"background: linear-gradient(145deg, #4CAF50, #2E7D32); color: white; font-weight: 700; border-radius: 20px; border: 2px solid #fff; box-shadow: 0 4px 16px #4CAF5040; margin-bottom: 10px; min-width: 120px;" if selected else "background: #fff; color: #1B5E20; font-weight: 500; border-radius: 20px; border: 2px solid #eee; margin-bottom: 10px; min-width: 120px;" }
+                            }}
+                            </style>
+                            """, unsafe_allow_html=True,
+                        )
+        
+                # --- Разделитель ---
+                st.markdown('<hr class="divider">', unsafe_allow_html=True)
+        
+                # --- Характер ---
+                st.markdown('<div class="section-title" style="text-align:left;">Характер персонажа</div>', unsafe_allow_html=True)
+                st.markdown(
+                    '<div style="color:#666; font-size:1rem; margin-bottom:22px;">'
+                    'Настройте характер по шкалам ниже: передвигайте ползунки, чтобы выбрать, к какому полюсу ближе ваш персонаж по каждой из четырёх черт.'
+                    '</div>',
+                    unsafe_allow_html=True
+                )
+                mbti_params = [
+                    {
+                        "key": "mbti_ei",
+                        "label": "Экстраверт — Интроверт",
+                        "left": "Экстраверт",
+                        "right": "Интроверт",
+                        "desc": "Экстраверт — быстро сходится с людьми, любит активное общение. Интроверт — ценит спокойствие и приватность, предпочитает узкий круг общения."
+                    },
+                    {
+                        "key": "mbti_ns",
+                        "label": "Реалист — Мечтатель",
+                        "left": "Реалист",
+                        "right": "Мечтатель",
+                        "desc": "Реалист — предпочитает факты и конкретику, опирается на опыт. Мечтатель — полон идей, любит фантазировать и строить планы."
+                    },
+                    {
+                        "key": "mbti_tf",
+                        "label": "Рациональный — Эмоциональный",
+                        "left": "Рациональный",
+                        "right": "Эмоциональный",
+                        "desc": "Рациональный — опирается на логику, решения принимает разумом. Эмоциональный — ориентируется на чувства, важна эмпатия и настроение."
+                    },
+                    {
+                        "key": "mbti_jp",
+                        "label": "Структурный — Спонтанный",
+                        "left": "Структурный",
+                        "right": "Спонтанный",
+                        "desc": "Структурный — любит порядок, планирование, организованность. Спонтанный — легко меняет планы, открыт новым идеям и сюрпризам."
+                    },
+                ]
+                for p in mbti_params:
+                    if p["key"] not in st.session_state.char_settings:
+                        st.session_state.char_settings[p["key"]] = 3
+        
+                for param in mbti_params:
+                    val = st.session_state.char_settings[param["key"]]
+                    val = st.slider(
+                        "",
+                        min_value=1, max_value=5,
+                        value=val,
+                        key=f"slider_{param['key']}",
+                        label_visibility="collapsed",
+                        step=1
                     )
-
-            # Музыка
-            st.markdown('<div class="slider-header" style="text-align:left;">Музыкальные предпочтения</div>', unsafe_allow_html=True)
-            music_options = ["Рок", "Поп", "Хип-хоп", "Электроника", "Джаз", "Классика", "Инди", "Метал", "R&B"]
-            cols = st.columns(3)
-            for i, music in enumerate(music_options):
-                with cols[i % 3]:
-                    selected = music in st.session_state.char_settings["music"]
-                    btn = st.button(music + (" ✅" if selected else ""), key=f"music_{music}", use_container_width=True)
-                    if btn:
-                        if selected:
-                            st.session_state.char_settings["music"].remove(music)
-                        else:
-                            st.session_state.char_settings["music"].append(music)
-                        st.rerun()
+                    st.session_state.char_settings[param["key"]] = val
                     st.markdown(
-                        f"""
-                        <style>
-                        [data-testid="stButton"] button#{f"music_{music}".replace(' ', '_')} {{
-                            {"background: linear-gradient(145deg, #FF9800, #EF6C00); color: white; font-weight: 700; border-radius: 20px; border: 2px solid #fff; box-shadow: 0 4px 16px #FF980040; margin-bottom: 10px; min-width: 120px;" if selected else "background: #fff; color: #E65100; font-weight: 500; border-radius: 20px; border: 2px solid #eee; margin-bottom: 10px; min-width: 120px;" }
-                        }}
-                        </style>
-                        """, unsafe_allow_html=True,
+                        f'''
+                        <div style="display:flex; justify-content:space-between; color:#666; font-size:1.08rem; font-weight:600; margin-top:-12px; margin-bottom:0px;">
+                            <span>{param["left"]}</span>
+                            <span>{param["right"]}</span>
+                        </div>
+                        <div style="color:#B0B0B0; font-size:0.97rem; margin-bottom:24px; margin-top:3px;">
+                            {param["desc"]}
+                        </div>
+                        ''',
+                        unsafe_allow_html=True
                     )
-            st.markdown('</div>', unsafe_allow_html=True)  # конец секции
+        
+                # --- Разделитель ---
+                st.markdown('<hr class="divider">', unsafe_allow_html=True)
+        
+                # --- Интересы (хобби/музыка) ---
+                st.markdown('<div class="section-title" style="text-align:left;">Мне интересно</div>', unsafe_allow_html=True)
+        
+                # Хобби
+                st.markdown('<div class="slider-header" style="text-align:left;">Хобби</div>', unsafe_allow_html=True)
+                hobbies_options = ["Кино", "Бег", "Комиксы", "Путешествия", "Фотография", "Кулинария", "Игры", "Чтение", "Йога"]
+                cols = st.columns(3)
+                for i, hobby in enumerate(hobbies_options):
+                    with cols[i % 3]:
+                        selected = hobby in st.session_state.char_settings["hobbies"]
+                        btn = st.button(hobby + (" ✅" if selected else ""), key=f"hobby_{hobby}", use_container_width=True)
+                        if btn:
+                            if selected:
+                                st.session_state.char_settings["hobbies"].remove(hobby)
+                            else:
+                                st.session_state.char_settings["hobbies"].append(hobby)
+                            st.rerun()
+                        st.markdown(
+                            f"""
+                            <style>
+                            [data-testid="stButton"] button#{f"hobby_{hobby}".replace(' ', '_')} {{
+                                {"background: linear-gradient(145deg, #2196F3, #0D47A1); color: white; font-weight: 700; border-radius: 20px; border: 2px solid #fff; box-shadow: 0 4px 16px #2196F340; margin-bottom: 10px; min-width: 120px;" if selected else "background: #fff; color: #0D47A1; font-weight: 500; border-radius: 20px; border: 2px solid #eee; margin-bottom: 10px; min-width: 120px;" }
+                            }}
+                            </style>
+                            """, unsafe_allow_html=True,
+                        )
+        
+                # Музыка
+                st.markdown('<div class="slider-header" style="text-align:left;">Музыкальные предпочтения</div>', unsafe_allow_html=True)
+                music_options = ["Рок", "Поп", "Хип-хоп", "Электроника", "Джаз", "Классика", "Инди", "Метал", "R&B"]
+                cols = st.columns(3)
+                for i, music in enumerate(music_options):
+                    with cols[i % 3]:
+                        selected = music in st.session_state.char_settings["music"]
+                        btn = st.button(music + (" ✅" if selected else ""), key=f"music_{music}", use_container_width=True)
+                        if btn:
+                            if selected:
+                                st.session_state.char_settings["music"].remove(music)
+                            else:
+                                st.session_state.char_settings["music"].append(music)
+                            st.rerun()
+                        st.markdown(
+                            f"""
+                            <style>
+                            [data-testid="stButton"] button#{f"music_{music}".replace(' ', '_')} {{
+                                {"background: linear-gradient(145deg, #FF9800, #EF6C00); color: white; font-weight: 700; border-radius: 20px; border: 2px solid #fff; box-shadow: 0 4px 16px #FF980040; margin-bottom: 10px; min-width: 120px;" if selected else "background: #fff; color: #E65100; font-weight: 500; border-radius: 20px; border: 2px solid #eee; margin-bottom: 10px; min-width: 120px;" }
+                            }}
+                            </style>
+                            """, unsafe_allow_html=True,
+                        )
+        
+                # --- Разделитель ---
+                st.markdown('<hr class="divider">', unsafe_allow_html=True)
+        
+                # --- Внешний вайб ---
+                st.markdown('<div class="section-title" style="text-align:left;">Внешний вайб</div>', unsafe_allow_html=True)
+        
+                # Стиль одежды
+                st.markdown('<div class="slider-header" style="text-align:left;">Стиль одежды</div>', unsafe_allow_html=True)
+                fashion_options = ["Casual", "Спорт-шик", "Elegant", "Dark-academia", "Soft-girl", "Бохо", "Минимализм"]
+                cols = st.columns(4)
+                for i, fashion in enumerate(fashion_options):
+                    with cols[i % 4]:
+                        selected = fashion == st.session_state.char_settings["fashion"]
+                        btn = st.button(fashion, key=f"fashion_{fashion}", use_container_width=True)
+                        if btn:
+                            st.session_state.char_settings["fashion"] = fashion
+                            st.rerun()
+                        st.markdown(
+                            f"""
+                            <style>
+                            [data-testid="stButton"] button#{f"fashion_{fashion}".replace(' ', '_')} {{
+                                {"background: linear-gradient(145deg, #4CAF50, #2E7D32); color: white; font-weight: 700; border-radius: 20px; border: 2px solid #fff; box-shadow: 0 4px 16px #4CAF5040; margin-bottom: 10px; min-width: 120px;" if selected else "background: #fff; color: #1B5E20; font-weight: 500; border-radius: 20px; border: 2px solid #eee; margin-bottom: 10px; min-width: 120px;" }
+                            }}
+                            </style>
+                            """, unsafe_allow_html=True,
+                        )
+        
+                # Визуальный вайб
+                st.markdown('<div class="slider-header" style="text-align:left;">Визуальный вайб</div>', unsafe_allow_html=True)
+                vibe_options = ["Солнечный", "Таинственный", "Гик", "Арт-бохо", "Романтичный", "Брутальный", "Утонченный"]
+                cols = st.columns(4)
+                for i, vibe in enumerate(vibe_options):
+                    with cols[i % 4]:
+                        selected = vibe == st.session_state.char_settings["vibe"]
+                        btn = st.button(vibe, key=f"vibe_{vibe}", use_container_width=True)
+                        if btn:
+                            st.session_state.char_settings["vibe"] = vibe
+                            st.rerun()
+                        st.markdown(
+                            f"""
+                            <style>
+                            [data-testid="stButton"] button#{f"vibe_{vibe}".replace(' ', '_')} {{
+                                {"background: linear-gradient(145deg, #9C27B0, #6A1B9A); color: white; font-weight: 700; border-radius: 20px; border: 2px solid #fff; box-shadow: 0 4px 16px #9C27B040; margin-bottom: 10px; min-width: 120px;" if selected else "background: #fff; color: #6A1B9A; font-weight: 500; border-radius: 20px; border: 2px solid #eee; margin-bottom: 10px; min-width: 120px;" }
+                            }}
+                            </style>
+                            """, unsafe_allow_html=True,
+                        )
+        
+                # --- Разделитель ---
+                st.markdown('<hr class="divider">', unsafe_allow_html=True)
+        
+                # --- Черты характера ---
+                st.markdown('<div class="section-title" style="text-align:left;">Черты характера</div>', unsafe_allow_html=True)
+                st.markdown('<div class="slider-header" style="text-align:left;">Основные черты</div>', unsafe_allow_html=True)
+                traits_options = ["Юмористичный", "Романтичный", "Sassy", "Интроверт", "Экстраверт", "Добрый", "Уверенный", "Скромный"]
+                cols = st.columns(4)
+                for i, trait in enumerate(traits_options):
+                    with cols[i % 4]:
+                        selected = trait in st.session_state.char_settings["traits"]
+                        btn = st.button(trait + (" ✅" if selected else ""), key=f"trait_{trait}", use_container_width=True)
+                        if btn:
+                            if selected:
+                                st.session_state.char_settings["traits"].remove(trait)
+                            else:
+                                st.session_state.char_settings["traits"].append(trait)
+                            st.rerun()
+                        st.markdown(
+                            f"""
+                            <style>
+                            [data-testid="stButton"] button#{f"trait_{trait}".replace(' ', '_')} {{
+                                {"background: linear-gradient(145deg, #9C27B0, #6A1B9A); color: white; font-weight: 700; border-radius: 20px; border: 2px solid #fff; box-shadow: 0 4px 16px #9C27B040; margin-bottom: 10px; min-width: 120px;" if selected else "background: #fff; color: #6A1B9A; font-weight: 500; border-radius: 20px; border: 2px solid #eee; margin-bottom: 10px; min-width: 120px;" }
+                            }}
+                            </style>
+                            """, unsafe_allow_html=True,
+                        )
+        
+                # Темперамент
+                st.markdown('<div class="slider-header" style="text-align:left;">Темперамент</div>', unsafe_allow_html=True)
+                temper_options = ["Спокойный", "Энергичный", "Сбалансированный", "Импульсивный", "Флегматичный"]
+                cols = st.columns(5)
+                for i, temper in enumerate(temper_options):
+                    with cols[i % 5]:
+                        selected = temper == st.session_state.char_settings["temper"]
+                        btn = st.button(temper, key=f"temper_{temper}", use_container_width=True)
+                        if btn:
+                            st.session_state.char_settings["temper"] = temper
+                            st.rerun()
+                        st.markdown(
+                            f"""
+                            <style>
+                            [data-testid="stButton"] button#{f"temper_{temper}".replace(' ', '_')} {{
+                                {"background: linear-gradient(145deg, #2196F3, #0D47A1); color: white; font-weight: 700; border-radius: 20px; border: 2px solid #fff; box-shadow: 0 4px 16px #2196F340; margin-bottom: 10px; min-width: 120px;" if selected else "background: #fff; color: #0D47A1; font-weight: 500; border-radius: 20px; border: 2px solid #eee; margin-bottom: 10px; min-width: 120px;" }
+                            }}
+                            </style>
+                            """, unsafe_allow_html=True,
+                        )
+        
+                # --- Разделитель ---
+                st.markdown('<hr class="divider">', unsafe_allow_html=True)
+        
+                # --- Красные флаги (личные антипатии) ---
+                st.markdown('<div class="section-title" style="text-align:left;">Что вам не нравится?</div>', unsafe_allow_html=True)
+                st.markdown('<div class="slider-header" style="text-align:left;">Личные антипатии</div>', unsafe_allow_html=True)
+                dislikes_options = ["Опоздания", "Грубость", "Ложь", "Нарциссизм", "Эгоизм", "Пассивность", "Агрессия"]
+                cols = st.columns(4)
+                for i, dislike in enumerate(dislikes_options):
+                    with cols[i % 4]:
+                        selected = dislike in st.session_state.char_settings["dislikes"]
+                        btn = st.button(dislike + (" ✅" if selected else ""), key=f"dislike_{dislike}", use_container_width=True)
+                        if btn:
+                            if selected:
+                                st.session_state.char_settings["dislikes"].remove(dislike)
+                            else:
+                                st.session_state.char_settings["dislikes"].append(dislike)
+                            st.rerun()
+                        st.markdown(
+                            f"""
+                            <style>
+                            [data-testid="stButton"] button#{f"dislike_{dislike}".replace(' ', '_')} {{
+                                {"background: linear-gradient(145deg, #F44336, #C62828); color: white; font-weight: 700; border-radius: 20px; border: 2px solid #fff; box-shadow: 0 4px 16px #F4433640; margin-bottom: 10px; min-width: 120px;" if selected else "background: #fff; color: #B71C1C; font-weight: 500; border-radius: 20px; border: 2px solid #eee; margin-bottom: 10px; min-width: 120px;" }
+                            }}
+                            </style>
+                            """, unsafe_allow_html=True,
+                        )
+        
+                # --- Кнопка сохранения ---
+                st.markdown('<hr class="divider">', unsafe_allow_html=True)
+                if st.button("💾 Сохранить персонажа", key="save_character",
+                             use_container_width=True, type="primary",
+                             help="Сохранить все настройки персонажа и начать диалог"):
+                    st.session_state.personality_saved = True
+                    st.rerun()
+        
+        # ----------- ВНИМАНИЕ! ----------- 
+        # В начало твоего скрипта (например, после глобальных <style>) 
+        # добавь такие стили для тонкого полупрозрачного разделителя:
+        st.markdown("""
+        <style>
+        hr.divider {
+            border: none;
+            border-top: 1.5px solid #c2b9ef55;
+            margin: 24px 0 32px 0;
+            width: 100%;
+            opacity: 0.8;
+        }
+        </style>
+        """, unsafe_allow_html=True)
 
-        # --- Внешний вайб ---
-        with st.container():
-            st.markdown('<div class="section">', unsafe_allow_html=True)
-            st.markdown('<div class="section-title" style="text-align:left;">Внешний вайб</div>', unsafe_allow_html=True)
-
-            # Стиль одежды
-            st.markdown('<div class="slider-header" style="text-align:left;">Стиль одежды</div>', unsafe_allow_html=True)
-            fashion_options = ["Casual", "Спорт-шик", "Elegant", "Dark-academia", "Soft-girl", "Бохо", "Минимализм"]
-            cols = st.columns(4)
-            for i, fashion in enumerate(fashion_options):
-                with cols[i % 4]:
-                    selected = fashion == st.session_state.char_settings["fashion"]
-                    btn = st.button(fashion, key=f"fashion_{fashion}", use_container_width=True)
-                    if btn:
-                        st.session_state.char_settings["fashion"] = fashion
-                        st.rerun()
-                    st.markdown(
-                        f"""
-                        <style>
-                        [data-testid="stButton"] button#{f"fashion_{fashion}".replace(' ', '_')} {{
-                            {"background: linear-gradient(145deg, #4CAF50, #2E7D32); color: white; font-weight: 700; border-radius: 20px; border: 2px solid #fff; box-shadow: 0 4px 16px #4CAF5040; margin-bottom: 10px; min-width: 120px;" if selected else "background: #fff; color: #1B5E20; font-weight: 500; border-radius: 20px; border: 2px solid #eee; margin-bottom: 10px; min-width: 120px;" }
-                        }}
-                        </style>
-                        """, unsafe_allow_html=True,
-                    )
-
-            # Визуальный вайб
-            st.markdown('<div class="slider-header" style="text-align:left;">Визуальный вайб</div>', unsafe_allow_html=True)
-            vibe_options = ["Солнечный", "Таинственный", "Гик", "Арт-бохо", "Романтичный", "Брутальный", "Утонченный"]
-            cols = st.columns(4)
-            for i, vibe in enumerate(vibe_options):
-                with cols[i % 4]:
-                    selected = vibe == st.session_state.char_settings["vibe"]
-                    btn = st.button(vibe, key=f"vibe_{vibe}", use_container_width=True)
-                    if btn:
-                        st.session_state.char_settings["vibe"] = vibe
-                        st.rerun()
-                    st.markdown(
-                        f"""
-                        <style>
-                        [data-testid="stButton"] button#{f"vibe_{vibe}".replace(' ', '_')} {{
-                            {"background: linear-gradient(145deg, #9C27B0, #6A1B9A); color: white; font-weight: 700; border-radius: 20px; border: 2px solid #fff; box-shadow: 0 4px 16px #9C27B040; margin-bottom: 10px; min-width: 120px;" if selected else "background: #fff; color: #6A1B9A; font-weight: 500; border-radius: 20px; border: 2px solid #eee; margin-bottom: 10px; min-width: 120px;" }
-                        }}
-                        </style>
-                        """, unsafe_allow_html=True,
-                    )
-            st.markdown('</div>', unsafe_allow_html=True)  # конец секции
-
-        # --- Черты характера ---
-        with st.container():
-            st.markdown('<div class="section">', unsafe_allow_html=True)
-            st.markdown('<div class="section-title" style="text-align:left;">Черты характера</div>', unsafe_allow_html=True)
-
-            # Черты характера
-            st.markdown('<div class="slider-header" style="text-align:left;">Основные черты</div>', unsafe_allow_html=True)
-            traits_options = ["Юмористичный", "Романтичный", "Sassy", "Интроверт", "Экстраверт", "Добрый", "Уверенный", "Скромный"]
-            cols = st.columns(4)
-            for i, trait in enumerate(traits_options):
-                with cols[i % 4]:
-                    selected = trait in st.session_state.char_settings["traits"]
-                    btn = st.button(trait + (" ✅" if selected else ""), key=f"trait_{trait}", use_container_width=True)
-                    if btn:
-                        if selected:
-                            st.session_state.char_settings["traits"].remove(trait)
-                        else:
-                            st.session_state.char_settings["traits"].append(trait)
-                        st.rerun()
-                    st.markdown(
-                        f"""
-                        <style>
-                        [data-testid="stButton"] button#{f"trait_{trait}".replace(' ', '_')} {{
-                            {"background: linear-gradient(145deg, #9C27B0, #6A1B9A); color: white; font-weight: 700; border-radius: 20px; border: 2px solid #fff; box-shadow: 0 4px 16px #9C27B040; margin-bottom: 10px; min-width: 120px;" if selected else "background: #fff; color: #6A1B9A; font-weight: 500; border-radius: 20px; border: 2px solid #eee; margin-bottom: 10px; min-width: 120px;" }
-                        }}
-                        </style>
-                        """, unsafe_allow_html=True,
-                    )
-
-            # Темперамент
-            st.markdown('<div class="slider-header" style="text-align:left;">Темперамент</div>', unsafe_allow_html=True)
-            temper_options = ["Спокойный", "Энергичный", "Сбалансированный", "Импульсивный", "Флегматичный"]
-            cols = st.columns(5)
-            for i, temper in enumerate(temper_options):
-                with cols[i % 5]:
-                    selected = temper == st.session_state.char_settings["temper"]
-                    btn = st.button(temper, key=f"temper_{temper}", use_container_width=True)
-                    if btn:
-                        st.session_state.char_settings["temper"] = temper
-                        st.rerun()
-                    st.markdown(
-                        f"""
-                        <style>
-                        [data-testid="stButton"] button#{f"temper_{temper}".replace(' ', '_')} {{
-                            {"background: linear-gradient(145deg, #2196F3, #0D47A1); color: white; font-weight: 700; border-radius: 20px; border: 2px solid #fff; box-shadow: 0 4px 16px #2196F340; margin-bottom: 10px; min-width: 120px;" if selected else "background: #fff; color: #0D47A1; font-weight: 500; border-radius: 20px; border: 2px solid #eee; margin-bottom: 10px; min-width: 120px;" }
-                        }}
-                        </style>
-                        """, unsafe_allow_html=True,
-                    )
-            st.markdown('</div>', unsafe_allow_html=True)  # конец секции
-
-        # --- Красные флаги (личные антипатии) ---
-        with st.container():
-            st.markdown('<div class="section">', unsafe_allow_html=True)
-            st.markdown('<div class="section-title" style="text-align:left;">Что вам не нравится?</div>', unsafe_allow_html=True)
-
-            st.markdown('<div class="slider-header" style="text-align:left;">Личные антипатии</div>', unsafe_allow_html=True)
-            dislikes_options = ["Опоздания", "Грубость", "Ложь", "Нарциссизм", "Эгоизм", "Пассивность", "Агрессия"]
-            cols = st.columns(4)
-            for i, dislike in enumerate(dislikes_options):
-                with cols[i % 4]:
-                    selected = dislike in st.session_state.char_settings["dislikes"]
-                    btn = st.button(dislike + (" ✅" if selected else ""), key=f"dislike_{dislike}", use_container_width=True)
-                    if btn:
-                        if selected:
-                            st.session_state.char_settings["dislikes"].remove(dislike)
-                        else:
-                            st.session_state.char_settings["dislikes"].append(dislike)
-                        st.rerun()
-                    st.markdown(
-                        f"""
-                        <style>
-                        [data-testid="stButton"] button#{f"dislike_{dislike}".replace(' ', '_')} {{
-                            {"background: linear-gradient(145deg, #F44336, #C62828); color: white; font-weight: 700; border-radius: 20px; border: 2px solid #fff; box-shadow: 0 4px 16px #F4433640; margin-bottom: 10px; min-width: 120px;" if selected else "background: #fff; color: #B71C1C; font-weight: 500; border-radius: 20px; border: 2px solid #eee; margin-bottom: 10px; min-width: 120px;" }
-                        }}
-                        </style>
-                        """, unsafe_allow_html=True,
-                    )
-            st.markdown('</div>', unsafe_allow_html=True)  # конец секции
-
-        # Кнопка сохранения
-        if st.button("💾 Сохранить персонажа", key="save_character", 
-                    use_container_width=True, type="primary", 
-                    help="Сохранить все настройки персонажа и начать диалог"):
-            st.session_state.personality_saved = True
-            st.rerun()
 
 # --- 6. Чат и логика взаимодействия ---
 if st.session_state.get("personality_saved", False) or (
@@ -905,11 +901,15 @@ if st.session_state.get("personality_saved", False) or (
     Тебя описывают так: {traits_str if traits_str != 'нейтральный' else 'обычный, но с изюминкой'}. Темперамент — {settings['temper'].lower()}.
     
     Ты не особо любишь: {dislikes_str if dislikes_str != 'нет' else 'ничего, кроме банальных грубостей'}.
+
+    Учитывай эти параметры в общении.
     
-    {mbti_text}
+    Твой тип личности: {mbti_text}
     
-    Представь, что вы только что познакомились в дейтинговом приложении twinby. Переписка только начинается — будь живым персонажем, проявляй индивидуальность, пиши с лёгкой флиртовой ноткой, задавай интересные вопросы в ответ, делай комплименты, поддерживай лёгкий, дружелюбный вайб.
-    
+    Представь, что вы только что познакомились в дейтинговом приложении twinby. Переписка только начинается — будь живым персонажем, проявляй индивидуальность, пиши с лёгкой флиртовой ноткой, но оставайся в своих
+    заданных характеристиках. Отвечай в соответствии со своим характером.
+    задавай интересные вопросы в ответ, делай комплименты, поддерживай лёгкий, дружелюбный вайб.
+    Избегай остро-социальных тем, если собеседник их инициирует, переключай тему.
     Избегай шаблонных фраз, не пиши длинных полотен, не забывай проявлять юмор, вовлечённость и искренний интерес к собеседнику. Твоя цель — чтобы собеседнику было приятно продолжать общение и он чувствовал себя привлекательным и интересным.
     """
 
@@ -965,7 +965,9 @@ if st.session_state.get("personality_saved", False) or (
         fb_prompt = f"""
         Ты — эксперт по коммуникациям и дейтингу. Проанализируй сообщения пользователя
         ниже и дай три пункта: 1) что привлекательно, 2) что может оттолкнуть, 3) совет
-        по следующему шагу. Сообщения:\n{user_dialog}
+        по следующему шагу. Ответ давай исключительно на русском языке, не используй английские выражения. Отвечай понятно и располагающе. 
+        Отвечай в формате сообщения, НЕ озвучивай свои действия, например, [Поднял свои брови и удивился]. Ответ дай пользователю будто ты ему пишешь сообщение-фидбек.
+        Перед ответом подумай и размышляй поэтапно и вдумчиво. Сообщения:\n{user_dialog}
         """
         try:
             fb = client.chat.completions.create(
