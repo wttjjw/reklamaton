@@ -922,7 +922,7 @@ if st.session_state.get("personality_saved", False) or (
     user_input = st.chat_input(f"Напишите {name} сообщение...")
     if user_input:
         username = st.session_state.user_name
-        user_message = f"**{username}:** {user_input}"
+        user_message = f"{user_input}"
         st.session_state.msgs.append({"role": "user", "content": user_message})
 
         messages = [{"role": "system", "content": SYSTEM_PROMPT}] + st.session_state.msgs
