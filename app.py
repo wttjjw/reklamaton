@@ -476,6 +476,19 @@ if st.session_state.get("character_created", False) and st.session_state.charact
             st.markdown('</div>', unsafe_allow_html=True)  # конец секции
 
         # --- Характер ---
+        def get_trait_text(val, left, right):
+            if val == 1:
+                return f"крайний {left.lower()}"
+            elif val == 2:
+                return f"скорее {left.lower()}"
+            elif val == 3:
+                return "сбалансированный"
+            elif val == 4:
+                return f"скорее {right.lower()}"
+            else:
+                return f"крайний {right.lower()}"
+
+        
         with st.container():
             st.markdown('<div class="section">', unsafe_allow_html=True)
             st.markdown(
@@ -552,19 +565,7 @@ if st.session_state.get("character_created", False) and st.session_state.charact
 
 
 
-        
-
-        def get_trait_text(val, left, right):
-            if val == 1:
-                return f"крайний {left.lower()}"
-            elif val == 2:
-                return f"скорее {left.lower()}"
-            elif val == 3:
-                return "сбалансированный"
-            elif val == 4:
-                return f"скорее {right.lower()}"
-            else:
-                return f"крайний {right.lower()}"
+    
 
 
         # --- Интересы (хобби/музыка) ---
