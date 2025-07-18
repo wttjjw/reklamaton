@@ -74,13 +74,45 @@ if not st.session_state.form_saved:
 
         st.markdown('</div>', unsafe_allow_html=True)
 
-# --- 3. System prompt ---
-if st.session_state.form_saved:
+# --- 3. Этап: выбор характера (до чата) ---
+if st.session_state.form_saved and "personality_saved" not in st.session_state:
+    st.title("Выберите характер персонажа")
+
+    col1, col2 = st.columns(2)
+    with col1:
+        mbti_ei = st.slider("Экстраверт — Интроверт", 0, 100, 50)
+        mbti_ns = st.slider("Реалист — Мечтатель", 0, 100, 50)
+    with col2:
+        mbti_tf = st.slider("Рациональный — Эмоциональный", 0, 100, 50)
+        mbti_jp = st.slider("Структурный — Спонтанный", 0, 100, 50)
+
+    selected_gender = st.radio("Выберите пол персонажа", ["Мужской", "Женский"], horizontal=True)
+
+    if st.button("Сохранить характер"):
+        st.session_state.personality_saved = True
+        st.session_state.mbti_ei = mbti_ei
+        st.session_state.mbti_ns = mbti_ns
+        st.session_state.mbti_tf = mbti_tf
+        st.session_state.mbti_jp = mbti_jp
+        st.session_state.selected_gender = selected_gender
+
+# --- 4. Чат и логика взаимодействия ---
+if st.session_state.get("personality_saved", False):
+    # Текстовое описание MBTI черт
+    mbti_text = f"""
+    MBTI черты: {'Экстраверт' if st.session_state.mbti_ei > 50 else 'Интроверт'}, 
+    {'Мечтатель' if st.session_state.mbti_ns > 50 else 'Реалист'}, 
+    {'Эмоциональный' if st.session_state.mbti_tf > 50 else 'Рациональный'}, 
+    {'Спонтанный' if st.session_state.mbti_jp > 50 else 'Структурный'}.
+    Стиль общения: {st.session_state.selected_gender.lower()}.
+    """
+
     SYSTEM_PROMPT = f"""
     Ты — {gender.lower()} {age} лет из {city}. Внешний стиль: {fashion}, вайб: {vibe}.
     Увлечения: {hobbies}. Любимая музыка: {music}.
     Характер: {', '.join(traits) or 'нейтральный'}, темперамент {temper.lower()}.
     Тебе не нравятся: {dislikes}.
+    {mbti_text}
     Общайся в чате, как на первом свидании в Тиндере: флиртуй, задавай вопросы, поддерживай тему.
     """
 
@@ -109,7 +141,7 @@ if st.session_state.form_saved:
         with st.chat_message(m["role"]):
             st.markdown(m["content"])
 
-    # --- 6. Feedback ---
+    # --- Feedback ---
     st.divider()
     if st.button("Получить фидбек о моём стиле общения"):
         user_dialog = "\n".join(
