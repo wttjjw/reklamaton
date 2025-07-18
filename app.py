@@ -455,41 +455,45 @@ if st.session_state.get("character_created", False) and st.session_state.charact
             
             # СТИЛЬ ПОД КНОПКУ + красивый placeholder:
             st.markdown(
-                """
-                <style>
-                input[type="text"][id^="age_input_text"] {
-                    background: #fff !important;
-                    color: #6A1B9A !important;
-                    border: 2px solid #eee !important;
-                    border-radius: 20px !important;
-                    font-size: 1.25rem !important;
-                    font-weight: 500 !important;
-                    height: 56px !important;
-                    min-width: 160px !important;
-                    box-shadow: 0 4px 16px #6a11cb14 !important;
-                    outline: none !important;
-                    padding-left: 0 !important;
-                    padding-right: 0 !important;
-                    margin-top: 12px !important;
-                    margin-bottom: 10px !important;
-                    transition: border 0.2s;
-                    text-align: center !important;
-                    appearance: none !important;
-                }
-                input[type="text"][id^="age_input_text"]:focus {
-                    border: 2px solid #6a11cb !important;
-                    background: #f8f9fa !important;
-                }
-                input[type="text"][id^="age_input_text"]::placeholder {
-                    color: #bdbdbd !important;
-                    opacity: 1 !important;
-                    font-weight: 400 !important;
-                    font-size: 1.1rem !important;
-                }
-                </style>
-                """,
-                unsafe_allow_html=True
-            )
+            """
+            <style>
+            input[type="text"][id^="age_input_text"] {
+                background: #fff !important;
+                color: #6A1B9A !important;
+                border: 2px solid #eee !important;
+                border-radius: 20px !important;
+                font-size: 1.25rem !important;
+                font-weight: 500 !important;
+                height: 56px !important;
+                min-width: 160px !important;
+                width: 100% !important;
+                box-shadow: 0 4px 16px #6a11cb12 !important;
+                outline: none !important;
+                padding: 18px 0 18px 0 !important; /* как у кнопки */
+                margin-top: 12px !important;      /* как у кнопки */
+                margin-bottom: 10px !important;
+                transition: border 0.2s;
+                text-align: center !important;
+                appearance: none !important;
+                display: flex !important;
+                align-items: center !important;
+                justify-content: center !important;
+            }
+            input[type="text"][id^="age_input_text"]:focus {
+                border: 2px solid #6a11cb !important;
+                background: #f8f9fa !important;
+            }
+            input[type="text"][id^="age_input_text"]::placeholder {
+                color: #bdbdbd !important;
+                opacity: 1 !important;
+                font-weight: 400 !important;
+                font-size: 1.1rem !important;
+            }
+            </style>
+            """,
+            unsafe_allow_html=True
+        )
+
             
             if error_msg:
                 st.info(error_msg)
