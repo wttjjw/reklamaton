@@ -95,18 +95,17 @@ if st.session_state.form_saved and "personality_saved" not in st.session_state:
     """, unsafe_allow_html=True)
 
     def labeled_slider(label_left, label_right, key):
-        st.markdown(f"""
-        <div class="slider-block">
-            <div class="slider-labels">
-                <span>{label_left}</span>
-                <span>{label_right}</span>
-            </div>
+    st.markdown(f"""
+    <div class="slider-block">
+        <div class="slider-labels">
+            <span>{label_left}</span>
+            <span>{label_right}</span>
         </div>
-        """, unsafe_allow_html=True)
-        return st.slider(
-            label=" ", min_value=0, max_value=100, step=25, value=50, key=key, label_visibility="collapsed"
-        )
-
+    </div>
+    """, unsafe_allow_html=True)
+    st.slider(
+        label=" ", min_value=0, max_value=100, step=25, value=50, key=key, label_visibility="collapsed"
+    )
     mbti_ei = labeled_slider("Экстраверт", "Интроверт", "mbti_ei")
     mbti_ns = labeled_slider("Реалист", "Мечтатель", "mbti_ns")
     mbti_tf = labeled_slider("Рациональный", "Эмоциональный", "mbti_tf")
@@ -118,12 +117,13 @@ if st.session_state.form_saved and "personality_saved" not in st.session_state:
     female_names = ["Аня", "Лера", "Катя", "Софа", "Маша", "Даша", "Оля", "Ксюша", "Ира", "Лиза"]
 
     if st.button("Сохранить характер"):
-        st.session_state.personality_saved = True
-        st.session_state.mbti_ei = mbti_ei
-        st.session_state.mbti_ns = mbti_ns
-        st.session_state.mbti_tf = mbti_tf
-        st.session_state.mbti_jp = mbti_jp
-        st.session_state.selected_gender = selected_gender
+         st.session_state.personality_saved = True
+    st.session_state.mbti_ei = st.session_state["mbti_ei"]
+    st.session_state.mbti_ns = st.session_state["mbti_ns"]
+    st.session_state.mbti_tf = st.session_state["mbti_tf"]
+    st.session_state.mbti_jp = st.session_state["mbti_jp"]
+    st.session_state.selected_gender = selected_gender
+
 
         if selected_gender == "Мужской":
             st.session_state.bot_name = random.choice(male_names)
