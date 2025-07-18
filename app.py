@@ -481,66 +481,76 @@ if st.session_state.get("character_created", False) and st.session_state.charact
         # --- Характер ---
         with st.container():
             st.markdown('<div class="section">', unsafe_allow_html=True)
-            st.markdown('<div class="section-title" style="text-align:left;">Характер персонажа</div>', unsafe_allow_html=True)
             st.markdown(
-                '<div style="color:#666; font-size:1rem; margin-bottom:18px;">'
-                'Настройте характер вашего персонажа по четырём шкалам от 1 до 5. '
-                'Каждая шкала — это крайности определённой черты: выберите, насколько персонаж близок к одному или другому полюсу.'
+                '<div class="section-title" style="text-align:left;">Характер персонажа</div>',
+                unsafe_allow_html=True
+            )
+            st.markdown(
+                '<div style="color:#666; font-size:1rem; margin-bottom:22px;">'
+                'Настройте характер по шкалам ниже: передвиньте ползунки, чтобы выбрать, к какому полюсу ближе ваш персонаж по каждой из четырёх черт.'
                 '</div>',
                 unsafe_allow_html=True
             )
-
+        
             mbti_params = [
                 {
                     "key": "mbti_ei",
                     "label": "Экстраверт — Интроверт",
                     "left": "Экстраверт",
                     "right": "Интроверт",
-                    "desc": "Экстраверт — легко идёт на контакт, любит общение и активные компании. Интроверт — предпочитает уединение и глубокие разговоры один на один.",
+                    "desc": "Экстраверт — быстро сходится с людьми, любит активное общение. Интроверт — ценит спокойствие и приватность, предпочитает узкий круг общения."
                 },
                 {
                     "key": "mbti_ns",
                     "label": "Реалист — Мечтатель",
                     "left": "Реалист",
                     "right": "Мечтатель",
-                    "desc": "Реалист — живёт здесь и сейчас, любит факты и конкретику. Мечтатель — часто уходит в фантазии, креативен и любит строить планы.",
+                    "desc": "Реалист — предпочитает факты и конкретику, опирается на опыт. Мечтатель — полон идей, любит фантазировать и строить планы."
                 },
                 {
                     "key": "mbti_tf",
                     "label": "Рациональный — Эмоциональный",
                     "left": "Рациональный",
                     "right": "Эмоциональный",
-                    "desc": "Рациональный — принимает решения с опорой на логику и аргументы. Эмоциональный — опирается на чувства, настроения и эмпатию.",
+                    "desc": "Рациональный — опирается на логику, решения принимает разумом. Эмоциональный — ориентируется на чувства, важна эмпатия и настроение."
                 },
                 {
                     "key": "mbti_jp",
                     "label": "Структурный — Спонтанный",
                     "left": "Структурный",
                     "right": "Спонтанный",
-                    "desc": "Структурный — любит планировать, придерживается расписания и порядка. Спонтанный — действует по настроению, открыт для новых идей и сюрпризов.",
+                    "desc": "Структурный — любит порядок, планирование, организованность. Спонтанный — легко меняет планы, открыт новым идеям и сюрпризам."
                 },
             ]
-
-            # Инициализация дефолтов
+            for p in mbti_params:
+                if p["key"] not in st.session_state.char_settings:
+                    st.session_state.char_settings[p["key"]] = 3
+        
             for param in mbti_params:
                 val = st.slider(
                     "",
-                    min_value=1, max_value=5, value=st.session_state.char_settings[param["key"]],
+                    min_value=1, max_value=5,
+                    value=st.session_state.char_settings[param["key"]],
                     key=f"slider_{param['key']}",
-                    label_visibility="collapsed"
+                    label_visibility="collapsed",
+                    step=1,
+                    format=""
                 )
                 st.session_state.char_settings[param["key"]] = val
                 st.markdown(
                     f'''
-                    <div style="display:flex; justify-content:space-between; color:#888; font-size:1rem; margin-top:-12px; margin-bottom:4px;">
+                    <div style="display:flex; justify-content:space-between; color:#666; font-size:1.08rem; font-weight:600; margin-top:-12px; margin-bottom:0px;">
                         <span>{param["left"]}</span>
                         <span>{param["right"]}</span>
                     </div>
-                    <div style="color:#888; font-size:0.95rem; margin-bottom:16px;">
+                    <div style="color:#B0B0B0; font-size:0.97rem; margin-bottom:24px; margin-top:3px;">
                         {param["desc"]}
                     </div>
-                    ''', unsafe_allow_html=True
+                    ''',
+                    unsafe_allow_html=True
                 )
+            st.markdown('</div>', unsafe_allow_html=True)
+
 
         
 
