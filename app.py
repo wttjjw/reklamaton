@@ -529,10 +529,6 @@ if st.session_state.get("character_created", False) and st.session_state.charact
             for param in mbti_params:
                 val = st.session_state.char_settings[param["key"]]
                 # --- Вывод цифры выбранного значения ---
-                st.markdown(
-                    f'<div style="text-align:center; color:#e85a98; font-size:1.15rem; font-weight:700; margin-bottom:-14px; margin-top:4px;">{val}</div>',
-                    unsafe_allow_html=True
-                )
                 val = st.slider(
                     "",
                     min_value=1, max_value=5,
