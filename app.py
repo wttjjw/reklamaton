@@ -396,15 +396,15 @@ if st.session_state.get("character_created", False) and st.session_state.charact
         st.session_state.personality_saved = False
 
     if not st.session_state.personality_saved:
-        st.title("🎭 Создайте своего персонажа")
+        st.title("Создайте своего персонажа")
 
         # --- Основные настройки ---
         with st.container():
             st.markdown('<div class="section">', unsafe_allow_html=True)
-            st.markdown('<div class="section-title"><span>👤</span> Основная информация</div>', unsafe_allow_html=True)
+            st.markdown('<div class="section-title" style="text-align:left;">Основная информация</div>', unsafe_allow_html=True)
 
             # Пол персонажа
-            st.markdown('<div class="slider-header"><span>👫</span> Пол персонажа</div>', unsafe_allow_html=True)
+            st.markdown('<div class="slider-header" style="text-align:left;">Пол персонажа</div>', unsafe_allow_html=True)
             genders = ["Девушка", "Парень", "Небинарный"]
             cols = st.columns(3)
             for i, gender in enumerate(genders):
@@ -425,7 +425,7 @@ if st.session_state.get("character_created", False) and st.session_state.charact
                     )
 
             # Возраст
-            st.markdown('<div class="slider-header"><span>🎂</span> Возраст</div>', unsafe_allow_html=True)
+            st.markdown('<div class="slider-header" style="text-align:left;">Возраст</div>', unsafe_allow_html=True)
             ages = ["18-22", "23-27", "28-32", "33+"]
             cols = st.columns(4)
             for i, age in enumerate(ages):
@@ -446,7 +446,7 @@ if st.session_state.get("character_created", False) and st.session_state.charact
                     )
 
             # Город
-            st.markdown('<div class="slider-header"><span>🏙️</span> Город</div>', unsafe_allow_html=True)
+            st.markdown('<div class="slider-header" style="text-align:left;">Город</div>', unsafe_allow_html=True)
             cities = ["Москва", "Санкт-Петербург", "Казань", "Сочи", "Екатеринбург", "Другой"]
             cols = st.columns(3)
             for i, city in enumerate(cities):
@@ -470,33 +470,33 @@ if st.session_state.get("character_created", False) and st.session_state.charact
         # --- Характер ---
         with st.container():
             st.markdown('<div class="section">', unsafe_allow_html=True)
-            st.markdown('<div class="section-title"><span>🧠</span> Характер персонажа</div>', unsafe_allow_html=True)
+            st.markdown('<div class="section-title" style="text-align:left;">Характер персонажа</div>', unsafe_allow_html=True)
 
             st.markdown('<div class="slider-container">', unsafe_allow_html=True)
-            st.markdown('<div class="slider-header"><span>🔊</span> Экстраверт vs Интроверт</div>', unsafe_allow_html=True)
+            st.markdown('<div class="slider-header" style="text-align:left;">Экстраверт vs Интроверт</div>', unsafe_allow_html=True)
             st.slider("", 0, 100, 50, key="mbti_ei", label_visibility="collapsed")
-            st.markdown('<div class="slider-values">', unsafe_allow_html=True)
+            st.markdown('<div class="slider-values" style="text-align:left;">', unsafe_allow_html=True)
             st.markdown('<div>Общительный</div><div>Созерцательный</div>', unsafe_allow_html=True)
             st.markdown('</div></div>', unsafe_allow_html=True)
 
             st.markdown('<div class="slider-container">', unsafe_allow_html=True)
-            st.markdown('<div class="slider-header"><span>🌈</span> Реалист vs Мечтатель</div>', unsafe_allow_html=True)
+            st.markdown('<div class="slider-header" style="text-align:left;">Реалист vs Мечтатель</div>', unsafe_allow_html=True)
             st.slider("", 0, 100, 50, key="mbti_ns", label_visibility="collapsed")
-            st.markdown('<div class="slider-values">', unsafe_allow_html=True)
+            st.markdown('<div class="slider-values" style="text-align:left;">', unsafe_allow_html=True)
             st.markdown('<div>Практичный</div><div>Творческий</div>', unsafe_allow_html=True)
             st.markdown('</div></div>', unsafe_allow_html=True)
 
             st.markdown('<div class="slider-container">', unsafe_allow_html=True)
-            st.markdown('<div class="slider-header"><span>💖</span> Рациональный vs Эмоциональный</div>', unsafe_allow_html=True)
+            st.markdown('<div class="slider-header" style="text-align:left;">Рациональный vs Эмоциональный</div>', unsafe_allow_html=True)
             st.slider("", 0, 100, 50, key="mbti_tf", label_visibility="collapsed")
-            st.markdown('<div class="slider-values">', unsafe_allow_html=True)
+            st.markdown('<div class="slider-values" style="text-align:left;">', unsafe_allow_html=True)
             st.markdown('<div>Логичный</div><div>Чувствительный</div>', unsafe_allow_html=True)
             st.markdown('</div></div>', unsafe_allow_html=True)
 
             st.markdown('<div class="slider-container">', unsafe_allow_html=True)
-            st.markdown('<div class="slider-header"><span>📅</span> Структурный vs Спонтанный</div>', unsafe_allow_html=True)
+            st.markdown('<div class="slider-header" style="text-align:left;">Структурный vs Спонтанный</div>', unsafe_allow_html=True)
             st.slider("", 0, 100, 50, key="mbti_jp", label_visibility="collapsed")
-            st.markdown('<div class="slider-values">', unsafe_allow_html=True)
+            st.markdown('<div class="slider-values" style="text-align:left;">', unsafe_allow_html=True)
             st.markdown('<div>Организованный</div><div>Импульсивный</div>', unsafe_allow_html=True)
             st.markdown('</div></div>', unsafe_allow_html=True)
 
@@ -505,7 +505,7 @@ if st.session_state.get("character_created", False) and st.session_state.charact
         # --- Стиль общения ---
         with st.container():
             st.markdown('<div class="section">', unsafe_allow_html=True)
-            st.markdown('<div class="section-title"><span>💬</span> Стиль общения</div>', unsafe_allow_html=True)
+            st.markdown('<div class="section-title" style="text-align:left;">Стиль общения</div>', unsafe_allow_html=True)
 
             styles = ["Дружелюбный", "Флиртующий", "Прямолинейный", "Загадочный", "Интеллектуальный"]
             cols = st.columns(len(styles))
@@ -530,10 +530,10 @@ if st.session_state.get("character_created", False) and st.session_state.charact
         # --- Интересы (хобби/музыка) ---
         with st.container():
             st.markdown('<div class="section">', unsafe_allow_html=True)
-            st.markdown('<div class="section-title"><span>🎯</span> Мне интересно</div>', unsafe_allow_html=True)
+            st.markdown('<div class="section-title" style="text-align:left;">Мне интересно</div>', unsafe_allow_html=True)
 
             # Хобби
-            st.markdown('<div class="slider-header"><span>🎨</span> Хобби</div>', unsafe_allow_html=True)
+            st.markdown('<div class="slider-header" style="text-align:left;">Хобби</div>', unsafe_allow_html=True)
             hobbies_options = ["Кино", "Бег", "Комиксы", "Путешествия", "Фотография", "Кулинария", "Игры", "Чтение", "Йога"]
             cols = st.columns(3)
             for i, hobby in enumerate(hobbies_options):
@@ -557,7 +557,7 @@ if st.session_state.get("character_created", False) and st.session_state.charact
                     )
 
             # Музыка
-            st.markdown('<div class="slider-header"><span>🎵</span> Музыкальные предпочтения</div>', unsafe_allow_html=True)
+            st.markdown('<div class="slider-header" style="text-align:left;">Музыкальные предпочтения</div>', unsafe_allow_html=True)
             music_options = ["Рок", "Поп", "Хип-хоп", "Электроника", "Джаз", "Классика", "Инди", "Метал", "R&B"]
             cols = st.columns(3)
             for i, music in enumerate(music_options):
@@ -584,10 +584,10 @@ if st.session_state.get("character_created", False) and st.session_state.charact
         # --- Внешний вайб ---
         with st.container():
             st.markdown('<div class="section">', unsafe_allow_html=True)
-            st.markdown('<div class="section-title"><span>👗</span> Внешний вайб</div>', unsafe_allow_html=True)
+            st.markdown('<div class="section-title" style="text-align:left;">Внешний вайб</div>', unsafe_allow_html=True)
 
             # Стиль одежды
-            st.markdown('<div class="slider-header"><span>👕</span> Стиль одежды</div>', unsafe_allow_html=True)
+            st.markdown('<div class="slider-header" style="text-align:left;">Стиль одежды</div>', unsafe_allow_html=True)
             fashion_options = ["Casual", "Спорт-шик", "Elegant", "Dark-academia", "Soft-girl", "Бохо", "Минимализм"]
             cols = st.columns(4)
             for i, fashion in enumerate(fashion_options):
@@ -608,7 +608,7 @@ if st.session_state.get("character_created", False) and st.session_state.charact
                     )
 
             # Визуальный вайб
-            st.markdown('<div class="slider-header"><span>🌟</span> Визуальный вайб</div>', unsafe_allow_html=True)
+            st.markdown('<div class="slider-header" style="text-align:left;">Визуальный вайб</div>', unsafe_allow_html=True)
             vibe_options = ["Солнечный", "Таинственный", "Гик", "Арт-бохо", "Романтичный", "Брутальный", "Утонченный"]
             cols = st.columns(4)
             for i, vibe in enumerate(vibe_options):
@@ -632,10 +632,10 @@ if st.session_state.get("character_created", False) and st.session_state.charact
         # --- Черты характера ---
         with st.container():
             st.markdown('<div class="section">', unsafe_allow_html=True)
-            st.markdown('<div class="section-title"><span>😊</span> Черты характера</div>', unsafe_allow_html=True)
+            st.markdown('<div class="section-title" style="text-align:left;">Черты характера</div>', unsafe_allow_html=True)
 
             # Черты характера
-            st.markdown('<div class="slider-header"><span>💫</span> Основные черты</div>', unsafe_allow_html=True)
+            st.markdown('<div class="slider-header" style="text-align:left;">Основные черты</div>', unsafe_allow_html=True)
             traits_options = ["Юмористичный", "Романтичный", "Sassy", "Интроверт", "Экстраверт", "Добрый", "Уверенный", "Скромный"]
             cols = st.columns(4)
             for i, trait in enumerate(traits_options):
@@ -659,7 +659,7 @@ if st.session_state.get("character_created", False) and st.session_state.charact
                     )
 
             # Темперамент
-            st.markdown('<div class="slider-header"><span>🔥</span> Темперамент</div>', unsafe_allow_html=True)
+            st.markdown('<div class="slider-header" style="text-align:left;">Темперамент</div>', unsafe_allow_html=True)
             temper_options = ["Спокойный", "Энергичный", "Сбалансированный", "Импульсивный", "Флегматичный"]
             cols = st.columns(5)
             for i, temper in enumerate(temper_options):
@@ -683,9 +683,9 @@ if st.session_state.get("character_created", False) and st.session_state.charact
         # --- Красные флаги (личные антипатии) ---
         with st.container():
             st.markdown('<div class="section">', unsafe_allow_html=True)
-            st.markdown('<div class="section-title"><span>🚩</span> Что вам не нравится?</div>', unsafe_allow_html=True)
+            st.markdown('<div class="section-title" style="text-align:left;">Что вам не нравится?</div>', unsafe_allow_html=True)
 
-            st.markdown('<div class="slider-header"><span>⛔</span> Личные антипатии</div>', unsafe_allow_html=True)
+            st.markdown('<div class="slider-header" style="text-align:left;">Личные антипатии</div>', unsafe_allow_html=True)
             dislikes_options = ["Опоздания", "Грубость", "Ложь", "Нарциссизм", "Эгоизм", "Пассивность", "Агрессия"]
             cols = st.columns(4)
             for i, dislike in enumerate(dislikes_options):
@@ -715,8 +715,6 @@ if st.session_state.get("character_created", False) and st.session_state.charact
                     help="Сохранить все настройки персонажа и начать диалог"):
             st.session_state.personality_saved = True
             st.rerun()
-
-
 
 # --- 6. Чат и логика взаимодействия ---
 if st.session_state.get("personality_saved", False) or (
