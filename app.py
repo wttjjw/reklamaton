@@ -1,4 +1,4 @@
-# app.py — DreamDate AI (Streamlit + Groq)
+# app.py — DreamDate AI (Streamlit + Groq)
 import datetime
 import streamlit as st
 from openai import OpenAI  # openai>=1.1.0
@@ -10,27 +10,9 @@ client = OpenAI(
 )
 MODEL = "llama3-70b-8192"
 
-# --- 1.5. Функция генерации изображения персонажа ---
-def generate_character_image(prompt: str):
-    try:
-        response = client.images.generate(
-            model="dall-e-3",
-            prompt=prompt,
-            n=1,
-            size="1024x1024",
-            quality="hd",
-            response_format="url"
-        )
-        return response.data[0].url
-    except Exception as e:
-        st.error(f"Ошибка генерации изображения: {e}")
-        return None
-
 # --- Состояние анкеты ---
 if "form_saved" not in st.session_state:
     st.session_state.form_saved = False
-if "next_step" not in st.session_state:
-    st.session_state.next_step = None
 if "msgs" not in st.session_state:
     st.session_state.msgs = []
 
@@ -40,19 +22,19 @@ with st.sidebar:
     gender   = st.selectbox("Пол персонажа", ["Девушка", "Парень", "Небинарный"])
     age      = st.slider("Возраст", 18, 60, 25)
     city     = st.text_input("Город/часовой пояс", "Москва")
-
+    
     st.markdown("### Внешний вайб")
     fashion  = st.selectbox("Стиль одежды", ["Casual", "Спорт‑шик", "Elegant", "Dark‑academia", "Soft‑girl"])
     vibe     = st.selectbox("Визуальный вайб", ["Солнечный", "Таинственный", "Гик", "Арт‑бохо"])
-
+    
     st.markdown("### Хобби & интересы")
     hobbies  = st.text_input("Хобби (через запятую)", "кино, бег, комиксы")
-    music    = st.text_input("Любимая музыка/группы", "The 1975, Arctic Monkeys")
-
+    music    = st.text_input("Любимая музыка/группы", "The 1975, Arctic Monkeys")
+    
     st.markdown("### Характер")
     traits   = st.multiselect("Черты", ["Юмористичный", "Романтичный", "Sassy", "Интроверт", "Экстраверт"])
     temper   = st.selectbox("Темперамент", ["Спокойный", "Энергичный", "Сбалансированный"])
-
+    
     st.markdown("### Красные флаги")
     dislikes = st.text_input("Что бот не любит", "опоздания, грубость")
 
@@ -92,27 +74,8 @@ if not st.session_state.form_saved:
 
         st.markdown('</div>', unsafe_allow_html=True)
 
-# --- 3. Промежуточный экран ---
-if st.session_state.form_saved and st.session_state.next_step is None:
-    st.success("💚 Пройдите небольшой тест, и мы подберем вам идеального партнера")
-    col1, col2 = st.columns(2)
-    with col1:
-        if st.button("🚀 Вперёд!"):
-            st.session_state.next_step = "test"
-    with col2:
-        if st.button("🛠️ Я создам персонажа самостоятельно"):
-            st.session_state.next_step = "custom"
-
-# --- 4. Генерация фона персонажа ---
-if st.session_state.next_step in ["test", "custom"] and "bg_url" not in st.session_state:
-    character_prompt = f"anime girl, {fashion} clothes, {vibe.lower()} vibe, "
-    character_prompt += f"{', '.join(traits or ['neutral'])}, full color, fantasy background, digital art"
-    img_url = generate_character_image(character_prompt)
-    if img_url:
-        st.session_state.bg_url = img_url
-
-# --- 5. System prompt и чат ---
-if st.session_state.next_step in ["test", "custom"]:
+# --- 3. System prompt ---
+if st.session_state.form_saved:
     SYSTEM_PROMPT = f"""
     Ты — {gender.lower()} {age} лет из {city}. Внешний стиль: {fashion}, вайб: {vibe}.
     Увлечения: {hobbies}. Любимая музыка: {music}.
@@ -120,24 +83,6 @@ if st.session_state.next_step in ["test", "custom"]:
     Тебе не нравятся: {dislikes}.
     Общайся в чате, как на первом свидании в Тиндере: флиртуй, задавай вопросы, поддерживай тему.
     """
-
-    # --- Фон страницы ---
-    if "bg_url" in st.session_state:
-        st.markdown(f"""
-            <style>
-                .stApp {{
-                    background-image: url({st.session_state.bg_url});
-                    background-size: cover;
-                    background-position: center;
-                    background-attachment: fixed;
-                }}
-                .stChatMessage {{
-                    background-color: rgba(255, 255, 255, 0.85) !important;
-                    border-radius: 10px;
-                    padding: 8px;
-                }}
-            </style>
-        """, unsafe_allow_html=True)
 
     # --- Чат: Ввод пользователя ---
     user_input = st.chat_input("Напиши сообщение идеальному партнёру…")
@@ -159,10 +104,12 @@ if st.session_state.next_step in ["test", "custom"]:
         except Exception as e:
             st.error(f"Groq error: {e}")
 
+    # --- Вывод чата ---
     for m in st.session_state.msgs:
         with st.chat_message(m["role"]):
             st.markdown(m["content"])
 
+    # --- 6. Feedback ---
     st.divider()
     if st.button("Получить фидбек о моём стиле общения"):
         user_dialog = "\n".join(
