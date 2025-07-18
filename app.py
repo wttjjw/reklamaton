@@ -78,10 +78,10 @@ if not st.session_state.form_saved:
         st.session_state.mbti_tf = mbti_tf
         st.session_state.mbti_jp = mbti_jp
         st.session_state.selected_gender = selected_gender
-        if selected_gender == "Мужской":
-            st.session_state.bot_name = random.choice(male_names)
-        else:
-            st.session_state.bot_name = random.choice(female_names)
+            if selected_gender == "Мужской":
+                st.session_state.bot_name = random.choice(male_names)
+            else:
+                st.session_state.bot_name = random.choice(female_names)
             
         if st.button("Сохранить анкету"):
             st.session_state.form_saved = True
