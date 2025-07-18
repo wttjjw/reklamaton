@@ -536,10 +536,11 @@ if st.session_state.get("character_created", False) and st.session_state.charact
                 val = st.slider(
                     "",
                     min_value=1, max_value=5,
-                    value=val,
+                    value=st.session_state.char_settings[param["key"]],
                     key=f"slider_{param['key']}",
                     label_visibility="collapsed",
-                    step=1,
+                    step=1
+
                 )
                 st.session_state.char_settings[param["key"]] = val
                 st.markdown(
