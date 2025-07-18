@@ -494,39 +494,39 @@ if st.session_state.get("character_created", False) and st.session_state.charact
 
         
         with st.container():
-        st.markdown('<div class="section">', unsafe_allow_html=True)
-        st.markdown('<div class="section-title" style="text-align:left;">Характер персонажа</div>', unsafe_allow_html=True)
-        
-        char_params = [
-            {
-                "key": "mbti_ei",
-                "label": "Экстраверт vs Интроверт",
-                "left": "Экстраверт",
-                "right": "Интроверт",
-                "color": "#6a11cb"
-            },
-            {
-                "key": "mbti_ns",
-                "label": "Реалист vs Мечтатель",
-                "left": "Реалист",
-                "right": "Мечтатель",
-                "color": "#2196F3"
-            },
-            {
-                "key": "mbti_tf",
-                "label": "Рациональный vs Эмоциональный",
-                "left": "Рациональный",
-                "right": "Эмоциональный",
-                "color": "#FF9800"
-            },
-            {
-                "key": "mbti_jp",
-                "label": "Структурный vs Спонтанный",
-                "left": "Структурный",
-                "right": "Спонтанный",
-                "color": "#4CAF50"
-            },
-        ]
+            st.markdown('<div class="section">', unsafe_allow_html=True)
+            st.markdown('<div class="section-title" style="text-align:left;">Характер персонажа</div>', unsafe_allow_html=True)
+            
+            char_params = [
+                {
+                    "key": "mbti_ei",
+                    "label": "Экстраверт vs Интроверт",
+                    "left": "Экстраверт",
+                    "right": "Интроверт",
+                    "color": "#6a11cb"
+                },
+                {
+                    "key": "mbti_ns",
+                    "label": "Реалист vs Мечтатель",
+                    "left": "Реалист",
+                    "right": "Мечтатель",
+                    "color": "#2196F3"
+                },
+                {
+                    "key": "mbti_tf",
+                    "label": "Рациональный vs Эмоциональный",
+                    "left": "Рациональный",
+                    "right": "Эмоциональный",
+                    "color": "#FF9800"
+                },
+                {
+                    "key": "mbti_jp",
+                    "label": "Структурный vs Спонтанный",
+                    "left": "Структурный",
+                    "right": "Спонтанный",
+                    "color": "#4CAF50"
+                },
+            ]
         
         for param in char_params:
             st.markdown(f'<div class="slider-header" style="text-align:left;">{param["label"]}</div>', unsafe_allow_html=True)
