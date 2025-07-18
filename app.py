@@ -403,10 +403,10 @@ if st.session_state.get("character_created", False) and st.session_state.charact
             st.markdown('<div class="section">', unsafe_allow_html=True)
             st.markdown('<div class="section-title" style="text-align:left;">Основная информация</div>', unsafe_allow_html=True)
 
-            # Пол персонажа
+            #  Пол
             st.markdown('<div class="slider-header" style="text-align:left;">Пол персонажа</div>', unsafe_allow_html=True)
             genders = ["Девушка", "Парень"]
-            cols = st.columns(2)
+            cols = st.columns([1, 1])
             for i, gender in enumerate(genders):
                 with cols[i]:
                     selected = st.session_state.char_settings["gender"] == gender
@@ -418,17 +418,20 @@ if st.session_state.get("character_created", False) and st.session_state.charact
                         f"""
                         <style>
                         [data-testid="stButton"] button#{f"gender_{gender}".replace(' ', '_')} {{
-                            {"background: linear-gradient(145deg, #9C27B0, #6A1B9A); color: white; font-weight: 700; border-radius: 20px; border: 2px solid #fff; box-shadow: 0 4px 16px #9C27B040; margin-bottom: 10px; min-width: 120px;" if selected else "background: #fff; color: #6A1B9A; font-weight: 500; border-radius: 20px; border: 2px solid #eee; margin-bottom: 10px; min-width: 120px;" }
+                            min-width:160px !important;
+                            max-width:100%;
+                            font-size: 1.25rem;
+                            white-space: nowrap;
+                            {"background: linear-gradient(145deg, #9C27B0, #6A1B9A); color: white; font-weight: 700; border-radius: 20px; border: 2px solid #fff;" if selected else "background: #fff; color: #6A1B9A; font-weight: 500; border-radius: 20px; border: 2px solid #eee;" }
                         }}
                         </style>
-                        """, unsafe_allow_html=True,
+                        """,
+                        unsafe_allow_html=True,
                     )
-
-
-
+            
             # Возраст
             st.markdown('<div class="slider-header" style="text-align:left;">Возраст</div>', unsafe_allow_html=True)
-            col1, col2, col3 = st.columns([2, 0.4, 0.4])
+            col1, col2, col3 = st.columns([3, 0.6, 0.6])
             with col1:
                 age = st.text_input(
                     "",
@@ -440,7 +443,6 @@ if st.session_state.get("character_created", False) and st.session_state.charact
             with col3:
                 down = st.button("▼", key="age_down")
             
-            # Проверка: только число от 18 до 100, иначе возвращаем к валидному
             try:
                 age_val = int(age)
                 if age_val < 18:
@@ -448,24 +450,22 @@ if st.session_state.get("character_created", False) and st.session_state.charact
                 elif age_val > 100:
                     age_val = 100
             except Exception:
-                age_val = 23  # по умолчанию
+                age_val = 23
             
-            # Реализация стрелок
             if up and age_val < 100:
                 age_val += 1
             if down and age_val > 18:
                 age_val -= 1
             
-            # Сохраняем обратно
             st.session_state.char_settings["age"] = age_val
             
-            # Показать аккуратно отрендеренное значение
+            # Красивая стилизация input и стрелок
             st.markdown(
                 f"""
                 <style>
                 input[type="text"][id^="age_input_text"] {{
                     text-align: center;
-                    font-size: 1.5rem;
+                    font-size: 1.35rem;
                     border: 2px solid #6a11cb;
                     border-radius: 14px;
                     width: 100%;
@@ -475,21 +475,23 @@ if st.session_state.get("character_created", False) and st.session_state.charact
                     margin-top: 0px;
                     outline: none;
                     box-shadow: 0 2px 8px #6a11cb11;
-                    height: 56px;
+                    height: 54px;
                 }}
-                button[kind="secondary"] {{
-                    font-size: 1.5rem !important;
-                    height: 56px !important;
-                    width: 56px !important;
+                [data-testid="stButton"] button#age_up, [data-testid="stButton"] button#age_down {{
+                    font-size: 1.4rem !important;
+                    height: 54px !important;
+                    width: 54px !important;
                     border-radius: 14px !important;
                     color: #6a11cb !important;
                     border: 2px solid #e0e0e0 !important;
                     background: #fff !important;
+                    margin-bottom: 0px !important;
+                    box-shadow: none !important;
                 }}
                 </style>
                 """,
                 unsafe_allow_html=True
-)
+            )
 
 
             # Город
