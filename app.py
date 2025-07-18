@@ -74,102 +74,164 @@ if not st.session_state.form_saved:
         if st.button("Сохранить анкету"):
             st.session_state.form_saved = True
             st.session_state.user_name = name
+            # Сбрасываем предыдущие состояния
+            st.session_state.character_created = False
+            st.session_state.personality_saved = False
+            st.rerun()
 
         st.markdown('</div>', unsafe_allow_html=True)
 
-# --- 4. Выбор типа персонажа ---
+# --- 4. Выбор типа персонажа (следующая страница) ---
 if st.session_state.form_saved and not st.session_state.character_created:
     st.title("Выберите тип персонажа")
     
-    col1, col2 = st.columns(2)
+    st.markdown("""
+        <style>
+            .big-button {
+                padding: 20px;
+                border-radius: 15px;
+                font-size: 18px;
+                font-weight: bold;
+                margin: 15px 0;
+                text-align: center;
+                cursor: pointer;
+                transition: all 0.3s;
+            }
+            .big-button:hover {
+                transform: scale(1.03);
+            }
+            .create-btn {
+                background-color: #4CAF50;
+                color: white;
+            }
+            .premade-btn {
+                background-color: #2196F3;
+                color: white;
+            }
+            .btn-container {
+                display: flex;
+                flex-direction: column;
+                max-width: 600px;
+                margin: 0 auto;
+            }
+        </style>
+    """, unsafe_allow_html=True)
     
-    with col1:
-        st.subheader("Создать своего")
-        st.image("https://placehold.co/400x200/00dc00/white?text=Создать+персонажа", 
-                 use_column_width=True)
-        if st.button("Создать уникального персонажа", key="create_custom"):
+    with st.container():
+        # Кнопка создания персонажа
+        st.markdown('<div class="btn-container">', unsafe_allow_html=True)
+        if st.button("Создать своего персонажа", key="create_custom"):
             st.session_state.character_type = "custom"
             st.session_state.character_created = True
-    
-    with col2:
-        st.subheader("Готовые персонажи")
+            st.rerun()
+        st.markdown('<div class="big-button create-btn">Создать своего персонажа</div>', unsafe_allow_html=True)
         
-        # Персонаж 1
-        with st.expander("Энергичный экстраверт", expanded=True):
-            st.image("https://placehold.co/300x150/4a86e8/white?text=Персонаж+1", 
-                     use_column_width=True)
-            st.caption("Любит активный отдых, легко заводит знакомства")
-            if st.button("Выбрать персонажа 1", key="premade_1"):
+        st.divider()
+        
+        # Кнопки готовых персонажей
+        st.subheader("Или выберите готового:")
+        
+        col1, col2, col3 = st.columns(3)
+        with col1:
+            if st.button("Персонаж 1", key="premade_1"):
                 st.session_state.character_type = "premade_1"
                 st.session_state.character_created = True
+                st.rerun()
+            st.markdown('<div class="big-button premade-btn">Энергичный экстраверт</div>', unsafe_allow_html=True)
+            st.caption("Любит активный отдых, легко заводит знакомства")
         
-        # Персонаж 2
-        with st.expander("Романтичный интроверт", expanded=True):
-            st.image("https://placehold.co/300x150/ff6d6d/white?text=Персонаж+2", 
-                     use_column_width=True)
-            st.caption("Ценит глубокие разговоры, любит искусство")
-            if st.button("Выбрать персонажа 2", key="premade_2"):
+        with col2:
+            if st.button("Персонаж 2", key="premade_2"):
                 st.session_state.character_type = "premade_2"
                 st.session_state.character_created = True
+                st.rerun()
+            st.markdown('<div class="big-button premade-btn">Романтичный интроверт</div>', unsafe_allow_html=True)
+            st.caption("Ценит глубокие разговоры, любит искусство")
         
-        # Персонаж 3
-        with st.expander("Загадочный артистичный", expanded=True):
-            st.image("https://placehold.co/300x150/c27ba0/white?text=Персонаж+3", 
-                     use_column_width=True)
-            st.caption("Творческая личность с необычным взглядом на мир")
-            if st.button("Выбрать персонажа 3", key="premade_3"):
+        with col3:
+            if st.button("Персонаж 3", key="premade_3"):
                 st.session_state.character_type = "premade_3"
                 st.session_state.character_created = True
+                st.rerun()
+            st.markdown('<div class="big-button premade-btn">Загадочный артистичный</div>', unsafe_allow_html=True)
+            st.caption("Творческая личность с необычным взглядом")
+        
+        st.markdown('</div>', unsafe_allow_html=True)
 
-# --- 5. Создание кастомного персонажа ---
+# --- 5. Создание кастомного персонажа (следующая страница) ---
 if st.session_state.get("character_created", False) and st.session_state.character_type == "custom":
     if "personality_saved" not in st.session_state:
         st.session_state.personality_saved = False
     
     if not st.session_state.personality_saved:
-        st.title("Создайте характер персонажа")
-
+        st.title("Настройте характер персонажа")
+        
         st.markdown("""
             <style>
-                .slider-labels {
+                .slider-container {
+                    background: #f0f2f6;
+                    border-radius: 12px;
+                    padding: 20px;
+                    margin-bottom: 25px;
+                }
+                .slider-header {
                     display: flex;
                     justify-content: space-between;
-                    margin-bottom: -12px;
-                    font-weight: 500;
+                    margin-bottom: 10px;
+                    font-weight: bold;
                 }
-                .slider-block {
-                    margin: 35px 0;
+                .icon {
+                    font-size: 24px;
+                    margin: 0 10px;
                 }
             </style>
         """, unsafe_allow_html=True)
-
-        def labeled_slider(label_left, label_right, key):
-            st.markdown(f"""
-            <div class="slider-block">
-                <div class="slider-labels">
-                    <span>{label_left}</span>
-                    <span>{label_right}</span>
-                </div>
-            </div>
-            """, unsafe_allow_html=True)
-            return st.slider(
-                label=" ", min_value=0, max_value=100, step=25, value=50, key=key, label_visibility="collapsed"
-            )
-
-        mbti_ei = labeled_slider("Экстраверт", "Интроверт", "mbti_ei")
-        mbti_ns = labeled_slider("Реалист", "Мечтатель", "mbti_ns")
-        mbti_tf = labeled_slider("Рациональный", "Эмоциональный", "mbti_tf")
-        mbti_jp = labeled_slider("Структурный", "Спонтанный", "mbti_jp")
-
-        selected_gender = st.radio("Пол персонажа", ["Мужской", "Женский"], horizontal=True)
-
-        if st.button("Сохранить характер"):
+        
+        # Первая строка слайдеров
+        col1, col2 = st.columns(2)
+        with col1:
+            with st.container():
+                st.markdown('<div class="slider-container">', unsafe_allow_html=True)
+                st.markdown('<div class="slider-header"><span>👥 Экстраверт</span><span>🧘 Интроверт</span></div>', unsafe_allow_html=True)
+                mbti_ei = st.slider("Экстраверт/Интроверт", 0, 100, 50, key="mbti_ei", label_visibility="collapsed")
+                st.markdown('</div>', unsafe_allow_html=True)
+        
+        with col2:
+            with st.container():
+                st.markdown('<div class="slider-container">', unsafe_allow_html=True)
+                st.markdown('<div class="slider-header"><span>📐 Реалист</span><span>🌈 Мечтатель</span></div>', unsafe_allow_html=True)
+                mbti_ns = st.slider("Реалист/Мечтатель", 0, 100, 50, key="mbti_ns", label_visibility="collapsed")
+                st.markdown('</div>', unsafe_allow_html=True)
+        
+        # Вторая строка слайдеров
+        col3, col4 = st.columns(2)
+        with col3:
+            with st.container():
+                st.markdown('<div class="slider-container">', unsafe_allow_html=True)
+                st.markdown('<div class="slider-header"><span>📊 Рациональный</span><span>❤️ Эмоциональный</span></div>', unsafe_allow_html=True)
+                mbti_tf = st.slider("Рациональный/Эмоциональный", 0, 100, 50, key="mbti_tf", label_visibility="collapsed")
+                st.markdown('</div>', unsafe_allow_html=True)
+        
+        with col4:
+            with st.container():
+                st.markdown('<div class="slider-container">', unsafe_allow_html=True)
+                st.markdown('<div class="slider-header"><span>📅 Структурный</span><span>🎲 Спонтанный</span></div>', unsafe_allow_html=True)
+                mbti_jp = st.slider("Структурный/Спонтанный", 0, 100, 50, key="mbti_jp", label_visibility="collapsed")
+                st.markdown('</div>', unsafe_allow_html=True)
+        
+        # Выбор пола
+        st.markdown("### Пол персонажа")
+        selected_gender = st.radio("", ["Мужской", "Женский"], horizontal=True, key="char_gender")
+        
+        # Кнопка сохранения
+        if st.button("Сохранить характер", type="primary"):
             st.session_state.personality_saved = True
             st.session_state.mbti_ei = mbti_ei
             st.session_state.mbti_ns = mbti_ns
             st.session_state.mbti_tf = mbti_tf
             st.session_state.mbti_jp = mbti_jp
             st.session_state.selected_gender = selected_gender
+            st.rerun()
 
 # --- 6. Чат и логика взаимодействия ---
 if st.session_state.get("personality_saved", False) or (
