@@ -433,18 +433,39 @@ if st.session_state.get("character_created", False) and st.session_state.charact
                     )
             
             # Возраст
-        
-           #
-            st.markdown('<div class="slider-container">', unsafe_allow_html=True)
-            st.markdown('<div class="slider-header" style="text-align:left;">Возраст</div>', unsafe_allow_html=True)
+            # Заголовок
+            st.markdown(
+                '<div class="slider-header" style="text-align:left;">Возраст</div>',
+                unsafe_allow_html=True
+            )
             
+            # Переопределяем дефолтный стиль для st.text_input
+            st.markdown("""
+                <style>
+                /* делаем инпут белым, с рамкой и скруглениями, как у кнопок */
+                div[data-testid="stTextInput"] input {
+                    background: #fff !important;
+                    border: 2px solid #eee !important;
+                    border-radius: 20px !important;
+                    padding: 12px 20px !important;
+                    font-size: 1rem !important;
+                    margin-top: 8px !important;
+                    margin-bottom: 20px !important;  /* согласуем отступ снизу с другими блоками */
+                    width: 100% !important;
+                }
+                </style>
+            """, unsafe_allow_html=True)
+            
+            # Сам инпут
             age_input = st.text_input(
                 "", 
                 value="",
                 key="age_input_text",
-                placeholder="Введите свой возраст"
+                placeholder="Введите свой возраст",
+                label_visibility="collapsed"
             )
             
+            # Валидация и сохранение
             error_msg = ""
             try:
                 age_val = int(age_input)
@@ -461,8 +482,7 @@ if st.session_state.get("character_created", False) and st.session_state.charact
             
             if error_msg:
                 st.info(error_msg)
-            
-            st.markdown('</div>', unsafe_allow_html=True)
+
 
 
 
