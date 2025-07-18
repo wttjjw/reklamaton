@@ -1,4 +1,5 @@
 # app.py — DreamDate AI (Streamlit + Groq)
+import datetime
 import streamlit as st
 from openai import OpenAI  # openai>=1.1.0
 
