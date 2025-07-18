@@ -2,6 +2,8 @@
 import datetime
 import streamlit as st
 from openai import OpenAI  # openai>=1.1.0
+from streamlit_tags import st_tags  
+
 
 # --- 1. Groq client ---
 client = OpenAI(
@@ -390,28 +392,30 @@ if st.session_state.form_saved and not st.session_state.character_created:
             st.rerun()
 
 # --- 5. Создание кастомного персонажа ---
+from streamlit_tags import st_tags  # импорт рядом с другими import
+
 if st.session_state.get("character_created", False) and st.session_state.character_type == "custom":
     if "personality_saved" not in st.session_state:
         st.session_state.personality_saved = False
-    
+
     if not st.session_state.personality_saved:
         st.title("🎭 Создайте своего персонажа")
-        
+
         # --- Основные настройки ---
         with st.container():
             st.markdown('<div class="section">', unsafe_allow_html=True)
             st.markdown('<div class="section-title"><span>👤</span> Основная информация</div>', unsafe_allow_html=True)
-            
+
             # Пол персонажа
             st.markdown('<div class="slider-header"><span>👫</span> Пол персонажа</div>', unsafe_allow_html=True)
             genders = ["Девушка", "Парень", "Небинарный"]
             cols = st.columns(3)
             for i, gender in enumerate(genders):
                 with cols[i]:
-                    if st.button(gender, key=f"gender_{gender}"):
+                    selected = st.session_state.char_settings["gender"] == gender
+                    if st.button(gender, key=f"gender_{gender}", help=f"Выбрать: {gender}"):
                         st.session_state.char_settings["gender"] = gender
                         st.rerun()
-                    selected = st.session_state.char_settings["gender"] == gender
                     bg = "linear-gradient(145deg, #9C27B0, #6A1B9A)" if selected else "rgba(156, 39, 176, 0.15)"
                     st.markdown(f"""
                         <div class="tag {'selected' if selected else ''}" 
@@ -419,17 +423,17 @@ if st.session_state.get("character_created", False) and st.session_state.charact
                             {gender}
                         </div>
                     """, unsafe_allow_html=True)
-            
+
             # Возраст
             st.markdown('<div class="slider-header"><span>🎂</span> Возраст</div>', unsafe_allow_html=True)
             ages = ["18-22", "23-27", "28-32", "33+"]
             cols = st.columns(4)
             for i, age in enumerate(ages):
                 with cols[i]:
-                    if st.button(age, key=f"age_{age}"):
+                    selected = st.session_state.char_settings["age"] == age
+                    if st.button(age, key=f"age_{age}", help=f"Выбрать возраст: {age}"):
                         st.session_state.char_settings["age"] = age
                         st.rerun()
-                    selected = st.session_state.char_settings["age"] == age
                     bg = "linear-gradient(145deg, #2196F3, #0D47A1)" if selected else "rgba(33, 150, 243, 0.15)"
                     st.markdown(f"""
                         <div class="tag {'selected' if selected else ''}" 
@@ -437,17 +441,17 @@ if st.session_state.get("character_created", False) and st.session_state.charact
                             {age}
                         </div>
                     """, unsafe_allow_html=True)
-            
+
             # Город
             st.markdown('<div class="slider-header"><span>🏙️</span> Город</div>', unsafe_allow_html=True)
             cities = ["Москва", "Санкт-Петербург", "Казань", "Сочи", "Екатеринбург", "Другой"]
             cols = st.columns(3)
             for i, city in enumerate(cities):
                 with cols[i % 3]:
-                    if st.button(city, key=f"city_{city}"):
+                    selected = st.session_state.char_settings["city"] == city
+                    if st.button(city, key=f"city_{city}", help=f"Выбрать город: {city}"):
                         st.session_state.char_settings["city"] = city
                         st.rerun()
-                    selected = st.session_state.char_settings["city"] == city
                     bg = "linear-gradient(145deg, #4CAF50, #2E7D32)" if selected else "rgba(76, 175, 80, 0.15)"
                     st.markdown(f"""
                         <div class="tag {'selected' if selected else ''}" 
@@ -455,58 +459,57 @@ if st.session_state.get("character_created", False) and st.session_state.charact
                             {city}
                         </div>
                     """, unsafe_allow_html=True)
-            
+
             st.markdown('</div>', unsafe_allow_html=True)  # конец секции
-        
+
         # --- Характер ---
         with st.container():
             st.markdown('<div class="section">', unsafe_allow_html=True)
             st.markdown('<div class="section-title"><span>🧠</span> Характер персонажа</div>', unsafe_allow_html=True)
-            
-            # Слайдеры для характеристик
+
             st.markdown('<div class="slider-container">', unsafe_allow_html=True)
             st.markdown('<div class="slider-header"><span>🔊</span> Экстраверт vs Интроверт</div>', unsafe_allow_html=True)
             ei_value = st.slider("", 0, 100, 50, key="mbti_ei", label_visibility="collapsed")
             st.markdown('<div class="slider-values">', unsafe_allow_html=True)
             st.markdown('<div>Общительный</div><div>Созерцательный</div>', unsafe_allow_html=True)
             st.markdown('</div></div>', unsafe_allow_html=True)
-            
+
             st.markdown('<div class="slider-container">', unsafe_allow_html=True)
             st.markdown('<div class="slider-header"><span>🌈</span> Реалист vs Мечтатель</div>', unsafe_allow_html=True)
             ns_value = st.slider("", 0, 100, 50, key="mbti_ns", label_visibility="collapsed")
             st.markdown('<div class="slider-values">', unsafe_allow_html=True)
             st.markdown('<div>Практичный</div><div>Творческий</div>', unsafe_allow_html=True)
             st.markdown('</div></div>', unsafe_allow_html=True)
-            
+
             st.markdown('<div class="slider-container">', unsafe_allow_html=True)
             st.markdown('<div class="slider-header"><span>💖</span> Рациональный vs Эмоциональный</div>', unsafe_allow_html=True)
             tf_value = st.slider("", 0, 100, 50, key="mbti_tf", label_visibility="collapsed")
             st.markdown('<div class="slider-values">', unsafe_allow_html=True)
             st.markdown('<div>Логичный</div><div>Чувствительный</div>', unsafe_allow_html=True)
             st.markdown('</div></div>', unsafe_allow_html=True)
-            
+
             st.markdown('<div class="slider-container">', unsafe_allow_html=True)
             st.markdown('<div class="slider-header"><span>📅</span> Структурный vs Спонтанный</div>', unsafe_allow_html=True)
             jp_value = st.slider("", 0, 100, 50, key="mbti_jp", label_visibility="collapsed")
             st.markdown('<div class="slider-values">', unsafe_allow_html=True)
             st.markdown('<div>Организованный</div><div>Импульсивный</div>', unsafe_allow_html=True)
             st.markdown('</div></div>', unsafe_allow_html=True)
-            
+
             st.markdown('</div>', unsafe_allow_html=True)  # конец секции
-        
+
         # --- Стиль общения ---
         with st.container():
             st.markdown('<div class="section">', unsafe_allow_html=True)
             st.markdown('<div class="section-title"><span>💬</span> Стиль общения</div>', unsafe_allow_html=True)
-            
+
             styles = ["Дружелюбный", "Флиртующий", "Прямолинейный", "Загадочный", "Интеллектуальный"]
             cols = st.columns(len(styles))
             for i, style in enumerate(styles):
                 with cols[i]:
-                    if st.button(style, key=f"style_{style}"):
+                    selected = st.session_state.char_settings["style"] == style
+                    if st.button(style, key=f"style_{style}", help=f"Выбрать стиль: {style}"):
                         st.session_state.char_settings["style"] = style
                         st.rerun()
-                    selected = st.session_state.char_settings["style"] == style
                     bg = "linear-gradient(145deg, #6a11cb, #2575fc)" if selected else "rgba(106, 17, 203, 0.15)"
                     st.markdown(f"""
                         <div class="tag {'selected' if selected else ''}" 
@@ -514,73 +517,55 @@ if st.session_state.get("character_created", False) and st.session_state.charact
                             {style}
                         </div>
                     """, unsafe_allow_html=True)
-            
+
             st.markdown('</div>', unsafe_allow_html=True)  # конец секции
-        
+
         # --- Интересы ---
         with st.container():
             st.markdown('<div class="section">', unsafe_allow_html=True)
             st.markdown('<div class="section-title"><span>🎯</span> Мне интересно</div>', unsafe_allow_html=True)
-            
-            # Хобби
+
+            # Хобби — без дублирования!
             st.markdown('<div class="slider-header"><span>🎨</span> Хобби</div>', unsafe_allow_html=True)
             hobbies_options = ["Кино", "Бег", "Комиксы", "Путешествия", "Фотография", "Кулинария", "Игры", "Чтение", "Йога"]
-            cols = st.columns(3)
-            for i, hobby in enumerate(hobbies_options):
-                with cols[i % 3]:
-                    if st.button(hobby, key=f"hobby_{hobby}"):
-                        if hobby in st.session_state.char_settings["hobbies"]:
-                            st.session_state.char_settings["hobbies"].remove(hobby)
-                        else:
-                            st.session_state.char_settings["hobbies"].append(hobby)
-                        st.rerun()
-                    selected = hobby in st.session_state.char_settings["hobbies"]
-                    bg = "linear-gradient(145deg, #2196F3, #0D47A1)" if selected else "rgba(33, 150, 243, 0.15)"
-                    st.markdown(f"""
-                        <div class="tag {'selected' if selected else ''}" 
-                             style="background: {bg}; {'color: white;' if selected else 'color: #0D47A1;'}">
-                            {hobby}
-                        </div>
-                    """, unsafe_allow_html=True)
-            
-            # Музыка
+            st.session_state.char_settings["hobbies"] = st_tags(
+                label='',
+                text='Выберите хобби (клик по тегу)',
+                value=st.session_state.char_settings["hobbies"],
+                suggestions=hobbies_options,
+                maxtags=len(hobbies_options),
+                key='hobbies_tagbox'
+            )
+
+            # Музыка — без дублирования!
             st.markdown('<div class="slider-header"><span>🎵</span> Музыкальные предпочтения</div>', unsafe_allow_html=True)
             music_options = ["Рок", "Поп", "Хип-хоп", "Электроника", "Джаз", "Классика", "Инди", "Метал", "R&B"]
-            cols = st.columns(3)
-            for i, music in enumerate(music_options):
-                with cols[i % 3]:
-                    if st.button(music, key=f"music_{music}"):
-                        if music in st.session_state.char_settings["music"]:
-                            st.session_state.char_settings["music"].remove(music)
-                        else:
-                            st.session_state.char_settings["music"].append(music)
-                        st.rerun()
-                    selected = music in st.session_state.char_settings["music"]
-                    bg = "linear-gradient(145deg, #FF9800, #EF6C00)" if selected else "rgba(255, 152, 0, 0.15)"
-                    st.markdown(f"""
-                        <div class="tag {'selected' if selected else ''}" 
-                             style="background: {bg}; {'color: white;' if selected else 'color: #E65100;'}">
-                            {music}
-                        </div>
-                    """, unsafe_allow_html=True)
-            
+            st.session_state.char_settings["music"] = st_tags(
+                label='',
+                text='Любимая музыка',
+                value=st.session_state.char_settings["music"],
+                suggestions=music_options,
+                maxtags=len(music_options),
+                key='music_tagbox'
+            )
+
             st.markdown('</div>', unsafe_allow_html=True)  # конец секции
-        
+
         # --- Внешний вайб ---
         with st.container():
             st.markdown('<div class="section">', unsafe_allow_html=True)
             st.markdown('<div class="section-title"><span>👗</span> Внешний вайб</div>', unsafe_allow_html=True)
-            
+
             # Стиль одежды
             st.markdown('<div class="slider-header"><span>👕</span> Стиль одежды</div>', unsafe_allow_html=True)
             fashion_options = ["Casual", "Спорт-шик", "Elegant", "Dark-academia", "Soft-girl", "Бохо", "Минимализм"]
             cols = st.columns(4)
             for i, fashion in enumerate(fashion_options):
                 with cols[i % 4]:
-                    if st.button(fashion, key=f"fashion_{fashion}"):
+                    selected = fashion == st.session_state.char_settings["fashion"]
+                    if st.button(fashion, key=f"fashion_{fashion}", help=f"Стиль одежды: {fashion}"):
                         st.session_state.char_settings["fashion"] = fashion
                         st.rerun()
-                    selected = fashion == st.session_state.char_settings["fashion"]
                     bg = "linear-gradient(145deg, #4CAF50, #2E7D32)" if selected else "rgba(76, 175, 80, 0.15)"
                     st.markdown(f"""
                         <div class="tag {'selected' if selected else ''}" 
@@ -588,17 +573,17 @@ if st.session_state.get("character_created", False) and st.session_state.charact
                             {fashion}
                         </div>
                     """, unsafe_allow_html=True)
-            
+
             # Визуальный вайб
             st.markdown('<div class="slider-header"><span>🌟</span> Визуальный вайб</div>', unsafe_allow_html=True)
             vibe_options = ["Солнечный", "Таинственный", "Гик", "Арт-бохо", "Романтичный", "Брутальный", "Утонченный"]
             cols = st.columns(4)
             for i, vibe in enumerate(vibe_options):
                 with cols[i % 4]:
-                    if st.button(vibe, key=f"vibe_{vibe}"):
+                    selected = vibe == st.session_state.char_settings["vibe"]
+                    if st.button(vibe, key=f"vibe_{vibe}", help=f"Вайб: {vibe}"):
                         st.session_state.char_settings["vibe"] = vibe
                         st.rerun()
-                    selected = vibe == st.session_state.char_settings["vibe"]
                     bg = "linear-gradient(145deg, #9C27B0, #6A1B9A)" if selected else "rgba(156, 39, 176, 0.15)"
                     st.markdown(f"""
                         <div class="tag {'selected' if selected else ''}" 
@@ -606,45 +591,36 @@ if st.session_state.get("character_created", False) and st.session_state.charact
                             {vibe}
                         </div>
                     """, unsafe_allow_html=True)
-            
+
             st.markdown('</div>', unsafe_allow_html=True)  # конец секции
-        
+
         # --- Черты характера ---
         with st.container():
             st.markdown('<div class="section">', unsafe_allow_html=True)
             st.markdown('<div class="section-title"><span>😊</span> Черты характера</div>', unsafe_allow_html=True)
-            
-            # Черты характера
+
+            # Черты характера — без дублирования!
             st.markdown('<div class="slider-header"><span>💫</span> Основные черты</div>', unsafe_allow_html=True)
             traits_options = ["Юмористичный", "Романтичный", "Sassy", "Интроверт", "Экстраверт", "Добрый", "Уверенный", "Скромный"]
-            cols = st.columns(4)
-            for i, trait in enumerate(traits_options):
-                with cols[i % 4]:
-                    if st.button(trait, key=f"trait_{trait}"):
-                        if trait in st.session_state.char_settings["traits"]:
-                            st.session_state.char_settings["traits"].remove(trait)
-                        else:
-                            st.session_state.char_settings["traits"].append(trait)
-                        st.rerun()
-                    selected = trait in st.session_state.char_settings["traits"]
-                    bg = "linear-gradient(145deg, #9C27B0, #6A1B9A)" if selected else "rgba(156, 39, 176, 0.15)"
-                    st.markdown(f"""
-                        <div class="tag {'selected' if selected else ''}" 
-                             style="background: {bg}; {'color: white;' if selected else 'color: #6A1B9A;'}">
-                            {trait}
-                        </div>
-                    """, unsafe_allow_html=True)
-            
+            st.session_state.char_settings["traits"] = st_tags(
+                label='',
+                text='Выбери черты характера',
+                value=st.session_state.char_settings["traits"],
+                suggestions=traits_options,
+                maxtags=len(traits_options),
+                key='traits_tagbox'
+            )
+
             # Темперамент
             st.markdown('<div class="slider-header"><span>🔥</span> Темперамент</div>', unsafe_allow_html=True)
             temper_options = ["Спокойный", "Энергичный", "Сбалансированный", "Импульсивный", "Флегматичный"]
             cols = st.columns(5)
             for i, temper in enumerate(temper_options):
                 with cols[i % 5]:
-                    if st.button(temper, key=f"temper_{temper}"):
+                    selected = temper == st.session_state.char_settings["temper"]
+                    if st.button(temper, key=f"temper_{temper}", help=f"Темперамент: {temper}"):
                         st.session_state.char_settings["temper"] = temper
                         st.rerun()
-                    selected = temper == st.session_state.char_settings["temper"]
                     bg = "linear-gradient(145deg, #2196F3, #0D47A1)" if selected else "rgba(33, 150, 243, 0.15)"
                     st.markdown(f"""
                         <div class="tag {'selected' if selected else ''}" 
@@ -652,42 +628,34 @@ if st.session_state.get("character_created", False) and st.session_state.charact
                             {temper}
                         </div>
                     """, unsafe_allow_html=True)
-            
+
             st.markdown('</div>', unsafe_allow_html=True)  # конец секции
-        
-        # --- Красные флаги ---
+
+        # --- Красные флаги (личные антипатии) — без дублирования!
         with st.container():
             st.markdown('<div class="section">', unsafe_allow_html=True)
             st.markdown('<div class="section-title"><span>🚩</span> Что вам не нравится?</div>', unsafe_allow_html=True)
-            
+
             st.markdown('<div class="slider-header"><span>⛔</span> Личные антипатии</div>', unsafe_allow_html=True)
             dislikes_options = ["Опоздания", "Грубость", "Ложь", "Нарциссизм", "Эгоизм", "Пассивность", "Агрессия"]
-            cols = st.columns(4)
-            for i, dislike in enumerate(dislikes_options):
-                with cols[i % 4]:
-                    if st.button(dislike, key=f"dislike_{dislike}"):
-                        if dislike in st.session_state.char_settings["dislikes"]:
-                            st.session_state.char_settings["dislikes"].remove(dislike)
-                        else:
-                            st.session_state.char_settings["dislikes"].append(dislike)
-                        st.rerun()
-                    selected = dislike in st.session_state.char_settings["dislikes"]
-                    bg = "linear-gradient(145deg, #F44336, #C62828)" if selected else "rgba(244, 67, 54, 0.15)"
-                    st.markdown(f"""
-                        <div class="tag {'selected' if selected else ''}" 
-                             style="background: {bg}; {'color: white;' if selected else 'color: #B71C1C;'}">
-                            {dislike}
-                        </div>
-                    """, unsafe_allow_html=True)
-            
+            st.session_state.char_settings["dislikes"] = st_tags(
+                label='',
+                text='Что вас отталкивает?',
+                value=st.session_state.char_settings["dislikes"],
+                suggestions=dislikes_options,
+                maxtags=len(dislikes_options),
+                key='dislikes_tagbox'
+            )
+
             st.markdown('</div>', unsafe_allow_html=True)  # конец секции
-        
+
         # Кнопка сохранения
         if st.button("💾 Сохранить персонажа", key="save_character", 
                     use_container_width=True, type="primary", 
                     help="Сохранить все настройки персонажа и начать диалог"):
             st.session_state.personality_saved = True
             st.rerun()
+
 
 # --- 6. Чат и логика взаимодействия ---
 if st.session_state.get("personality_saved", False) or (
