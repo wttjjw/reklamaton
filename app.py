@@ -402,6 +402,9 @@ if st.session_state.get("character_created", False) and st.session_state.charact
         st.title("Создайте своего персонажа")
 
         # --- Основные настройки ---
+
+
+        
         with st.container():
             st.markdown('<div class="section">', unsafe_allow_html=True)
             st.markdown('<div class="section-title" style="text-align:left;">Основная информация</div>', unsafe_allow_html=True)
@@ -476,39 +479,92 @@ if st.session_state.get("character_created", False) and st.session_state.charact
             st.markdown('</div>', unsafe_allow_html=True)  # конец секции
 
         # --- Характер ---
+        def get_trait_text(val, left, right):
+        if val == 1:
+            return f"крайний {left.lower()}"
+        elif val == 2:
+            return f"скорее {left.lower()}"
+        elif val == 3:
+            return "сбалансированный"
+        elif val == 4:
+            return f"скорее {right.lower()}"
+        else:
+            return f"крайний {right.lower()}"
+
+        
         with st.container():
-            st.markdown('<div class="section">', unsafe_allow_html=True)
-            st.markdown('<div class="section-title" style="text-align:left;">Характер персонажа</div>', unsafe_allow_html=True)
+        st.markdown('<div class="section">', unsafe_allow_html=True)
+        st.markdown('<div class="section-title" style="text-align:left;">Характер персонажа</div>', unsafe_allow_html=True)
+        
+        char_params = [
+            {
+                "key": "mbti_ei",
+                "label": "Экстраверт vs Интроверт",
+                "left": "Экстраверт",
+                "right": "Интроверт",
+                "color": "#6a11cb"
+            },
+            {
+                "key": "mbti_ns",
+                "label": "Реалист vs Мечтатель",
+                "left": "Реалист",
+                "right": "Мечтатель",
+                "color": "#2196F3"
+            },
+            {
+                "key": "mbti_tf",
+                "label": "Рациональный vs Эмоциональный",
+                "left": "Рациональный",
+                "right": "Эмоциональный",
+                "color": "#FF9800"
+            },
+            {
+                "key": "mbti_jp",
+                "label": "Структурный vs Спонтанный",
+                "left": "Структурный",
+                "right": "Спонтанный",
+                "color": "#4CAF50"
+            },
+        ]
+        
+        for param in char_params:
+            st.markdown(f'<div class="slider-header" style="text-align:left;">{param["label"]}</div>', unsafe_allow_html=True)
+            cols = st.columns(5)
+            if param["key"] not in st.session_state:
+                st.session_state[param["key"]] = 3  # default to mid
+            for i in range(1, 6):
+                with cols[i-1]:
+                    selected = st.session_state[param["key"]] == i
+                    btn = st.button(str(i), key=f"{param['key']}_{i}", use_container_width=True)
+                    if btn:
+                        st.session_state[param["key"]] = i
+                        st.rerun()
+                    st.markdown(
+                        f"""
+                        <style>
+                        [data-testid="stButton"] button#{param['key']}_{i} {{
+                            min-width:48px !important; 
+                            max-width:100%; 
+                            font-size: 1.15rem;
+                            font-weight: 700;
+                            border-radius: 20px; 
+                            border: 2px solid #fff;
+                            {"background: linear-gradient(145deg, " + param["color"] + ", #fff); color: white; box-shadow: 0 4px 16px " + param["color"] + "40;" if selected else "background: #fff; color: " + param["color"] + "; font-weight: 500; border: 2px solid #eee;" }
+                            margin-bottom: 6px;
+                            margin-top: 3px;
+                        }}
+                        </style>
+                        """,
+                        unsafe_allow_html=True,
+                    )
+            # подписи под крайними кнопками
+            st.markdown(
+                f'<div style="display:flex; justify-content:space-between; color:#666; font-size:0.95rem;"><span>{param["left"]}</span><span>{param["right"]}</span></div>',
+                unsafe_allow_html=True
+            )
+        st.markdown('</div>', unsafe_allow_html=True)
 
-            st.markdown('<div class="slider-container">', unsafe_allow_html=True)
-            st.markdown('<div class="slider-header" style="text-align:left;">Экстраверт vs Интроверт</div>', unsafe_allow_html=True)
-            st.slider("", 0, 100, 50, key="mbti_ei", label_visibility="collapsed")
-            st.markdown('<div class="slider-values" style="text-align:left;">', unsafe_allow_html=True)
-            st.markdown('<div>Общительный</div><div>Созерцательный</div>', unsafe_allow_html=True)
-            st.markdown('</div></div>', unsafe_allow_html=True)
 
-            st.markdown('<div class="slider-container">', unsafe_allow_html=True)
-            st.markdown('<div class="slider-header" style="text-align:left;">Реалист vs Мечтатель</div>', unsafe_allow_html=True)
-            st.slider("", 0, 100, 50, key="mbti_ns", label_visibility="collapsed")
-            st.markdown('<div class="slider-values" style="text-align:left;">', unsafe_allow_html=True)
-            st.markdown('<div>Практичный</div><div>Творческий</div>', unsafe_allow_html=True)
-            st.markdown('</div></div>', unsafe_allow_html=True)
-
-            st.markdown('<div class="slider-container">', unsafe_allow_html=True)
-            st.markdown('<div class="slider-header" style="text-align:left;">Рациональный vs Эмоциональный</div>', unsafe_allow_html=True)
-            st.slider("", 0, 100, 50, key="mbti_tf", label_visibility="collapsed")
-            st.markdown('<div class="slider-values" style="text-align:left;">', unsafe_allow_html=True)
-            st.markdown('<div>Логичный</div><div>Чувствительный</div>', unsafe_allow_html=True)
-            st.markdown('</div></div>', unsafe_allow_html=True)
-
-            st.markdown('<div class="slider-container">', unsafe_allow_html=True)
-            st.markdown('<div class="slider-header" style="text-align:left;">Структурный vs Спонтанный</div>', unsafe_allow_html=True)
-            st.slider("", 0, 100, 50, key="mbti_jp", label_visibility="collapsed")
-            st.markdown('<div class="slider-values" style="text-align:left;">', unsafe_allow_html=True)
-            st.markdown('<div>Организованный</div><div>Импульсивный</div>', unsafe_allow_html=True)
-            st.markdown('</div></div>', unsafe_allow_html=True)
-
-            st.markdown('</div>', unsafe_allow_html=True)  # конец секции
 
         # --- Стиль общения ---
         with st.container():
@@ -845,13 +901,13 @@ if st.session_state.get("personality_saved", False) or (
             }
 
     # Текстовое описание характеристик
-    mbti_text = f"""
-    MBTI черты: {'Экстраверт' if st.session_state.get('mbti_ei', 50) > 50 else 'Интроверт'}, 
-    {'Мечтатель' if st.session_state.get('mbti_ns', 50) > 50 else 'Реалист'}, 
-    {'Эмоциональный' if st.session_state.get('mbti_tf', 50) > 50 else 'Рациональный'}, 
-    {'Спонтанный' if st.session_state.get('mbti_jp', 50) > 50 else 'Структурный'}.
-    Стиль общения: {st.session_state.char_settings.get("style", "Дружелюбный").lower()}.
-    """
+    mbti_traits = [
+        f"Экстраверсия: {get_trait_text(st.session_state.get('mbti_ei', 3), 'экстраверт', 'интроверт')}",
+        f"Мышление: {get_trait_text(st.session_state.get('mbti_ns', 3), 'реалист', 'мечтатель')}",
+        f"Эмоции: {get_trait_text(st.session_state.get('mbti_tf', 3), 'рациональный', 'эмоциональный')}",
+        f"Поведение: {get_trait_text(st.session_state.get('mbti_jp', 3), 'структурный', 'спонтанный')}",
+    ]
+    mbti_text = ", ".join(mbti_traits) + f". Стиль общения: {st.session_state.char_settings.get('style', 'Дружелюбный').lower()}."
     
     # Форматирование настроек персонажа
     settings = st.session_state.char_settings
@@ -861,14 +917,22 @@ if st.session_state.get("personality_saved", False) or (
     dislikes_str = ", ".join(settings["dislikes"]) if settings["dislikes"] else "нет"
 
     SYSTEM_PROMPT = f"""
-    Ты — {settings['gender'].lower()} {settings['age']} лет из {settings['city']}. 
+    Ты — {settings['gender'].lower()}, {settings['age']} лет, живёшь в городе {settings['city']}.
     Внешний стиль: {settings['fashion']}, вайб: {settings['vibe']}.
-    Увлечения: {hobbies_str}. Любимая музыка: {music_str}.
-    Характер: {traits_str}, темперамент {settings['temper'].lower()}.
-    Тебе не нравятся: {dislikes_str}.
+    Твои интересы: {hobbies_str if hobbies_str != 'нет' else 'разные вещи, всегда открыт(а) к новому'}.
+    Любимая музыка: {music_str if music_str != 'нет' else 'разная — что под настроение'}.
+    
+    Тебя описывают так: {traits_str if traits_str != 'нейтральный' else 'обычный, но с изюминкой'}. Темперамент — {settings['temper'].lower()}.
+    
+    Ты не особо любишь: {dislikes_str if dislikes_str != 'нет' else 'ничего, кроме банальных грубостей'}.
+    
     {mbti_text}
-    Общайся в чате, как на первом свидании в Тиндере: флиртуй, задавай вопросы, поддерживай тему.
+    
+    Представь, что вы только что познакомились в дейтинговом приложении twinby. Переписка только начинается — будь живым персонажем, проявляй индивидуальность, пиши с лёгкой флиртовой ноткой, задавай интересные вопросы в ответ, делай комплименты, поддерживай лёгкий, дружелюбный вайб.
+    
+    Избегай шаблонных фраз, не пиши длинных полотен, не забывай проявлять юмор, вовлечённость и искренний интерес к собеседнику. Твоя цель — чтобы собеседнику было приятно продолжать общение и он чувствовал себя привлекательным и интересным.
     """
+
 
     # --- Чат: Ввод пользователя ---
     user_input = st.chat_input(f"Напишите {name} сообщение...")
