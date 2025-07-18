@@ -495,110 +495,155 @@ if st.session_state.get("character_created", False) and st.session_state.charact
         with st.container():
             st.markdown('<div class="section">', unsafe_allow_html=True)
             st.markdown('<div class="section-title" style="text-align:left;">Характер персонажа</div>', unsafe_allow_html=True)
-            char_params = [
-                {
-                    "key": "mbti_ei",
-                    "label": "Экстраверт vs Интроверт",
-                    "left": "Экстраверт",
-                    "right": "Интроверт",
-                    "color": "#6a11cb"
-                },
-                {
-                    "key": "mbti_ns",
-                    "label": "Реалист vs Мечтатель",
-                    "left": "Реалист",
-                    "right": "Мечтатель",
-                    "color": "#2196F3"
-                },
-                {
-                    "key": "mbti_tf",
-                    "label": "Рациональный vs Эмоциональный",
-                    "left": "Рациональный",
-                    "right": "Эмоциональный",
-                    "color": "#FF9800"
-                },
-                {
-                    "key": "mbti_jp",
-                    "label": "Структурный vs Спонтанный",
-                    "left": "Структурный",
-                    "right": "Спонтанный",
-                    "color": "#4CAF50"
-                },
-            ]
         
-            for param in char_params:
-                # дефолт если нет выбора
-                if param["key"] not in st.session_state:
-                    st.session_state[param["key"]] = 3  # середина
-        
-                st.markdown(f'<div class="slider-header" style="text-align:left;">{param["label"]}</div>', unsafe_allow_html=True)
-                cols = st.columns(5)
-                for i in range(1, 6):
-                    with cols[i-1]:
-                        selected = st.session_state.get(param["key"], 3) == i
-                        label = f"{i}{' ✅' if selected else ''}"
-                        btn = st.button(label, key=f"{param['key']}_{i}", use_container_width=True)
-                        if btn:
-                            st.session_state[param["key"]] = i
-                            st.rerun()
-                        st.markdown(
-                            f"""
-                            <style>
-                            [data-testid="stButton"] button#{param['key']}_{i} {{
-                                min-width:48px !important; 
-                                max-width:100%; 
-                                font-size: 1.15rem;
-                                font-weight: 700;
-                                border-radius: 20px; 
-                                border: 2px solid #fff;
-                                {"background: linear-gradient(145deg, " + param["color"] + ", #fff); color: white; box-shadow: 0 4px 16px " + param["color"] + "40;" if selected else "background: #fff; color: " + param["color"] + "; font-weight: 500; border: 2px solid #eee;" }
-                                margin-bottom: 4px;
-                            }}
-                            </style>
-                            """,
-                            unsafe_allow_html=True,
-                        )
-                st.markdown(
-                    f'''
-                    <div style="display:flex; justify-content:space-between; color:#666; font-size:0.97rem; margin-top:-10px; margin-bottom:18px;">
-                        <span>{param["left"]}</span>
-                        <span>{param["right"]}</span>
-                    </div>
-                    ''', unsafe_allow_html=True
-                )
-            st.markdown('</div>', unsafe_allow_html=True)
-
-
-
-
-
-
-
-
-        # --- Стиль общения ---
-        with st.container():
-            st.markdown('<div class="section">', unsafe_allow_html=True)
-            st.markdown('<div class="section-title" style="text-align:left;">Стиль общения</div>', unsafe_allow_html=True)
-
-            styles = ["Дружелюбный", "Флиртующий", "Прямолинейный", "Загадочный", "Интеллектуальный"]
-            cols = st.columns(len(styles))
-            for i, style in enumerate(styles):
-                with cols[i]:
-                    selected = st.session_state.char_settings["style"] == style
-                    btn = st.button(style, key=f"style_{style}", use_container_width=True)
+            # --- Экстраверт vs Интроверт ---
+            st.markdown('<div class="slider-header" style="text-align:left;">Экстраверт vs Интроверт</div>', unsafe_allow_html=True)
+            cols = st.columns(5)
+            for i in range(1, 6):
+                with cols[i-1]:
+                    selected = st.session_state["mbti_ei"] == i
+                    label = f"{i}{' ✅' if selected else ''}"
+                    btn = st.button(label, key=f"mbti_ei_{i}", use_container_width=True)
                     if btn:
-                        st.session_state.char_settings["style"] = style
+                        st.session_state["mbti_ei"] = i
                         st.rerun()
                     st.markdown(
                         f"""
                         <style>
-                        [data-testid="stButton"] button#{f"style_{style}".replace(' ', '_')} {{
-                            {"background: linear-gradient(145deg, #6a11cb, #2575fc); color: white; font-weight: 700; border-radius: 20px; border: 2px solid #fff; box-shadow: 0 4px 16px #6a11cb40; margin-bottom: 10px; min-width: 120px;" if selected else "background: #fff; color: #6a11cb; font-weight: 500; border-radius: 20px; border: 2px solid #eee; margin-bottom: 10px; min-width: 120px;" }
+                        [data-testid="stButton"] button#mbti_ei_{i} {{
+                            min-width:48px !important;
+                            max-width:100%;
+                            font-size: 1.15rem;
+                            font-weight: 700;
+                            border-radius: 20px;
+                            border: 2px solid #fff;
+                            {"background: linear-gradient(145deg, #6a11cb, #fff); color: white; box-shadow: 0 4px 16px #6a11cb40;" if selected else "background: #fff; color: #6a11cb; font-weight: 500; border: 2px solid #eee;" }
+                            margin-bottom: 4px;
                         }}
                         </style>
-                        """, unsafe_allow_html=True,
+                        """,
+                        unsafe_allow_html=True,
                     )
-            st.markdown('</div>', unsafe_allow_html=True)  # конец секции
+            st.markdown(
+                '''
+                <div style="display:flex; justify-content:space-between; color:#666; font-size:0.97rem; margin-top:-10px; margin-bottom:18px;">
+                    <span>Экстраверт</span>
+                    <span>Интроверт</span>
+                </div>
+                ''', unsafe_allow_html=True
+            )
+        
+            # --- Реалист vs Мечтатель ---
+            st.markdown('<div class="slider-header" style="text-align:left;">Реалист vs Мечтатель</div>', unsafe_allow_html=True)
+            cols = st.columns(5)
+            for i in range(1, 6):
+                with cols[i-1]:
+                    selected = st.session_state["mbti_ns"] == i
+                    label = f"{i}{' ✅' if selected else ''}"
+                    btn = st.button(label, key=f"mbti_ns_{i}", use_container_width=True)
+                    if btn:
+                        st.session_state["mbti_ns"] = i
+                        st.rerun()
+                    st.markdown(
+                        f"""
+                        <style>
+                        [data-testid="stButton"] button#mbti_ns_{i} {{
+                            min-width:48px !important;
+                            max-width:100%;
+                            font-size: 1.15rem;
+                            font-weight: 700;
+                            border-radius: 20px;
+                            border: 2px solid #fff;
+                            {"background: linear-gradient(145deg, #2196F3, #fff); color: white; box-shadow: 0 4px 16px #2196F340;" if selected else "background: #fff; color: #2196F3; font-weight: 500; border: 2px solid #eee;" }
+                            margin-bottom: 4px;
+                        }}
+                        </style>
+                        """,
+                        unsafe_allow_html=True,
+                    )
+            st.markdown(
+                '''
+                <div style="display:flex; justify-content:space-between; color:#666; font-size:0.97rem; margin-top:-10px; margin-bottom:18px;">
+                    <span>Реалист</span>
+                    <span>Мечтатель</span>
+                </div>
+                ''', unsafe_allow_html=True
+            )
+        
+            # --- Рациональный vs Эмоциональный ---
+            st.markdown('<div class="slider-header" style="text-align:left;">Рациональный vs Эмоциональный</div>', unsafe_allow_html=True)
+            cols = st.columns(5)
+            for i in range(1, 6):
+                with cols[i-1]:
+                    selected = st.session_state["mbti_tf"] == i
+                    label = f"{i}{' ✅' if selected else ''}"
+                    btn = st.button(label, key=f"mbti_tf_{i}", use_container_width=True)
+                    if btn:
+                        st.session_state["mbti_tf"] = i
+                        st.rerun()
+                    st.markdown(
+                        f"""
+                        <style>
+                        [data-testid="stButton"] button#mbti_tf_{i} {{
+                            min-width:48px !important;
+                            max-width:100%;
+                            font-size: 1.15rem;
+                            font-weight: 700;
+                            border-radius: 20px;
+                            border: 2px solid #fff;
+                            {"background: linear-gradient(145deg, #FF9800, #fff); color: white; box-shadow: 0 4px 16px #FF980040;" if selected else "background: #fff; color: #FF9800; font-weight: 500; border: 2px solid #eee;" }
+                            margin-bottom: 4px;
+                        }}
+                        </style>
+                        """,
+                        unsafe_allow_html=True,
+                    )
+            st.markdown(
+                '''
+                <div style="display:flex; justify-content:space-between; color:#666; font-size:0.97rem; margin-top:-10px; margin-bottom:18px;">
+                    <span>Рациональный</span>
+                    <span>Эмоциональный</span>
+                </div>
+                ''', unsafe_allow_html=True
+            )
+        
+            # --- Структурный vs Спонтанный ---
+            st.markdown('<div class="slider-header" style="text-align:left;">Структурный vs Спонтанный</div>', unsafe_allow_html=True)
+            cols = st.columns(5)
+            for i in range(1, 6):
+                with cols[i-1]:
+                    selected = st.session_state["mbti_jp"] == i
+                    label = f"{i}{' ✅' if selected else ''}"
+                    btn = st.button(label, key=f"mbti_jp_{i}", use_container_width=True)
+                    if btn:
+                        st.session_state["mbti_jp"] = i
+                        st.rerun()
+                    st.markdown(
+                        f"""
+                        <style>
+                        [data-testid="stButton"] button#mbti_jp_{i} {{
+                            min-width:48px !important;
+                            max-width:100%;
+                            font-size: 1.15rem;
+                            font-weight: 700;
+                            border-radius: 20px;
+                            border: 2px solid #fff;
+                            {"background: linear-gradient(145deg, #4CAF50, #fff); color: white; box-shadow: 0 4px 16px #4CAF5040;" if selected else "background: #fff; color: #4CAF50; font-weight: 500; border: 2px solid #eee;" }
+                            margin-bottom: 4px;
+                        }}
+                        </style>
+                        """,
+                        unsafe_allow_html=True,
+                    )
+            st.markdown(
+                '''
+                <div style="display:flex; justify-content:space-between; color:#666; font-size:0.97rem; margin-top:-10px; margin-bottom:18px;">
+                    <span>Структурный</span>
+                    <span>Спонтанный</span>
+                </div>
+                ''', unsafe_allow_html=True
+            )
+            st.markdown('</div>', unsafe_allow_html=True)
 
         # --- Интересы (хобби/музыка) ---
         with st.container():
