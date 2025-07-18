@@ -405,7 +405,7 @@ if st.session_state.get("character_created", False) and st.session_state.charact
 
             # Пол персонажа
             st.markdown('<div class="slider-header" style="text-align:left;">Пол персонажа</div>', unsafe_allow_html=True)
-            genders = ["Девушка", "Парень", "Небинарный"]
+            genders = ["Девушка", "Парень"]
             cols = st.columns(3)
             for i, gender in enumerate(genders):
                 with cols[i]:
@@ -823,7 +823,7 @@ if st.session_state.get("personality_saved", False) or (
             st.session_state.mbti_tf = 75
             st.session_state.mbti_jp = 60
             st.session_state.char_settings = {
-                "gender": "Небинарный",
+                "gender": "Мужской",
                 "age": "23-27",
                 "city": "Другой",
                 "fashion": "Бохо",
