@@ -67,6 +67,19 @@ if not st.session_state.form_saved:
         default_birthdate = datetime.date(2000, 1, 1)
         max_birthdate = datetime.date(2007, 12, 31)
         birthdate = st.date_input("Дата рождения", value=default_birthdate, max_value=max_birthdate, key="birthdate")
+st.markdown("### MBTI-профиль")
+
+        mbti_ei = st.slider("Экстраверт – Интроверт", 0, 100, 50, format="%d%%")
+        mbti_ns = st.slider("Интуит – Сенсорик", 0, 100, 50, format="%d%%")
+        mbti_tf = st.slider("Логик – Эмотив", 0, 100, 50, format="%d%%")
+        mbti_jp = st.slider("Рационал – Иррационал", 0, 100, 50, format="%d%%")
+
+        st.markdown("### Стиль общения")
+        communication_style = st.radio(
+            "Выберите стиль:",
+            ["Официальный", "Дружеский", "Романтика"],
+            horizontal=True
+        )
 
         if st.button("Сохранить анкету"):
             st.session_state.form_saved = True
@@ -75,14 +88,24 @@ if not st.session_state.form_saved:
         st.markdown('</div>', unsafe_allow_html=True)
 
 # --- 3. System prompt ---
-if st.session_state.form_saved:
+   if st.session_state.form_saved:
+    mbti_text = f"""
+    MBTI черты: {'Экстраверт' if mbti_ei > 50 else 'Интроверт'}, 
+    {'Интуит' if mbti_ns > 50 else 'Сенсорик'}, 
+    {'Логик' if mbti_tf > 50 else 'Эмотив'}, 
+    {'Рационал' if mbti_jp > 50 else 'Иррационал'}.
+    Стиль общения: {communication_style.lower()}.
+    """
+
     SYSTEM_PROMPT = f"""
     Ты — {gender.lower()} {age} лет из {city}. Внешний стиль: {fashion}, вайб: {vibe}.
     Увлечения: {hobbies}. Любимая музыка: {music}.
     Характер: {', '.join(traits) or 'нейтральный'}, темперамент {temper.lower()}.
     Тебе не нравятся: {dislikes}.
+    {mbti_text}
     Общайся в чате, как на первом свидании в Тиндере: флиртуй, задавай вопросы, поддерживай тему.
     """
+
 
     # --- Чат: Ввод пользователя ---
     user_input = st.chat_input("Напиши сообщение идеальному партнёру…")
