@@ -433,41 +433,25 @@ if st.session_state.get("character_created", False) and st.session_state.charact
                     )
             
             # Возраст
-            with st.container():
-            st.markdown('<div class="section">', unsafe_allow_html=True)
-            st.markdown('<div class="section-title" style="text-align:left;">Основная информация</div>', unsafe_allow_html=True)
-        
-            # --- Возраст ---
-            st.markdown('<div class="slider-container">', unsafe_allow_html=True)
             st.markdown('<div class="slider-header" style="text-align:left;">Возраст</div>', unsafe_allow_html=True)
-        
-            # Сбрасываем дефолтный фон у контейнера и задаём стиль самому input
-            st.markdown("""
-            <style>
-            div[data-testid="stTextInput"] {
-                background: none !important;
-                padding: 0 !important;
-                border: none !important;
-                box-shadow: none !important;
-            }
-            div[data-testid="stTextInput"] input {
-                background: #fff !important;
-                border: 2px solid #eee !important;
-                border-radius: 20px !important;
-                padding: 12px 20px !important;
-                font-size: 1rem !important;
-                width: 100% !important;
-                margin: 8px 0 12px 0 !important;
-            }
-            </style>
-            """, unsafe_allow_html=True)
-        
-            age_input = st.text_input(
-                "",
-                key="age_input_text",
-                placeholder="Введите свой возраст",
-                label_visibility="collapsed"
-            )
+            ages = ["18-22", "23-27", "28-32", "33+"]
+            cols = st.columns(4)
+            for i, age in enumerate(ages):
+                with cols[i]:
+                    selected = st.session_state.char_settings["age"] == age
+                    btn = st.button(age, key=f"age_{age}", use_container_width=True)
+                    if btn:
+                        st.session_state.char_settings["age"] = age
+                        st.rerun()
+                    st.markdown(
+                        f"""
+                        <style>
+                        [data-testid="stButton"] button#{f"age_{age}".replace(' ', '_')} {{
+                            {"background: linear-gradient(145deg, #2196F3, #0D47A1); color: white; font-weight: 700; border-radius: 20px; border: 2px solid #fff; box-shadow: 0 4px 16px #2196F340; margin-bottom: 10px; min-width: 120px;" if selected else "background: #fff; color: #0D47A1; font-weight: 500; border-radius: 20px; border: 2px solid #eee; margin-bottom: 10px; min-width: 120px;" }
+                        }}
+                        </style>
+                        """, unsafe_allow_html=True,
+                    )
         
             # Валидация
             error_msg = ""
