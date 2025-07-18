@@ -526,49 +526,38 @@ if st.session_state.get("character_created", False) and st.session_state.charact
                 },
             ]
         
-            # --- ВАЖНО: сохраняем уникальное состояние выбора для каждой черты ---
             for param in char_params:
-                # Дефолтное значение, если еще не было выбора
+                # дефолт если нет выбора
                 if param["key"] not in st.session_state:
                     st.session_state[param["key"]] = 3  # середина
         
                 st.markdown(f'<div class="slider-header" style="text-align:left;">{param["label"]}</div>', unsafe_allow_html=True)
                 cols = st.columns(5)
-        
-                # Фикс: уникальная форма на каждую черту, чтобы не было багов с выбором
-                with st.form(key=f"form_{param['key']}", clear_on_submit=True):
-                    chosen = st.session_state[param["key"]]
-                    btn_cols = st.columns(5)
-                    submitted = False
-                    for i in range(1, 6):
-                        with btn_cols[i-1]:
-                            selected = chosen == i
-                            label = f"{i}{' ✅' if selected else ''}"
-                            btn = st.form_submit_button(label, key=f"{param['key']}_btn_{i}", use_container_width=True)
-                            if btn:
-                                st.session_state[param["key"]] = i
-                                submitted = True
-                            # Кастомный стиль
-                            st.markdown(
-                                f"""
-                                <style>
-                                [data-testid="stFormSubmitButton"] button#{param['key']}_btn_{i} {{
-                                    min-width:48px !important; 
-                                    max-width:100%; 
-                                    font-size: 1.15rem;
-                                    font-weight: 700;
-                                    border-radius: 20px; 
-                                    border: 2px solid #fff;
-                                    {"background: linear-gradient(145deg, " + param["color"] + ", #fff); color: white; box-shadow: 0 4px 16px " + param["color"] + "40;" if selected else "background: #fff; color: " + param["color"] + "; font-weight: 500; border: 2px solid #eee;" }
-                                    margin-bottom: 4px;
-                                }}
-                                </style>
-                                """,
-                                unsafe_allow_html=True,
-                            )
-                    # Чтобы не было лишней перезагрузки, только если реально выбрали
-                    if submitted:
-                        st.experimental_rerun()
+                for i in range(1, 6):
+                    with cols[i-1]:
+                        selected = st.session_state.get(param["key"], 3) == i
+                        label = f"{i}{' ✅' if selected else ''}"
+                        btn = st.button(label, key=f"{param['key']}_{i}", use_container_width=True)
+                        if btn:
+                            st.session_state[param["key"]] = i
+                            st.rerun()
+                        st.markdown(
+                            f"""
+                            <style>
+                            [data-testid="stButton"] button#{param['key']}_{i} {{
+                                min-width:48px !important; 
+                                max-width:100%; 
+                                font-size: 1.15rem;
+                                font-weight: 700;
+                                border-radius: 20px; 
+                                border: 2px solid #fff;
+                                {"background: linear-gradient(145deg, " + param["color"] + ", #fff); color: white; box-shadow: 0 4px 16px " + param["color"] + "40;" if selected else "background: #fff; color: " + param["color"] + "; font-weight: 500; border: 2px solid #eee;" }
+                                margin-bottom: 4px;
+                            }}
+                            </style>
+                            """,
+                            unsafe_allow_html=True,
+                        )
                 st.markdown(
                     f'''
                     <div style="display:flex; justify-content:space-between; color:#666; font-size:0.97rem; margin-top:-10px; margin-bottom:18px;">
@@ -578,6 +567,7 @@ if st.session_state.get("character_created", False) and st.session_state.charact
                     ''', unsafe_allow_html=True
                 )
             st.markdown('</div>', unsafe_allow_html=True)
+
 
 
 
