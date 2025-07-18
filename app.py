@@ -428,19 +428,69 @@ if st.session_state.get("character_created", False) and st.session_state.charact
 
             # Возраст
             st.markdown('<div class="slider-header" style="text-align:left;">Возраст</div>', unsafe_allow_html=True)
+            col1, col2, col3 = st.columns([2, 0.4, 0.4])
+            with col1:
+                age = st.text_input(
+                    "",
+                    value=str(st.session_state.char_settings.get("age", 23)),
+                    key="age_input_text"
+                )
+            with col2:
+                up = st.button("▲", key="age_up")
+            with col3:
+                down = st.button("▼", key="age_down")
+            
+            # Проверка: только число от 18 до 100, иначе возвращаем к валидному
             try:
-                default_age = int(st.session_state.char_settings.get("age", 23))
+                age_val = int(age)
+                if age_val < 18:
+                    age_val = 18
+                elif age_val > 100:
+                    age_val = 100
             except Exception:
-                default_age = 23
-            age = st.number_input(
-                "",
-                min_value=18,
-                max_value=100,
-                step=1,
-                value=default_age,
-                key="age_input"
-            )
-            st.session_state.char_settings["age"] = age
+                age_val = 23  # по умолчанию
+            
+            # Реализация стрелок
+            if up and age_val < 100:
+                age_val += 1
+            if down and age_val > 18:
+                age_val -= 1
+            
+            # Сохраняем обратно
+            st.session_state.char_settings["age"] = age_val
+            
+            # Показать аккуратно отрендеренное значение
+            st.markdown(
+                f"""
+                <style>
+                input[type="text"][id^="age_input_text"] {{
+                    text-align: center;
+                    font-size: 1.5rem;
+                    border: 2px solid #6a11cb;
+                    border-radius: 14px;
+                    width: 100%;
+                    background: #f4f3fb;
+                    color: #333;
+                    margin-bottom: 0px;
+                    margin-top: 0px;
+                    outline: none;
+                    box-shadow: 0 2px 8px #6a11cb11;
+                    height: 56px;
+                }}
+                button[kind="secondary"] {{
+                    font-size: 1.5rem !important;
+                    height: 56px !important;
+                    width: 56px !important;
+                    border-radius: 14px !important;
+                    color: #6a11cb !important;
+                    border: 2px solid #e0e0e0 !important;
+                    background: #fff !important;
+                }}
+                </style>
+                """,
+                unsafe_allow_html=True
+)
+
 
             # Город
             st.markdown('<div class="slider-header" style="text-align:left;">Город</div>', unsafe_allow_html=True)
