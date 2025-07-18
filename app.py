@@ -504,34 +504,25 @@ if st.session_state.get("character_created", False) and st.session_state.charact
             st.markdown('<div class="section">', unsafe_allow_html=True)
             st.markdown('<div class="section-title" style="text-align:left;">Характер персонажа</div>', unsafe_allow_html=True)
         
-            # --- Экстраверт vs Интроверт ---
+            if "mbti_ei" not in st.session_state:
+                st.session_state["mbti_ei"] = 3
+            if "mbti_ns" not in st.session_state:
+                st.session_state["mbti_ns"] = 3
+            if "mbti_tf" not in st.session_state:
+                st.session_state["mbti_tf"] = 3
+            if "mbti_jp" not in st.session_state:
+                st.session_state["mbti_jp"] = 3
+        
+            # Экстраверт vs Интроверт
             st.markdown('<div class="slider-header" style="text-align:left;">Экстраверт vs Интроверт</div>', unsafe_allow_html=True)
-            cols = st.columns(5)
-            for i in range(1, 6):
-                with cols[i-1]:
-                    selected = st.session_state["mbti_ei"] == i
-                    label = f"{i}{' ✅' if selected else ''}"
-                    btn = st.button(label, key=f"mbti_ei_{i}", use_container_width=True)
-                    if btn:
-                        st.session_state["mbti_ei"] = i
-                        st.rerun()
-                    st.markdown(
-                        f"""
-                        <style>
-                        [data-testid="stButton"] button#mbti_ei_{i} {{
-                            min-width:48px !important;
-                            max-width:100%;
-                            font-size: 1.15rem;
-                            font-weight: 700;
-                            border-radius: 20px;
-                            border: 2px solid #fff;
-                            {"background: linear-gradient(145deg, #6a11cb, #fff); color: white; box-shadow: 0 4px 16px #6a11cb40;" if selected else "background: #fff; color: #6a11cb; font-weight: 500; border: 2px solid #eee;" }
-                            margin-bottom: 4px;
-                        }}
-                        </style>
-                        """,
-                        unsafe_allow_html=True,
-                    )
+            st.session_state["mbti_ei"] = st.radio(
+                "",
+                [1, 2, 3, 4, 5],
+                index=st.session_state["mbti_ei"] - 1,
+                key="mbti_ei_radio",
+                horizontal=True,
+                format_func=lambda x: f"{x} {'✅' if x == st.session_state['mbti_ei'] else ''}"
+            )
             st.markdown(
                 '''
                 <div style="display:flex; justify-content:space-between; color:#666; font-size:0.97rem; margin-top:-10px; margin-bottom:18px;">
@@ -541,34 +532,16 @@ if st.session_state.get("character_created", False) and st.session_state.charact
                 ''', unsafe_allow_html=True
             )
         
-            # --- Реалист vs Мечтатель ---
+            # Аналогично для всех других шкал:
             st.markdown('<div class="slider-header" style="text-align:left;">Реалист vs Мечтатель</div>', unsafe_allow_html=True)
-            cols = st.columns(5)
-            for i in range(1, 6):
-                with cols[i-1]:
-                    selected = st.session_state["mbti_ns"] == i
-                    label = f"{i}{' ✅' if selected else ''}"
-                    btn = st.button(label, key=f"mbti_ns_{i}", use_container_width=True)
-                    if btn:
-                        st.session_state["mbti_ns"] = i
-                        st.rerun()
-                    st.markdown(
-                        f"""
-                        <style>
-                        [data-testid="stButton"] button#mbti_ns_{i} {{
-                            min-width:48px !important;
-                            max-width:100%;
-                            font-size: 1.15rem;
-                            font-weight: 700;
-                            border-radius: 20px;
-                            border: 2px solid #fff;
-                            {"background: linear-gradient(145deg, #2196F3, #fff); color: white; box-shadow: 0 4px 16px #2196F340;" if selected else "background: #fff; color: #2196F3; font-weight: 500; border: 2px solid #eee;" }
-                            margin-bottom: 4px;
-                        }}
-                        </style>
-                        """,
-                        unsafe_allow_html=True,
-                    )
+            st.session_state["mbti_ns"] = st.radio(
+                "",
+                [1, 2, 3, 4, 5],
+                index=st.session_state["mbti_ns"] - 1,
+                key="mbti_ns_radio",
+                horizontal=True,
+                format_func=lambda x: f"{x} {'✅' if x == st.session_state['mbti_ns'] else ''}"
+            )
             st.markdown(
                 '''
                 <div style="display:flex; justify-content:space-between; color:#666; font-size:0.97rem; margin-top:-10px; margin-bottom:18px;">
@@ -578,6 +551,44 @@ if st.session_state.get("character_created", False) and st.session_state.charact
                 ''', unsafe_allow_html=True
             )
         
+            st.markdown('<div class="slider-header" style="text-align:left;">Рациональный vs Эмоциональный</div>', unsafe_allow_html=True)
+            st.session_state["mbti_tf"] = st.radio(
+                "",
+                [1, 2, 3, 4, 5],
+                index=st.session_state["mbti_tf"] - 1,
+                key="mbti_tf_radio",
+                horizontal=True,
+                format_func=lambda x: f"{x} {'✅' if x == st.session_state['mbti_tf'] else ''}"
+            )
+            st.markdown(
+                '''
+                <div style="display:flex; justify-content:space-between; color:#666; font-size:0.97rem; margin-top:-10px; margin-bottom:18px;">
+                    <span>Рациональный</span>
+                    <span>Эмоциональный</span>
+                </div>
+                ''', unsafe_allow_html=True
+            )
+        
+            st.markdown('<div class="slider-header" style="text-align:left;">Структурный vs Спонтанный</div>', unsafe_allow_html=True)
+            st.session_state["mbti_jp"] = st.radio(
+                "",
+                [1, 2, 3, 4, 5],
+                index=st.session_state["mbti_jp"] - 1,
+                key="mbti_jp_radio",
+                horizontal=True,
+                format_func=lambda x: f"{x} {'✅' if x == st.session_state['mbti_jp'] else ''}"
+            )
+            st.markdown(
+                '''
+                <div style="display:flex; justify-content:space-between; color:#666; font-size:0.97rem; margin-top:-10px; margin-bottom:18px;">
+                    <span>Структурный</span>
+                    <span>Спонтанный</span>
+                </div>
+                ''', unsafe_allow_html=True
+            )
+        
+            st.markdown('</div>', unsafe_allow_html=True)
+
             # --- Рациональный vs Эмоциональный ---
             st.markdown('<div class="slider-header" style="text-align:left;">Рациональный vs Эмоциональный</div>', unsafe_allow_html=True)
             cols = st.columns(5)
