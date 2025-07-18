@@ -492,7 +492,6 @@ if st.session_state.get("character_created", False) and st.session_state.charact
                 return f"крайний {right.lower()}"
 
 
-        
         with st.container():
             st.markdown('<div class="section">', unsafe_allow_html=True)
             st.markdown('<div class="section-title" style="text-align:left;">Характер персонажа</div>', unsafe_allow_html=True)
@@ -532,7 +531,9 @@ if st.session_state.get("character_created", False) and st.session_state.charact
                 for i in range(1, 6):
                     with cols[i-1]:
                         selected = st.session_state.get(param["key"], 3) == i
-                        btn = st.button(str(i), key=f"{param['key']}_{i}", use_container_width=True)
+                        # Кнопка с визуальным отображением выбора (✅)
+                        label = f"{i}{' ✅' if selected else ''}"
+                        btn = st.button(label, key=f"{param['key']}_{i}", use_container_width=True)
                         if btn:
                             st.session_state[param["key"]] = i
                             st.rerun()
@@ -553,7 +554,6 @@ if st.session_state.get("character_created", False) and st.session_state.charact
                             """,
                             unsafe_allow_html=True,
                         )
-                # Подписи полюсов — сразу после ряда кнопок, плотнее к ним
                 st.markdown(
                     f'''
                     <div style="display:flex; justify-content:space-between; color:#666; font-size:0.97rem; margin-top:-10px; margin-bottom:18px;">
@@ -563,6 +563,7 @@ if st.session_state.get("character_created", False) and st.session_state.charact
                     ''', unsafe_allow_html=True
                 )
             st.markdown('</div>', unsafe_allow_html=True)
+
 
 
 
