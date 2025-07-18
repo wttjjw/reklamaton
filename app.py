@@ -36,7 +36,7 @@ with st.sidebar:
 st.markdown("""
     <style>
         .form-container {
-            background-color: #c8c8cc;
+            background-color: #00dc00;
             padding: 40px 30px;
             border-radius: 35px;
             width: 400px;
