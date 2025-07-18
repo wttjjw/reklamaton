@@ -428,16 +428,19 @@ if st.session_state.get("character_created", False) and st.session_state.charact
 
             # Возраст
             st.markdown('<div class="slider-header" style="text-align:left;">Возраст</div>', unsafe_allow_html=True)
+            try:
+                default_age = int(st.session_state.char_settings.get("age", 23))
+            except Exception:
+                default_age = 23
             age = st.number_input(
                 "",
                 min_value=18,
                 max_value=100,
                 step=1,
-                value=int(st.session_state.char_settings.get("age", 23)),
+                value=default_age,
                 key="age_input"
             )
             st.session_state.char_settings["age"] = age
-
 
             # Город
             st.markdown('<div class="slider-header" style="text-align:left;">Город</div>', unsafe_allow_html=True)
