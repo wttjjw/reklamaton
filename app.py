@@ -487,7 +487,7 @@ if st.session_state.get("character_created", False) and st.session_state.charact
             )
             st.markdown(
                 '<div style="color:#666; font-size:1rem; margin-bottom:22px;">'
-                'Настройте характер по шкалам ниже: передвиньте ползунки, чтобы выбрать, к какому полюсу ближе ваш персонаж по каждой из четырёх черт.'
+                'Настройте характер по шкалам ниже: передвигайте ползунки, чтобы выбрать, к какому полюсу ближе ваш персонаж по каждой из четырёх черт.'
                 '</div>',
                 unsafe_allow_html=True
             )
@@ -527,10 +527,16 @@ if st.session_state.get("character_created", False) and st.session_state.charact
                     st.session_state.char_settings[p["key"]] = 3
         
             for param in mbti_params:
+                val = st.session_state.char_settings[param["key"]]
+                # --- Вывод цифры выбранного значения ---
+                st.markdown(
+                    f'<div style="text-align:center; color:#e85a98; font-size:1.15rem; font-weight:700; margin-bottom:-14px; margin-top:4px;">{val}</div>',
+                    unsafe_allow_html=True
+                )
                 val = st.slider(
                     "",
                     min_value=1, max_value=5,
-                    value=st.session_state.char_settings[param["key"]],
+                    value=val,
                     key=f"slider_{param['key']}",
                     label_visibility="collapsed",
                     step=1,
@@ -550,6 +556,7 @@ if st.session_state.get("character_created", False) and st.session_state.charact
                     unsafe_allow_html=True
                 )
             st.markdown('</div>', unsafe_allow_html=True)
+
 
 
         
