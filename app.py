@@ -431,67 +431,58 @@ if st.session_state.get("character_created", False) and st.session_state.charact
             
             # Возраст
             st.markdown('<div class="slider-header" style="text-align:left;">Возраст</div>', unsafe_allow_html=True)
-            col1, col2, col3 = st.columns([3, 0.6, 0.6])
-            with col1:
-                age = st.text_input(
-                    "",
-                    value=str(st.session_state.char_settings.get("age", 23)),
-                    key="age_input_text"
-                )
-            with col2:
-                up = st.button("▲", key="age_up")
-            with col3:
-                down = st.button("▼", key="age_down")
+
+            age_input = st.text_input(
+                "",
+                value=str(st.session_state.char_settings.get("age", 23)),
+                key="age_input_text"
+            )
             
+            # Проверка и реакция на ввод
+            error_msg = ""
             try:
-                age_val = int(age)
-                if age_val < 18:
-                    age_val = 18
-                elif age_val > 100:
-                    age_val = 100
+                age_val = int(age_input)
+                if age_val < 18 or age_val > 100:
+                    error_msg = "Возраст должен быть от 18 до 100 лет."
+                    age_val = ""
             except Exception:
-                age_val = 23
+                error_msg = "Пожалуйста, введите число от 18 до 100."
+                age_val = ""
             
-            if up and age_val < 100:
-                age_val += 1
-            if down and age_val > 18:
-                age_val -= 1
+            if age_val != "":
+                st.session_state.char_settings["age"] = age_val
             
-            st.session_state.char_settings["age"] = age_val
-            
-            # Красивая стилизация input и стрелок
+            # Кастомный стиль input под кнопку
             st.markdown(
-                f"""
+                """
                 <style>
-                input[type="text"][id^="age_input_text"] {{
+                input[type="text"][id^="age_input_text"] {
                     text-align: center;
                     font-size: 1.35rem;
-                    border: 2px solid #6a11cb;
-                    border-radius: 14px;
+                    border-radius: 20px;
+                    border: 2px solid #eee;
+                    background: #fff;
+                    color: #212529;
+                    box-shadow: 0 2px 10px #6a11cb12;
+                    outline: none;
+                    font-weight: 600;
+                    height: 56px;
                     width: 100%;
-                    background: #f4f3fb;
-                    color: #333;
                     margin-bottom: 0px;
                     margin-top: 0px;
-                    outline: none;
-                    box-shadow: 0 2px 8px #6a11cb11;
-                    height: 54px;
-                }}
-                [data-testid="stButton"] button#age_up, [data-testid="stButton"] button#age_down {{
-                    font-size: 1.4rem !important;
-                    height: 54px !important;
-                    width: 54px !important;
-                    border-radius: 14px !important;
-                    color: #6a11cb !important;
-                    border: 2px solid #e0e0e0 !important;
-                    background: #fff !important;
-                    margin-bottom: 0px !important;
-                    box-shadow: none !important;
-                }}
+                    transition: border 0.2s;
+                }
+                input[type="text"][id^="age_input_text"]:focus {
+                    border: 2px solid #6a11cb;
+                    background: #f8f9fa;
+                }
                 </style>
                 """,
                 unsafe_allow_html=True
             )
+            
+            if error_msg:
+                st.info(error_msg)
 
 
             # Город
