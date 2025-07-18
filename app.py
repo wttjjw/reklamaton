@@ -57,8 +57,15 @@ with st.container():
     
     name = st.text_input("Имя", key="name", label_visibility="visible")
     sex = st.selectbox("Пол", options=["Мужской", "Женский"], key="sex")
-    max_birthdate = datetime.date(2007, 12, 31)  # лимит — 2007 год
-    birthdate = st.date_input("Дата рождения", max_value=max_birthdate, key="birthdate")
+    max_birthdate = datetime.date(2007, 12, 31)
+default_birthdate = datetime.date(2000, 1, 1)
+
+birthdate = st.date_input(
+    "Дата рождения",
+    value=default_birthdate,
+    max_value=max_birthdate,
+    key="birthdate"
+)
 
     st.markdown('</div>', unsafe_allow_html=True)
 
