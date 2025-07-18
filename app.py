@@ -513,30 +513,29 @@ if st.session_state.get("character_created", False) and st.session_state.charact
                     "color": "#4CAF50"
                 },
             ]
-            # Инициализация по умолчанию (1-5, 3 = середина)
+            # Инициализация дефолтов
             for p in mbti_params:
                 if p["key"] not in st.session_state.char_settings:
                     st.session_state.char_settings[p["key"]] = 3
         
             for param in mbti_params:
                 val = st.slider(
-                    f"{param['label']}",
+                    "",
                     min_value=1, max_value=5, value=st.session_state.char_settings[param["key"]],
                     key=f"slider_{param['key']}",
-                    help=f"{param['left']} ←→ {param['right']}",
-                    label_visibility="visible"
+                    label_visibility="collapsed"
                 )
                 st.session_state.char_settings[param["key"]] = val
-                # красивое отображение полюсов под слайдером
                 st.markdown(
                     f'''
-                    <div style="display:flex; justify-content:space-between; color:#666; font-size:0.97rem; margin-top:-18px; margin-bottom:10px;">
+                    <div style="display:flex; justify-content:space-between; color:#888; font-size:1rem; margin-top:-12px; margin-bottom:12px;">
                         <span>{param["left"]}</span>
                         <span>{param["right"]}</span>
                     </div>
                     ''', unsafe_allow_html=True
                 )
             st.markdown('</div>', unsafe_allow_html=True)
+        
 
         def get_trait_text(val, left, right):
             if val == 1:
