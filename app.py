@@ -452,34 +452,37 @@ if st.session_state.get("character_created", False) and st.session_state.charact
             if age_val != "":
                 st.session_state.char_settings["age"] = age_val
             
-            # Кастомный стиль input под кнопку
             st.markdown(
                 """
                 <style>
                 input[type="text"][id^="age_input_text"] {
                     text-align: center;
-                    font-size: 1.35rem;
-                    border-radius: 20px;
-                    border: 2px solid #eee;
-                    background: #fff;
-                    color: #212529;
-                    box-shadow: 0 2px 10px #6a11cb12;
-                    outline: none;
-                    font-weight: 600;
-                    height: 56px;
-                    width: 100%;
-                    margin-bottom: 0px;
-                    margin-top: 0px;
+                    font-size: 1.25rem;
+                    border-radius: 20px !important;
+                    border: 2px solid #eee !important;
+                    background: #fff !important;
+                    color: #212529 !important;
+                    box-shadow: 0 4px 16px #6a11cb12 !important;
+                    outline: none !important;
+                    font-weight: 600 !important;
+                    height: 56px !important;
+                    width: 100% !important;
+                    margin-top: 12px !important;
+                    margin-bottom: 10px !important;
+                    padding-left: 0 !important;
+                    padding-right: 0 !important;
                     transition: border 0.2s;
+                    appearance: none !important;
                 }
                 input[type="text"][id^="age_input_text"]:focus {
-                    border: 2px solid #6a11cb;
-                    background: #f8f9fa;
+                    border: 2px solid #6a11cb !important;
+                    background: #f8f9fa !important;
                 }
                 </style>
                 """,
                 unsafe_allow_html=True
             )
+
             
             if error_msg:
                 st.info(error_msg)
