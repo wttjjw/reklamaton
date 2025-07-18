@@ -32,6 +32,34 @@ with st.sidebar:
     st.markdown("### Красные флаги")
     dislikes = st.text_input("Что бот не любит", "опоздания, грубость")
 
+# --- 2.5. Стильная визуальная анкета в центре страницы ---
+st.markdown("""
+    <style>
+        .form-container {
+            background-color: #c8c8cc;
+            padding: 40px 30px;
+            border-radius: 35px;
+            width: 400px;
+            margin: 30px auto;
+        }
+        .form-input > div > input,
+        .form-input > div > div {
+            background-color: #fcd966 !important;
+            color: black !important;
+            border-radius: 6px;
+        }
+    </style>
+""", unsafe_allow_html=True)
+
+with st.container():
+    st.markdown('<div class="form-container">', unsafe_allow_html=True)
+    
+    name = st.text_input("Имя", key="name", label_visibility="visible")
+    sex = st.selectbox("Пол", options=["Мужской", "Женский", "Другое"], key="sex")
+    birthdate = st.date_input("Дата рождения", key="birthdate")
+
+    st.markdown('</div>', unsafe_allow_html=True)
+
 # --- 3. System‑prompt на основе анкеты ---
 SYSTEM_PROMPT = f"""
 Ты — {gender.lower()} {age} лет из {city}. Внешний стиль: {fashion}, вайб: {vibe}.
