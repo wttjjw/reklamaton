@@ -433,56 +433,58 @@ if st.session_state.get("character_created", False) and st.session_state.charact
                     )
             
             # Возраст
-            # Заголовок
-            st.markdown(
-                '<div class="slider-header" style="text-align:left;">Возраст</div>',
-                unsafe_allow_html=True
-            )
-            
-            # Переопределяем дефолтный стиль для st.text_input
-            st.markdown("""
+    st.markdown('<div class="slider-container">', unsafe_allow_html=True)
+                st.markdown('<div class="slider-header" style="text-align:left;">Возраст</div>', unsafe_allow_html=True)
+                
+                # 1) Сбросим фон/паддинги у стандартного контейнера st.text_input
+                # 2) Зададим <input> ровно тот стиль, который нужен
+                st.markdown("""
                 <style>
-                /* делаем инпут белым, с рамкой и скруглениями, как у кнопок */
+                /* Убираем «серый фон» и паддинги у контейнера */
+                div[data-testid="stTextInput"] {
+                    background: none !important;
+                    padding: 0 !important;
+                    border: none !important;
+                    box-shadow: none !important;
+                }
+                /* Задаём наш белый инпут с рамкой и скруглениями */
                 div[data-testid="stTextInput"] input {
                     background: #fff !important;
                     border: 2px solid #eee !important;
                     border-radius: 20px !important;
                     padding: 12px 20px !important;
                     font-size: 1rem !important;
-                    margin-top: 8px !important;
-                    margin-bottom: 20px !important;  /* согласуем отступ снизу с другими блоками */
                     width: 100% !important;
+                    margin: 8px 0 12px 0 !important;
                 }
                 </style>
-            """, unsafe_allow_html=True)
-            
-            # Сам инпут
-            age_input = st.text_input(
-                "", 
-                value="",
-                key="age_input_text",
-                placeholder="Введите свой возраст",
-                label_visibility="collapsed"
-            )
-            
-            # Валидация и сохранение
-            error_msg = ""
-            try:
-                age_val = int(age_input)
-                if age_val < 18 or age_val > 100:
-                    error_msg = "Возраст должен быть от 18 до 100 лет."
+                """, unsafe_allow_html=True)
+                
+                age_input = st.text_input(
+                    "",
+                    key="age_input_text",
+                    placeholder="Введите свой возраст",
+                    label_visibility="collapsed"
+                )
+                
+                # — ваша валидация остаётся без изменений —
+                error_msg = ""
+                try:
+                    age_val = int(age_input)
+                    if age_val < 18 or age_val > 100:
+                        error_msg = "Возраст должен быть от 18 до 100 лет."
+                        age_val = ""
+                except ValueError:
+                    if age_input != "":
+                        error_msg = "Пожалуйста, введите число от 18 до 100."
                     age_val = ""
-            except ValueError:
-                if age_input != "":
-                    error_msg = "Пожалуйста, введите число от 18 до 100."
-                age_val = ""
-            
-            if age_val != "":
-                st.session_state.char_settings["age"] = age_val
-            
-            if error_msg:
-                st.info(error_msg)
-
+                
+                if age_val != "":
+                    st.session_state.char_settings["age"] = age_val
+                if error_msg:
+                    st.info(error_msg)
+                
+                st.markdown('</div>', unsafe_allow_html=True)
 
 
 
