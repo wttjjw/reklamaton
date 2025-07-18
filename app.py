@@ -496,7 +496,6 @@ if st.session_state.get("character_created", False) and st.session_state.charact
         with st.container():
             st.markdown('<div class="section">', unsafe_allow_html=True)
             st.markdown('<div class="section-title" style="text-align:left;">Характер персонажа</div>', unsafe_allow_html=True)
-            
             char_params = [
                 {
                     "key": "mbti_ei",
@@ -527,43 +526,44 @@ if st.session_state.get("character_created", False) and st.session_state.charact
                     "color": "#4CAF50"
                 },
             ]
-        
-        for param in char_params:
-            st.markdown(f'<div class="slider-header" style="text-align:left;">{param["label"]}</div>', unsafe_allow_html=True)
-            cols = st.columns(5)
-            if param["key"] not in st.session_state:
-                st.session_state[param["key"]] = 3  # default to mid
-            for i in range(1, 6):
-                with cols[i-1]:
-                    selected = st.session_state[param["key"]] == i
-                    btn = st.button(str(i), key=f"{param['key']}_{i}", use_container_width=True)
-                    if btn:
-                        st.session_state[param["key"]] = i
-                        st.rerun()
-                    st.markdown(
-                        f"""
-                        <style>
-                        [data-testid="stButton"] button#{param['key']}_{i} {{
-                            min-width:48px !important; 
-                            max-width:100%; 
-                            font-size: 1.15rem;
-                            font-weight: 700;
-                            border-radius: 20px; 
-                            border: 2px solid #fff;
-                            {"background: linear-gradient(145deg, " + param["color"] + ", #fff); color: white; box-shadow: 0 4px 16px " + param["color"] + "40;" if selected else "background: #fff; color: " + param["color"] + "; font-weight: 500; border: 2px solid #eee;" }
-                            margin-bottom: 6px;
-                            margin-top: 3px;
-                        }}
-                        </style>
-                        """,
-                        unsafe_allow_html=True,
-                    )
-            # подписи под крайними кнопками
-            st.markdown(
-                f'<div style="display:flex; justify-content:space-between; color:#666; font-size:0.95rem;"><span>{param["left"]}</span><span>{param["right"]}</span></div>',
-                unsafe_allow_html=True
-            )
-        st.markdown('</div>', unsafe_allow_html=True)
+            for param in char_params:
+                st.markdown(f'<div class="slider-header" style="text-align:left;">{param["label"]}</div>', unsafe_allow_html=True)
+                cols = st.columns(5)
+                for i in range(1, 6):
+                    with cols[i-1]:
+                        selected = st.session_state.get(param["key"], 3) == i
+                        btn = st.button(str(i), key=f"{param['key']}_{i}", use_container_width=True)
+                        if btn:
+                            st.session_state[param["key"]] = i
+                            st.rerun()
+                        st.markdown(
+                            f"""
+                            <style>
+                            [data-testid="stButton"] button#{param['key']}_{i} {{
+                                min-width:48px !important; 
+                                max-width:100%; 
+                                font-size: 1.15rem;
+                                font-weight: 700;
+                                border-radius: 20px; 
+                                border: 2px solid #fff;
+                                {"background: linear-gradient(145deg, " + param["color"] + ", #fff); color: white; box-shadow: 0 4px 16px " + param["color"] + "40;" if selected else "background: #fff; color: " + param["color"] + "; font-weight: 500; border: 2px solid #eee;" }
+                                margin-bottom: 4px;
+                            }}
+                            </style>
+                            """,
+                            unsafe_allow_html=True,
+                        )
+                # Подписи полюсов — сразу после ряда кнопок, плотнее к ним
+                st.markdown(
+                    f'''
+                    <div style="display:flex; justify-content:space-between; color:#666; font-size:0.97rem; margin-top:-10px; margin-bottom:18px;">
+                        <span>{param["left"]}</span>
+                        <span>{param["right"]}</span>
+                    </div>
+                    ''', unsafe_allow_html=True
+                )
+            st.markdown('</div>', unsafe_allow_html=True)
+
 
 
 
