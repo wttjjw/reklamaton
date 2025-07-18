@@ -433,58 +433,64 @@ if st.session_state.get("character_created", False) and st.session_state.charact
                     )
             
             # Возраст
-    st.markdown('<div class="slider-container">', unsafe_allow_html=True)
-                st.markdown('<div class="slider-header" style="text-align:left;">Возраст</div>', unsafe_allow_html=True)
-                
-                # 1) Сбросим фон/паддинги у стандартного контейнера st.text_input
-                # 2) Зададим <input> ровно тот стиль, который нужен
-                st.markdown("""
-                <style>
-                /* Убираем «серый фон» и паддинги у контейнера */
-                div[data-testid="stTextInput"] {
-                    background: none !important;
-                    padding: 0 !important;
-                    border: none !important;
-                    box-shadow: none !important;
-                }
-                /* Задаём наш белый инпут с рамкой и скруглениями */
-                div[data-testid="stTextInput"] input {
-                    background: #fff !important;
-                    border: 2px solid #eee !important;
-                    border-radius: 20px !important;
-                    padding: 12px 20px !important;
-                    font-size: 1rem !important;
-                    width: 100% !important;
-                    margin: 8px 0 12px 0 !important;
-                }
-                </style>
-                """, unsafe_allow_html=True)
-                
-                age_input = st.text_input(
-                    "",
-                    key="age_input_text",
-                    placeholder="Введите свой возраст",
-                    label_visibility="collapsed"
-                )
-                
-                # — ваша валидация остаётся без изменений —
-                error_msg = ""
-                try:
-                    age_val = int(age_input)
-                    if age_val < 18 or age_val > 100:
-                        error_msg = "Возраст должен быть от 18 до 100 лет."
-                        age_val = ""
-                except ValueError:
-                    if age_input != "":
-                        error_msg = "Пожалуйста, введите число от 18 до 100."
+            with st.container():
+            st.markdown('<div class="section">', unsafe_allow_html=True)
+            st.markdown('<div class="section-title" style="text-align:left;">Основная информация</div>', unsafe_allow_html=True)
+        
+            # --- Возраст ---
+            st.markdown('<div class="slider-container">', unsafe_allow_html=True)
+            st.markdown('<div class="slider-header" style="text-align:left;">Возраст</div>', unsafe_allow_html=True)
+        
+            # Сбрасываем дефолтный фон у контейнера и задаём стиль самому input
+            st.markdown("""
+            <style>
+            div[data-testid="stTextInput"] {
+                background: none !important;
+                padding: 0 !important;
+                border: none !important;
+                box-shadow: none !important;
+            }
+            div[data-testid="stTextInput"] input {
+                background: #fff !important;
+                border: 2px solid #eee !important;
+                border-radius: 20px !important;
+                padding: 12px 20px !important;
+                font-size: 1rem !important;
+                width: 100% !important;
+                margin: 8px 0 12px 0 !important;
+            }
+            </style>
+            """, unsafe_allow_html=True)
+        
+            age_input = st.text_input(
+                "",
+                key="age_input_text",
+                placeholder="Введите свой возраст",
+                label_visibility="collapsed"
+            )
+        
+            # Валидация
+            error_msg = ""
+            try:
+                age_val = int(age_input)
+                if age_val < 18 or age_val > 100:
+                    error_msg = "Возраст должен быть от 18 до 100 лет."
                     age_val = ""
-                
-                if age_val != "":
-                    st.session_state.char_settings["age"] = age_val
-                if error_msg:
-                    st.info(error_msg)
-                
-                st.markdown('</div>', unsafe_allow_html=True)
+            except ValueError:
+                if age_input != "":
+                    error_msg = "Пожалуйста, введите число от 18 до 100."
+                age_val = ""
+        
+            if age_val != "":
+                st.session_state.char_settings["age"] = age_val
+            if error_msg:
+                st.info(error_msg)
+        
+            st.markdown('</div>', unsafe_allow_html=True)  # закрываем .slider-container
+        
+            # ... продолжайте остальные поля внутри этого же контейнера или закройте его, как нужно ...
+            st.markdown('</div>', unsafe_allow_html=True)  # закрываем .section
+
 
 
 
