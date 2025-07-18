@@ -405,8 +405,8 @@ if st.session_state.get("character_created", False) and st.session_state.charact
 
             # Пол персонажа
             st.markdown('<div class="slider-header" style="text-align:left;">Пол персонажа</div>', unsafe_allow_html=True)
-            genders = ["Девушка", "Парень", "Предпочитаю не указывать"]
-            cols = st.columns(3)
+            genders = ["Девушка", "Парень"]
+            cols = st.columns(2)
             for i, gender in enumerate(genders):
                 with cols[i]:
                     selected = st.session_state.char_settings["gender"] == gender
@@ -423,6 +423,7 @@ if st.session_state.get("character_created", False) and st.session_state.charact
                         </style>
                         """, unsafe_allow_html=True,
                     )
+
 
 
             # Возраст
