@@ -453,31 +453,6 @@ if st.session_state.get("character_created", False) and st.session_state.charact
                         """, unsafe_allow_html=True,
                     )
         
-            # Валидация
-            error_msg = ""
-            try:
-                age_val = int(age_input)
-                if age_val < 18 or age_val > 100:
-                    error_msg = "Возраст должен быть от 18 до 100 лет."
-                    age_val = ""
-            except ValueError:
-                if age_input != "":
-                    error_msg = "Пожалуйста, введите число от 18 до 100."
-                age_val = ""
-        
-            if age_val != "":
-                st.session_state.char_settings["age"] = age_val
-            if error_msg:
-                st.info(error_msg)
-        
-            st.markdown('</div>', unsafe_allow_html=True)  # закрываем .slider-container
-        
-            # ... продолжайте остальные поля внутри этого же контейнера или закройте его, как нужно ...
-            st.markdown('</div>', unsafe_allow_html=True)  # закрываем .section
-
-
-
-
             # Город
             st.markdown('<div class="slider-header" style="text-align:left;">Город</div>', unsafe_allow_html=True)
             cities = ["Москва", "Санкт-Петербург", "Казань", "Сочи", "Екатеринбург", "Другой"]
