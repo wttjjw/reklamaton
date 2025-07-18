@@ -187,20 +187,40 @@ if st.session_state.get("character_created", False) and st.session_state.charact
             </style>
         """, unsafe_allow_html=True)
         
+        # Инициализация значений в session_state
+        if "mbti_ei" not in st.session_state:
+            st.session_state.mbti_ei = 50
+        if "mbti_ns" not in st.session_state:
+            st.session_state.mbti_ns = 50
+        if "mbti_tf" not in st.session_state:
+            st.session_state.mbti_tf = 50
+        if "mbti_jp" not in st.session_state:
+            st.session_state.mbti_jp = 50
+        
         # Первая строка слайдеров
         col1, col2 = st.columns(2)
         with col1:
             with st.container():
                 st.markdown('<div class="slider-container">', unsafe_allow_html=True)
                 st.markdown('<div class="slider-header"><span>👥 Экстраверт</span><span>🧘 Интроверт</span></div>', unsafe_allow_html=True)
-                mbti_ei = st.slider("Экстраверт/Интроверт", 0, 100, 50, key="mbti_ei", label_visibility="collapsed")
+                st.session_state.mbti_ei = st.slider(
+                    "Экстраверт/Интроверт", 
+                    0, 100, st.session_state.mbti_ei, 
+                    key="slider_ei", 
+                    label_visibility="collapsed"
+                )
                 st.markdown('</div>', unsafe_allow_html=True)
         
         with col2:
             with st.container():
                 st.markdown('<div class="slider-container">', unsafe_allow_html=True)
                 st.markdown('<div class="slider-header"><span>📐 Реалист</span><span>🌈 Мечтатель</span></div>', unsafe_allow_html=True)
-                mbti_ns = st.slider("Реалист/Мечтатель", 0, 100, 50, key="mbti_ns", label_visibility="collapsed")
+                st.session_state.mbti_ns = st.slider(
+                    "Реалист/Мечтатель", 
+                    0, 100, st.session_state.mbti_ns, 
+                    key="slider_ns", 
+                    label_visibility="collapsed"
+                )
                 st.markdown('</div>', unsafe_allow_html=True)
         
         # Вторая строка слайдеров
@@ -209,28 +229,41 @@ if st.session_state.get("character_created", False) and st.session_state.charact
             with st.container():
                 st.markdown('<div class="slider-container">', unsafe_allow_html=True)
                 st.markdown('<div class="slider-header"><span>📊 Рациональный</span><span>❤️ Эмоциональный</span></div>', unsafe_allow_html=True)
-                mbti_tf = st.slider("Рациональный/Эмоциональный", 0, 100, 50, key="mbti_tf", label_visibility="collapsed")
+                st.session_state.mbti_tf = st.slider(
+                    "Рациональный/Эмоциональный", 
+                    0, 100, st.session_state.mbti_tf, 
+                    key="slider_tf", 
+                    label_visibility="collapsed"
+                )
                 st.markdown('</div>', unsafe_allow_html=True)
         
         with col4:
             with st.container():
                 st.markdown('<div class="slider-container">', unsafe_allow_html=True)
                 st.markdown('<div class="slider-header"><span>📅 Структурный</span><span>🎲 Спонтанный</span></div>', unsafe_allow_html=True)
-                mbti_jp = st.slider("Структурный/Спонтанный", 0, 100, 50, key="mbti_jp", label_visibility="collapsed")
+                st.session_state.mbti_jp = st.slider(
+                    "Структурный/Спонтанный", 
+                    0, 100, st.session_state.mbti_jp, 
+                    key="slider_jp", 
+                    label_visibility="collapsed"
+                )
                 st.markdown('</div>', unsafe_allow_html=True)
         
         # Выбор пола
         st.markdown("### Пол персонажа")
-        selected_gender = st.radio("", ["Мужской", "Женский"], horizontal=True, key="char_gender")
+        if "selected_gender" not in st.session_state:
+            st.session_state.selected_gender = "Мужской"
+        st.session_state.selected_gender = st.radio(
+            "", 
+            ["Мужской", "Женский"], 
+            horizontal=True, 
+            key="char_gender",
+            index=0 if st.session_state.selected_gender == "Мужской" else 1
+        )
         
         # Кнопка сохранения
         if st.button("Сохранить характер", type="primary"):
             st.session_state.personality_saved = True
-            st.session_state.mbti_ei = mbti_ei
-            st.session_state.mbti_ns = mbti_ns
-            st.session_state.mbti_tf = mbti_tf
-            st.session_state.mbti_jp = mbti_jp
-            st.session_state.selected_gender = selected_gender
             st.rerun()
 
 # --- 6. Чат и логика взаимодействия ---
