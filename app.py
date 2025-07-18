@@ -1,4 +1,5 @@
 # app.py — DreamDate AI (Streamlit + Groq)
+import random
 import datetime
 import streamlit as st
 from openai import OpenAI  # openai>=1.1.0
@@ -67,7 +68,21 @@ if not st.session_state.form_saved:
         default_birthdate = datetime.date(2000, 1, 1)
         max_birthdate = datetime.date(2007, 12, 31)
         birthdate = st.date_input("Дата рождения", value=default_birthdate, max_value=max_birthdate, key="birthdate")
+ male_names = ["Илья", "Максим", "Артём", "Лев", "Кирилл", "Миша", "Саша", "Егор", "Никита", "Тимур"]
+    female_names = ["Аня", "Лера", "Катя", "Софа", "Маша", "Даша", "Оля", "Ксюша", "Ира", "Лиза"]
 
+    if st.button("Сохранить характер"):
+        st.session_state.personality_saved = True
+        st.session_state.mbti_ei = mbti_ei
+        st.session_state.mbti_ns = mbti_ns
+        st.session_state.mbti_tf = mbti_tf
+        st.session_state.mbti_jp = mbti_jp
+        st.session_state.selected_gender = selected_gender
+        if selected_gender == "Мужской":
+            st.session_state.bot_name = random.choice(male_names)
+        else:
+            st.session_state.bot_name = random.choice(female_names)
+            
         if st.button("Сохранить анкету"):
             st.session_state.form_saved = True
             st.session_state.user_name = name
