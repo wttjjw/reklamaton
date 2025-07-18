@@ -10,11 +10,75 @@ client = OpenAI(
 )
 MODEL = "llama3-70b-8192"
 
-# --- Состояние анкеты ---
-if "form_saved" not in st.session_state:
-    st.session_state.form_saved = False
-if "msgs" not in st.session_state:
-    st.session_state.msgs = []
+# --- После сохранения анкеты: показать следующий экран ---
+if st.session_state.form_saved and st.session_state.next_step is None:
+    st.success("💚 Пройдите небольшой тест, и мы подберем вам идеального партнера")
+
+    col1, col2 = st.columns(2)
+    with col1:
+        if st.button("🚀 Вперёд!"):
+            st.session_state.next_step = "test"
+    with col2:
+        if st.button("🛠️ Я создам персонажа самостоятельно"):
+            st.session_state.next_step = "custom"
+
+# --- Старт чата, если выбрана опция ---
+if st.session_state.next_step in ["test", "custom"]:
+    SYSTEM_PROMPT = f"""
+    Ты — {gender.lower()} {age} лет из {city}. Внешний стиль: {fashion}, вайб: {vibe}.
+    Увлечения: {hobbies}. Любимая музыка: {music}.
+    Характер: {', '.join(traits) or 'нейтральный'}, темперамент {temper.lower()}.
+    Тебе не нравятся: {dislikes}.
+    Общайся в чате, как на первом свидании в Тиндере: флиртуй, задавай вопросы, поддерживай тему.
+    """
+
+    user_input = st.chat_input("Напиши сообщение идеальному партнёру…")
+    if user_input:
+        username = st.session_state.user_name
+        user_message = f"**{username}:** {user_input}"
+        st.session_state.msgs.append({"role": "user", "content": user_message})
+
+        messages = [{"role": "system", "content": SYSTEM_PROMPT}] + st.session_state.msgs
+        try:
+            resp = client.chat.completions.create(
+                model=MODEL,
+                messages=messages,
+                temperature=0.85,
+                max_tokens=256
+            )
+            bot = resp.choices[0].message.content.strip()
+            st.session_state.msgs.append({"role": "assistant", "content": bot})
+        except Exception as e:
+            st.error(f"Groq error: {e}")
+
+    for m in st.session_state.msgs:
+        with st.chat_message(m["role"]):
+            st.markdown(m["content"])
+
+    st.divider()
+    if st.button("Получить фидбек о моём стиле общения"):
+        user_dialog = "\n".join(
+            [m["content"] for m in st.session_state.msgs if "user_name" in st.session_state and m["role"] == "user"]
+        )[:4000]
+
+        fb_prompt = f"""
+        Ты — эксперт по коммуникациям и дейтингу. Проанализируй сообщения пользователя
+        ниже и дай три пункта: 1) что привлекательно, 2) что может оттолкнуть, 3) совет
+        по следующему шагу. Сообщения:\n{user_dialog}
+        """
+        try:
+            fb = client.chat.completions.create(
+                model=MODEL,
+                messages=[{"role": "system", "content": fb_prompt}],
+                temperature=0.5,
+                max_tokens=300
+            )
+            with st.chat_message("assistant"):
+                st.subheader("📝 Фидбек от эксперта:")
+                st.markdown(fb.choices[0].message.content)
+        except Exception as e:
+            st.error(f"Groq feedback error: {e}")
+
 
 # --- 2. Анкета (sidebar) ---
 with st.sidebar:
