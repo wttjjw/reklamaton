@@ -1,20 +1,20 @@
-# app.py — DreamDate AI (Streamlit + Groq)
 import datetime
 import streamlit as st
 from openai import OpenAI  # openai>=1.1.0
 
- def get_trait_text(val, left, right):
-            if val == 1:
-                return f"крайний {left.lower()}"
-            elif val == 2:
-                return f"скорее {left.lower()}"
-            elif val == 3:
-                return "сбалансированный"
-            elif val == 4:
-                return f"скорее {right.lower()}"
-            else:
-                return f"крайний {right.lower()}"
-
+# --- UTILS ---
+def get_trait_text(val, left, right):
+    if val == 1:
+        return f"крайний {left.lower()}"
+    elif val == 2:
+        return f"скорее {left.lower()}"
+    elif val == 3:
+        return "сбалансированный"
+    elif val == 4:
+        return f"скорее {right.lower()}"
+    else:
+        return f"крайний {right.lower()}"
+     
 # --- 1. Groq client ---
 client = OpenAI(
     api_key=st.secrets["GROQ_API_KEY"],
