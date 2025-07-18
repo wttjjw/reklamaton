@@ -428,24 +428,16 @@ if st.session_state.get("character_created", False) and st.session_state.charact
 
             # Возраст
             st.markdown('<div class="slider-header" style="text-align:left;">Возраст</div>', unsafe_allow_html=True)
-            ages = ["18-22", "23-27", "28-32", "33+"]
-            cols = st.columns(4)
-            for i, age in enumerate(ages):
-                with cols[i]:
-                    selected = st.session_state.char_settings["age"] == age
-                    btn = st.button(age, key=f"age_{age}", use_container_width=True)
-                    if btn:
-                        st.session_state.char_settings["age"] = age
-                        st.rerun()
-                    st.markdown(
-                        f"""
-                        <style>
-                        [data-testid="stButton"] button#{f"age_{age}".replace(' ', '_')} {{
-                            {"background: linear-gradient(145deg, #2196F3, #0D47A1); color: white; font-weight: 700; border-radius: 20px; border: 2px solid #fff; box-shadow: 0 4px 16px #2196F340; margin-bottom: 10px; min-width: 120px;" if selected else "background: #fff; color: #0D47A1; font-weight: 500; border-radius: 20px; border: 2px solid #eee; margin-bottom: 10px; min-width: 120px;" }
-                        }}
-                        </style>
-                        """, unsafe_allow_html=True,
-                    )
+            age = st.number_input(
+                "",
+                min_value=18,
+                max_value=100,
+                step=1,
+                value=int(st.session_state.char_settings.get("age", 23)),
+                key="age_input"
+            )
+            st.session_state.char_settings["age"] = age
+
 
             # Город
             st.markdown('<div class="slider-header" style="text-align:left;">Город</div>', unsafe_allow_html=True)
