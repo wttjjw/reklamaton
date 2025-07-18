@@ -31,6 +31,195 @@ if "char_settings" not in st.session_state:
         "dislikes": []
     }
 
+# --- Глобальный стиль с градиентным фоном ---
+st.markdown("""
+    <style>
+        body {
+            background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+            background-attachment: fixed;
+            background-size: cover;
+            color: #333;
+        }
+        .stApp {
+            background: rgba(255, 255, 255, 0.85);
+            border-radius: 20px;
+            box-shadow: 0 8px 32px rgba(31, 38, 135, 0.37);
+            backdrop-filter: blur(4px);
+            margin: 2rem auto;
+            padding: 2rem;
+            max-width: 1200px;
+        }
+        .stButton>button {
+            border-radius: 12px !important;
+            padding: 10px 20px !important;
+            transition: all 0.3s !important;
+        }
+        .stButton>button:hover {
+            transform: translateY(-3px) !important;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1) !important;
+        }
+        .section {
+            background: rgba(255, 255, 255, 0.7);
+            border-radius: 16px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.05);
+        }
+        .tag {
+            display: inline-block;
+            border-radius: 16px;
+            padding: 8px 16px;
+            margin: 5px;
+            cursor: pointer;
+            transition: all 0.2s;
+            text-align: center;
+            width: 100%;
+            font-weight: 500;
+        }
+        .tag:hover {
+            transform: scale(1.05);
+        }
+        .tag.selected {
+            color: white !important;
+            font-weight: 600;
+        }
+        .char-btn {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 30px;
+            border-radius: 20px;
+            background: linear-gradient(145deg, #ffffff, #f0f0f0);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+            text-align: center;
+            height: 100%;
+            cursor: pointer;
+            border: none;
+            margin-bottom: 25px;
+            width: 100%;
+        }
+        .char-btn:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 15px 30px rgba(0,0,0,0.15);
+        }
+        .char-btn h3 {
+            margin: 15px 0 10px 0;
+            color: #333;
+            font-size: 1.5rem;
+        }
+        .char-btn p {
+            margin: 0;
+            color: #666;
+            font-size: 1.1rem;
+            line-height: 1.4;
+        }
+        .btn-icon {
+            font-size: 48px;
+            margin-bottom: 15px;
+        }
+        .create-btn {
+            background: linear-gradient(145deg, #4CAF50, #2E7D32);
+            color: white !important;
+        }
+        .create-btn h3, .create-btn p {
+            color: white !important;
+        }
+        .premade-btn-1 { background: linear-gradient(145deg, #2196F3, #0D47A1); }
+        .premade-btn-2 { background: linear-gradient(145deg, #9C27B0, #6A1B9A); }
+        .premade-btn-3 { background: linear-gradient(145deg, #FF9800, #EF6C00); }
+        .premade-btn-1 h3, .premade-btn-1 p,
+        .premade-btn-2 h3, .premade-btn-2 p,
+        .premade-btn-3 h3, .premade-btn-3 p {
+            color: white !important;
+        }
+        .btn-container {
+            margin: 0 auto;
+            max-width: 800px;
+        }
+        .trait-btn {
+            background: rgba(156, 39, 176, 0.15);
+            color: #6A1B9A;
+        }
+        .trait-btn.selected {
+            background: linear-gradient(145deg, #9C27B0, #6A1B9A);
+        }
+        .dislike-btn {
+            background: rgba(244, 67, 54, 0.15);
+            color: #B71C1C;
+        }
+        .dislike-btn.selected {
+            background: linear-gradient(145deg, #F44336, #C62828);
+        }
+        .hobby-btn {
+            background: rgba(33, 150, 243, 0.15);
+            color: #0D47A1;
+        }
+        .hobby-btn.selected {
+            background: linear-gradient(145deg, #2196F3, #0D47A1);
+        }
+        .music-btn {
+            background: rgba(255, 152, 0, 0.15);
+            color: #E65100;
+        }
+        .music-btn.selected {
+            background: linear-gradient(145deg, #FF9800, #EF6C00);
+        }
+        .fashion-btn {
+            background: rgba(76, 175, 80, 0.15);
+            color: #1B5E20;
+        }
+        .fashion-btn.selected {
+            background: linear-gradient(145deg, #4CAF50, #2E7D32);
+        }
+        .vibe-btn {
+            background: rgba(156, 39, 176, 0.15);
+            color: #6A1B9A;
+        }
+        .vibe-btn.selected {
+            background: linear-gradient(145deg, #9C27B0, #6A1B9A);
+        }
+        .temper-btn {
+            background: rgba(33, 150, 243, 0.15);
+            color: #0D47A1;
+        }
+        .temper-btn.selected {
+            background: linear-gradient(145deg, #2196F3, #0D47A1);
+        }
+        .mbti-option {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 15px;
+            border-radius: 12px;
+            background: rgba(255, 255, 255, 0.7);
+            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+            cursor: pointer;
+            transition: all 0.3s;
+            text-align: center;
+            height: 100%;
+        }
+        .mbti-option:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 15px rgba(0,0,0,0.1);
+        }
+        .mbti-option.selected {
+            background: linear-gradient(145deg, #6a11cb, #2575fc);
+            color: white;
+        }
+        .mbti-icon {
+            font-size: 36px;
+            margin-bottom: 10px;
+        }
+        .mbti-title {
+            font-weight: bold;
+            margin-bottom: 5px;
+            font-size: 1.1rem;
+        }
+    </style>
+""", unsafe_allow_html=True)
+
 # --- 3. Центральная анкета пользователя ---
 if not st.session_state.form_saved:
     st.title("DreamDate AI — тренируйся в дейтинге")
@@ -46,75 +235,13 @@ if not st.session_state.form_saved:
         if st.form_submit_button("Сохранить анкету", type="primary"):
             st.session_state.form_saved = True
             st.session_state.user_name = name
-            # Сбрасываем предыдущие состояния
             st.session_state.character_created = False
             st.session_state.personality_saved = False
             st.rerun()
 
-# --- 4. Выбор типа персонажа (обновлённые кнопки) ---
+# --- 4. Выбор типа персонажа ---
 if st.session_state.form_saved and not st.session_state.character_created:
     st.title("Выберите тип персонажа")
-    
-    st.markdown("""
-        <style>
-            .char-btn {
-                display: flex;
-                flex-direction: column;
-                align-items: center;
-                justify-content: center;
-                padding: 25px;
-                border-radius: 16px;
-                background: linear-gradient(145deg, #ffffff, #f0f0f0);
-                box-shadow: 5px 5px 15px #d9d9d9, 
-                            -5px -5px 15px #ffffff;
-                transition: all 0.3s ease;
-                text-align: center;
-                height: 100%;
-                cursor: pointer;
-                border: none;
-                margin-bottom: 20px;
-                width: 100%;
-            }
-            .char-btn:hover {
-                transform: translateY(-5px);
-                box-shadow: 8px 8px 20px #d0d0d0, 
-                            -8px -8px 20px #ffffff;
-            }
-            .char-btn h3 {
-                margin: 0 0 10px 0;
-                color: #333;
-                font-size: 1.4rem;
-            }
-            .char-btn p {
-                margin: 0;
-                color: #666;
-                font-size: 1rem;
-            }
-            .btn-icon {
-                font-size: 42px;
-                margin-bottom: 15px;
-            }
-            .create-btn {
-                background: linear-gradient(145deg, #4CAF50, #43A047);
-                color: white !important;
-            }
-            .create-btn h3, .create-btn p {
-                color: white !important;
-            }
-            .premade-btn-1 { background: linear-gradient(145deg, #2196F3, #1E88E5); }
-            .premade-btn-2 { background: linear-gradient(145deg, #9C27B0, #8E24AA); }
-            .premade-btn-3 { background: linear-gradient(145deg, #FF9800, #FB8C00); }
-            .premade-btn-1 h3, .premade-btn-1 p,
-            .premade-btn-2 h3, .premade-btn-2 p,
-            .premade-btn-3 h3, .premade-btn-3 p {
-                color: white !important;
-            }
-            .btn-container {
-                margin: 0 auto;
-                max-width: 800px;
-            }
-        </style>
-    """, unsafe_allow_html=True)
     
     # Контейнер для всех кнопок
     with st.container():
@@ -178,121 +305,239 @@ if st.session_state.form_saved and not st.session_state.character_created:
         
         st.markdown('</div>', unsafe_allow_html=True)
 
-# --- 5. Создание кастомного персонажа (исправленная версия) ---
+# --- 5. Создание кастомного персонажа (только кнопки) ---
 if st.session_state.get("character_created", False) and st.session_state.character_type == "custom":
     if "personality_saved" not in st.session_state:
         st.session_state.personality_saved = False
     
     if not st.session_state.personality_saved:
-        st.title("Настройте персонажа")
-        
-        # Инициализация значений
-        if "mbti_ei" not in st.session_state:
-            st.session_state.mbti_ei = 50
-        if "mbti_ns" not in st.session_state:
-            st.session_state.mbti_ns = 50
-        if "mbti_tf" not in st.session_state:
-            st.session_state.mbti_tf = 50
-        if "mbti_jp" not in st.session_state:
-            st.session_state.mbti_jp = 50
-        if "selected_gender" not in st.session_state:
-            st.session_state.selected_gender = "Мужской"
-        
-        # Проверка и инициализация char_settings
-        if not st.session_state.char_settings:
-            st.session_state.char_settings = {
-                "gender": "Девушка",
-                "age": 25,
-                "city": "Москва",
-                "fashion": "Casual",
-                "vibe": "Солнечный",
-                "hobbies": [],
-                "music": [],
-                "traits": [],
-                "temper": "Сбалансированный",
-                "dislikes": []
-            }
+        st.title("🎭 Создайте своего персонажа")
         
         # --- Основные настройки ---
         with st.container():
+            st.markdown("### Основная информация")
             col1, col2, col3 = st.columns(3)
             with col1:
-                st.session_state.char_settings["gender"] = st.selectbox(
-                    "Пол персонажа", 
-                    ["Девушка", "Парень", "Небинарный"],
-                    index=["Девушка", "Парень", "Небинарный"].index(st.session_state.char_settings["gender"])
-                )
+                st.markdown("**Пол персонажа**")
+                options = ["Девушка", "Парень", "Небинарный"]
+                for gender in options:
+                    if st.button(gender, key=f"gender_{gender}"):
+                        st.session_state.char_settings["gender"] = gender
+                        st.rerun()
+                    selected = st.session_state.char_settings["gender"] == gender
+                    st.markdown(f"""
+                        <div class="tag {'selected' if selected else ''} 
+                                   {'temper-btn' if selected else 'temper-btn'}" 
+                             style="{'background: linear-gradient(145deg, #9C27B0, #6A1B9A); color: white;' if selected else ''}">
+                            {gender}
+                        </div>
+                    """, unsafe_allow_html=True)
+            
             with col2:
-                st.session_state.char_settings["age"] = st.slider(
-                    "Возраст", 18, 60, st.session_state.char_settings["age"]
-                )
+                st.markdown("**Возраст**")
+                ages = ["18-22", "23-27", "28-32", "33+"]
+                for age in ages:
+                    if st.button(age, key=f"age_{age}"):
+                        st.session_state.char_settings["age"] = age
+                        st.rerun()
+                    selected = st.session_state.char_settings["age"] == age
+                    st.markdown(f"""
+                        <div class="tag {'selected' if selected else ''} 
+                                   {'temper-btn' if selected else 'temper-btn'}" 
+                             style="{'background: linear-gradient(145deg, #2196F3, #0D47A1); color: white;' if selected else ''}">
+                            {age}
+                        </div>
+                    """, unsafe_allow_html=True)
+            
             with col3:
-                st.session_state.char_settings["city"] = st.text_input(
-                    "Город/часовой пояс", 
-                    st.session_state.char_settings["city"]
-                )
+                st.markdown("**Город**")
+                cities = ["Москва", "Санкт-Петербург", "Другой"]
+                for city in cities:
+                    if st.button(city, key=f"city_{city}"):
+                        st.session_state.char_settings["city"] = city
+                        st.rerun()
+                    selected = st.session_state.char_settings["city"] == city
+                    st.markdown(f"""
+                        <div class="tag {'selected' if selected else ''} 
+                                   {'temper-btn' if selected else 'temper-btn'}" 
+                             style="{'background: linear-gradient(145deg, #4CAF50, #2E7D32); color: white;' if selected else ''}">
+                            {city}
+                        </div>
+                    """, unsafe_allow_html=True)
         
-        # --- Слайдеры характера ---
-        st.markdown("### Характер персонажа")
-        col1, col2 = st.columns(2)
+        # --- Характер ---
+        st.markdown("### 🧠 Характер персонажа")
+        
+        # MBTI характеристики в 2 ряда
+        st.markdown("**Экстраверт vs Интроверт**")
+        col1, col2, col3 = st.columns(3)
         with col1:
-            with st.container():
-                st.markdown('<div class="slider-container">', unsafe_allow_html=True)
-                st.markdown('<div class="slider-header"><span>👥 Экстраверт</span><span>🧘 Интроверт</span></div>', unsafe_allow_html=True)
-                st.session_state.mbti_ei = st.slider(
-                    "Экстраверт/Интроверт", 
-                    0, 100, st.session_state.mbti_ei, 
-                    key="slider_ei", 
-                    label_visibility="collapsed"
-                )
-                st.markdown('</div>', unsafe_allow_html=True)
-        
+            if st.button("", key="mbti_ei_0"):
+                st.session_state.mbti_ei = 20
+                st.rerun()
+            st.markdown("""
+                <div class="mbti-option">
+                    <div class="mbti-icon">👥</div>
+                    <div class="mbti-title">Экстраверт</div>
+                    <div>Общительный, энергичный</div>
+                </div>
+            """, unsafe_allow_html=True)
         with col2:
-            with st.container():
-                st.markdown('<div class="slider-container">', unsafe_allow_html=True)
-                st.markdown('<div class="slider-header"><span>📐 Реалист</span><span>🌈 Мечтатель</span></div>', unsafe_allow_html=True)
-                st.session_state.mbti_ns = st.slider(
-                    "Реалист/Мечтатель", 
-                    0, 100, st.session_state.mbti_ns, 
-                    key="slider_ns", 
-                    label_visibility="collapsed"
-                )
-                st.markdown('</div>', unsafe_allow_html=True)
-        
-        col3, col4 = st.columns(2)
+            if st.button("", key="mbti_ei_1"):
+                st.session_state.mbti_ei = 50
+                st.rerun()
+            st.markdown("""
+                <div class="mbti-option">
+                    <div class="mbti-icon">⚖️</div>
+                    <div class="mbti-title">Сбалансированный</div>
+                    <div>Адаптивный, универсальный</div>
+                </div>
+            """, unsafe_allow_html=True)
         with col3:
-            with st.container():
-                st.markdown('<div class="slider-container">', unsafe_allow_html=True)
-                st.markdown('<div class="slider-header"><span>📊 Рациональный</span><span>❤️ Эмоциональный</span></div>', unsafe_allow_html=True)
-                st.session_state.mbti_tf = st.slider(
-                    "Рациональный/Эмоциональный", 
-                    0, 100, st.session_state.mbti_tf, 
-                    key="slider_tf", 
-                    label_visibility="collapsed"
-                )
-                st.markdown('</div>', unsafe_allow_html=True)
+            if st.button("", key="mbti_ei_2"):
+                st.session_state.mbti_ei = 80
+                st.rerun()
+            st.markdown("""
+                <div class="mbti-option">
+                    <div class="mbti-icon">🧘</div>
+                    <div class="mbti-title">Интроверт</div>
+                    <div>Созерцательный, глубокий</div>
+                </div>
+            """, unsafe_allow_html=True)
         
-        with col4:
-            with st.container():
-                st.markdown('<div class="slider-container">', unsafe_allow_html=True)
-                st.markdown('<div class="slider-header"><span>📅 Структурный</span><span>🎲 Спонтанный</span></div>', unsafe_allow_html=True)
-                st.session_state.mbti_jp = st.slider(
-                    "Структурный/Спонтанный", 
-                    0, 100, st.session_state.mbti_jp, 
-                    key="slider_jp", 
-                    label_visibility="collapsed"
-                )
-                st.markdown('</div>', unsafe_allow_html=True)
+        st.markdown("**Реалист vs Мечтатель**")
+        col1, col2, col3 = st.columns(3)
+        with col1:
+            if st.button("", key="mbti_ns_0"):
+                st.session_state.mbti_ns = 20
+                st.rerun()
+            st.markdown("""
+                <div class="mbti-option">
+                    <div class="mbti-icon">📐</div>
+                    <div class="mbti-title">Реалист</div>
+                    <div>Практичный, конкретный</div>
+                </div>
+            """, unsafe_allow_html=True)
+        with col2:
+            if st.button("", key="mbti_ns_1"):
+                st.session_state.mbti_ns = 50
+                st.rerun()
+            st.markdown("""
+                <div class="mbti-option">
+                    <div class="mbti-icon">⚖️</div>
+                    <div class="mbti-title">Сбалансированный</div>
+                    <div>Гибкий, адаптивный</div>
+                </div>
+            """, unsafe_allow_html=True)
+        with col3:
+            if st.button("", key="mbti_ns_2"):
+                st.session_state.mbti_ns = 80
+                st.rerun()
+            st.markdown("""
+                <div class="mbti-option">
+                    <div class="mbti-icon">🌈</div>
+                    <div class="mbti-title">Мечтатель</div>
+                    <div>Творческий, инновационный</div>
+                </div>
+            """, unsafe_allow_html=True)
         
-        # Выбор пола
-        st.markdown("### Стиль общения")
-        st.session_state.selected_gender = st.radio(
-            "", 
-            ["Мужской", "Женский"], 
-            horizontal=True, 
-            key="char_gender",
-            index=0 if st.session_state.get('selected_gender', 'Мужской') == "Мужской" else 1
-        )
+        st.markdown("**Рациональный vs Эмоциональный**")
+        col1, col2, col3 = st.columns(3)
+        with col1:
+            if st.button("", key="mbti_tf_0"):
+                st.session_state.mbti_tf = 20
+                st.rerun()
+            st.markdown("""
+                <div class="mbti-option">
+                    <div class="mbti-icon">📊</div>
+                    <div class="mbti-title">Рациональный</div>
+                    <div>Логичный, аналитичный</div>
+                </div>
+            """, unsafe_allow_html=True)
+        with col2:
+            if st.button("", key="mbti_tf_1"):
+                st.session_state.mbti_tf = 50
+                st.rerun()
+            st.markdown("""
+                <div class="mbti-option">
+                    <div class="mbti-icon">⚖️</div>
+                    <div class="mbti-title">Сбалансированный</div>
+                    <div>Уравновешенный, объективный</div>
+                </div>
+            """, unsafe_allow_html=True)
+        with col3:
+            if st.button("", key="mbti_tf_2"):
+                st.session_state.mbti_tf = 80
+                st.rerun()
+            st.markdown("""
+                <div class="mbti-option">
+                    <div class="mbti-icon">❤️</div>
+                    <div class="mbti-title">Эмоциональный</div>
+                    <div>Чуткий, эмпатичный</div>
+                </div>
+            """, unsafe_allow_html=True)
+        
+        st.markdown("**Структурный vs Спонтанный**")
+        col1, col2, col3 = st.columns(3)
+        with col1:
+            if st.button("", key="mbti_jp_0"):
+                st.session_state.mbti_jp = 20
+                st.rerun()
+            st.markdown("""
+                <div class="mbti-option">
+                    <div class="mbti-icon">📅</div>
+                    <div class="mbti-title">Структурный</div>
+                    <div>Организованный, плановый</div>
+                </div>
+            """, unsafe_allow_html=True)
+        with col2:
+            if st.button("", key="mbti_jp_1"):
+                st.session_state.mbti_jp = 50
+                st.rerun()
+            st.markdown("""
+                <div class="mbti-option">
+                    <div class="mbti-icon">⚖️</div>
+                    <div class="mbti-title">Сбалансированный</div>
+                    <div>Адаптивный, гибкий</div>
+                </div>
+            """, unsafe_allow_html=True)
+        with col3:
+            if st.button("", key="mbti_jp_2"):
+                st.session_state.mbti_jp = 80
+                st.rerun()
+            st.markdown("""
+                <div class="mbti-option">
+                    <div class="mbti-icon">🎲</div>
+                    <div class="mbti-title">Спонтанный</div>
+                    <div>Импульсивный, свободный</div>
+                </div>
+            """, unsafe_allow_html=True)
+        
+        # Стиль общения
+        st.markdown("### 💬 Стиль общения")
+        genders = ["Мужской", "Женский"]
+        cols = st.columns(2)
+        for i, gender in enumerate(genders):
+            with cols[i]:
+                if st.button(gender, key=f"comm_{gender}"):
+                    st.session_state.selected_gender = gender
+                    st.rerun()
+                selected = st.session_state.get('selected_gender', 'Мужской') == gender
+                color = "#6a11cb" if selected else "#f0f0f0"
+                text_color = "white" if selected else "#333"
+                st.markdown(f"""
+                    <div style="
+                        background: {'linear-gradient(145deg, #6a11cb, #2575fc)' if selected else '#f0f0f0'};
+                        border-radius: 16px;
+                        padding: 20px;
+                        text-align: center;
+                        color: {text_color};
+                        font-weight: bold;
+                        font-size: 1.2rem;
+                    ">
+                        {gender}
+                    </div>
+                """, unsafe_allow_html=True)
         
         # --- Блок "Мне интересно" ---
         st.markdown("### 🎯 Мне интересно")
@@ -310,17 +555,8 @@ if st.session_state.get("character_created", False) and st.session_state.charact
                         st.session_state.char_settings["hobbies"].append(hobby)
                     st.rerun()
                 selected = hobby in st.session_state.char_settings["hobbies"]
-                color = "#4CAF50" if selected else "#E0E0E0"
                 st.markdown(f"""
-                    <div style="
-                        background-color: {color};
-                        border-radius: 16px;
-                        padding: 8px 16px;
-                        margin: 5px 0;
-                        text-align: center;
-                        color: {'white' if selected else 'black'};
-                        font-weight: {'bold' if selected else 'normal'};
-                    ">
+                    <div class="tag {'selected' if selected else ''} hobby-btn">
                         {hobby}
                     </div>
                 """, unsafe_allow_html=True)
@@ -338,17 +574,8 @@ if st.session_state.get("character_created", False) and st.session_state.charact
                         st.session_state.char_settings["music"].append(music)
                     st.rerun()
                 selected = music in st.session_state.char_settings["music"]
-                color = "#4CAF50" if selected else "#E0E0E0"
                 st.markdown(f"""
-                    <div style="
-                        background-color: {color};
-                        border-radius: 16px;
-                        padding: 8px 16px;
-                        margin: 5px 0;
-                        text-align: center;
-                        color: {'white' if selected else 'black'};
-                        font-weight: {'bold' if selected else 'normal'};
-                    ">
+                    <div class="tag {'selected' if selected else ''} music-btn">
                         {music}
                     </div>
                 """, unsafe_allow_html=True)
@@ -359,25 +586,15 @@ if st.session_state.get("character_created", False) and st.session_state.charact
         # Стиль одежды
         st.markdown("**Стиль одежды:**")
         fashion_options = ["Casual", "Спорт-шик", "Elegant", "Dark-academia", "Soft-girl", "Бохо", "Минимализм"]
-        selected_fashion = st.session_state.char_settings["fashion"]
         cols = st.columns(4)
         for i, fashion in enumerate(fashion_options):
             with cols[i % 4]:
                 if st.button(fashion, key=f"fashion_{fashion}"):
                     st.session_state.char_settings["fashion"] = fashion
                     st.rerun()
-                selected = fashion == selected_fashion
-                color = "#2196F3" if selected else "#E0E0E0"
+                selected = fashion == st.session_state.char_settings["fashion"]
                 st.markdown(f"""
-                    <div style="
-                        background-color: {color};
-                        border-radius: 16px;
-                        padding: 8px 5px;
-                        margin: 5px 0;
-                        text-align: center;
-                        color: {'white' if selected else 'black'};
-                        font-weight: {'bold' if selected else 'normal'};
-                    ">
+                    <div class="tag {'selected' if selected else ''} fashion-btn">
                         {fashion}
                     </div>
                 """, unsafe_allow_html=True)
@@ -385,25 +602,15 @@ if st.session_state.get("character_created", False) and st.session_state.charact
         # Визуальный вайб
         st.markdown("**Визуальный вайб:**")
         vibe_options = ["Солнечный", "Таинственный", "Гик", "Арт-бохо", "Романтичный", "Брутальный", "Утонченный"]
-        selected_vibe = st.session_state.char_settings["vibe"]
         cols = st.columns(4)
         for i, vibe in enumerate(vibe_options):
             with cols[i % 4]:
                 if st.button(vibe, key=f"vibe_{vibe}"):
                     st.session_state.char_settings["vibe"] = vibe
                     st.rerun()
-                selected = vibe == selected_vibe
-                color = "#2196F3" if selected else "#E0E0E0"
+                selected = vibe == st.session_state.char_settings["vibe"]
                 st.markdown(f"""
-                    <div style="
-                        background-color: {color};
-                        border-radius: 16px;
-                        padding: 8px 5px;
-                        margin: 5px 0;
-                        text-align: center;
-                        color: {'white' if selected else 'black'};
-                        font-weight: {'bold' if selected else 'normal'};
-                    ">
+                    <div class="tag {'selected' if selected else ''} vibe-btn">
                         {vibe}
                     </div>
                 """, unsafe_allow_html=True)
@@ -424,17 +631,8 @@ if st.session_state.get("character_created", False) and st.session_state.charact
                         st.session_state.char_settings["traits"].append(trait)
                     st.rerun()
                 selected = trait in st.session_state.char_settings["traits"]
-                color = "#9C27B0" if selected else "#E0E0E0"
                 st.markdown(f"""
-                    <div style="
-                        background-color: {color};
-                        border-radius: 16px;
-                        padding: 8px 5px;
-                        margin: 5px 0;
-                        text-align: center;
-                        color: {'white' if selected else 'black'};
-                        font-weight: {'bold' if selected else 'normal'};
-                    ">
+                    <div class="tag {'selected' if selected else ''} trait-btn">
                         {trait}
                     </div>
                 """, unsafe_allow_html=True)
@@ -442,25 +640,15 @@ if st.session_state.get("character_created", False) and st.session_state.charact
         # Темперамент
         st.markdown("**Темперамент:**")
         temper_options = ["Спокойный", "Энергичный", "Сбалансированный", "Импульсивный", "Флегматичный"]
-        selected_temper = st.session_state.char_settings["temper"]
         cols = st.columns(5)
         for i, temper in enumerate(temper_options):
             with cols[i % 5]:
                 if st.button(temper, key=f"temper_{temper}"):
                     st.session_state.char_settings["temper"] = temper
                     st.rerun()
-                selected = temper == selected_temper
-                color = "#9C27B0" if selected else "#E0E0E0"
+                selected = temper == st.session_state.char_settings["temper"]
                 st.markdown(f"""
-                    <div style="
-                        background-color: {color};
-                        border-radius: 16px;
-                        padding: 8px 5px;
-                        margin: 5px 0;
-                        text-align: center;
-                        color: {'white' if selected else 'black'};
-                        font-weight: {'bold' if selected else 'normal'};
-                    ">
+                    <div class="tag {'selected' if selected else ''} temper-btn">
                         {temper}
                     </div>
                 """, unsafe_allow_html=True)
@@ -480,23 +668,14 @@ if st.session_state.get("character_created", False) and st.session_state.charact
                         st.session_state.char_settings["dislikes"].append(dislike)
                     st.rerun()
                 selected = dislike in st.session_state.char_settings["dislikes"]
-                color = "#F44336" if selected else "#FFEBEE"
                 st.markdown(f"""
-                    <div style="
-                        background-color: {color};
-                        border-radius: 16px;
-                        padding: 8px 5px;
-                        margin: 5px 0;
-                        text-align: center;
-                        color: {'white' if selected else '#B71C1C'};
-                        font-weight: {'bold' if selected else 'normal'};
-                    ">
+                    <div class="tag {'selected' if selected else ''} dislike-btn">
                         {dislike}
                     </div>
                 """, unsafe_allow_html=True)
         
         # Кнопка сохранения
-        if st.button("Сохранить персонажа", type="primary", use_container_width=True):
+        if st.button("✅ Сохранить персонажа", type="primary", use_container_width=True):
             st.session_state.personality_saved = True
             st.rerun()
 
@@ -515,7 +694,7 @@ if st.session_state.get("personality_saved", False) or (
             st.session_state.selected_gender = "Мужской"
             st.session_state.char_settings = {
                 "gender": "Парень",
-                "age": 28,
+                "age": "23-27",
                 "city": "Москва",
                 "fashion": "Спорт-шик",
                 "vibe": "Энергичный",
@@ -534,7 +713,7 @@ if st.session_state.get("personality_saved", False) or (
             st.session_state.selected_gender = "Женский"
             st.session_state.char_settings = {
                 "gender": "Девушка",
-                "age": 24,
+                "age": "23-27",
                 "city": "Санкт-Петербург",
                 "fashion": "Романтичный",
                 "vibe": "Нежный",
@@ -553,8 +732,8 @@ if st.session_state.get("personality_saved", False) or (
             st.session_state.selected_gender = "Небинарный"
             st.session_state.char_settings = {
                 "gender": "Небинарный",
-                "age": 26,
-                "city": "Калининград",
+                "age": "23-27",
+                "city": "Другой",
                 "fashion": "Бохо",
                 "vibe": "Загадочный",
                 "hobbies": ["Искусство", "Фотография", "Путешествия"],
