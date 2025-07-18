@@ -40,125 +40,152 @@ with st.sidebar:
     st.markdown("### Красные флаги")
     dislikes = st.text_input("Что бот не любит", "опоздания, грубость")
 
-# --- 3. Центральная анкета пользователя ---
+# --- 3. Центральная анкета пользователя (без зеленой шапки) ---
 if not st.session_state.form_saved:
     st.title("DreamDate AI — тренируйся в дейтинге")
-    st.markdown("""
-        <style>
-            .form-container {
-                background-color: #00dc00;
-                padding: 40px 30px;
-                border-radius: 35px;
-                width: 400px;
-                margin: 30px auto;
-            }
-            .form-input > div > input,
-            .form-input > div > div {
-                background-color: #fcd966 !important;
-                color: black !important;
-                border-radius: 6px;
-            }
-        </style>
-    """, unsafe_allow_html=True)
+    
+    name = st.text_input("Имя", key="name", label_visibility="visible")
+    sex = st.selectbox("Пол", options=["Мужской", "Женский"], key="sex")
+    default_birthdate = datetime.date(2000, 1, 1)
+    max_birthdate = datetime.date(2007, 12, 31)
+    birthdate = st.date_input("Дата рождения", value=default_birthdate, 
+                            max_value=max_birthdate, key="birthdate")
 
-    with st.container():
-        st.markdown('<div class="form-container">', unsafe_allow_html=True)
+    if st.button("Сохранить анкету", type="primary"):
+        st.session_state.form_saved = True
+        st.session_state.user_name = name
+        # Сбрасываем предыдущие состояния
+        st.session_state.character_created = False
+        st.session_state.personality_saved = False
+        st.rerun()
 
-        name = st.text_input("Имя", key="name", label_visibility="visible")
-        sex = st.selectbox("Пол", options=["Мужской", "Женский"], key="sex")
-        default_birthdate = datetime.date(2000, 1, 1)
-        max_birthdate = datetime.date(2007, 12, 31)
-        birthdate = st.date_input("Дата рождения", value=default_birthdate, 
-                                 max_value=max_birthdate, key="birthdate")
-
-        if st.button("Сохранить анкету"):
-            st.session_state.form_saved = True
-            st.session_state.user_name = name
-            # Сбрасываем предыдущие состояния
-            st.session_state.character_created = False
-            st.session_state.personality_saved = False
-            st.rerun()
-
-        st.markdown('</div>', unsafe_allow_html=True)
-
-# --- 4. Выбор типа персонажа (следующая страница) ---
+# --- 4. Выбор типа персонажа (стильные кликабельные кнопки) ---
 if st.session_state.form_saved and not st.session_state.character_created:
     st.title("Выберите тип персонажа")
     
     st.markdown("""
         <style>
-            .big-button {
-                padding: 20px;
-                border-radius: 15px;
-                font-size: 18px;
-                font-weight: bold;
-                margin: 15px 0;
-                text-align: center;
-                cursor: pointer;
-                transition: all 0.3s;
-            }
-            .big-button:hover {
-                transform: scale(1.03);
-            }
-            .create-btn {
-                background-color: #4CAF50;
-                color: white;
-            }
-            .premade-btn {
-                background-color: #2196F3;
-                color: white;
-            }
-            .btn-container {
+            .char-btn {
                 display: flex;
                 flex-direction: column;
-                max-width: 600px;
-                margin: 0 auto;
+                align-items: center;
+                justify-content: center;
+                padding: 25px;
+                border-radius: 16px;
+                background: linear-gradient(145deg, #ffffff, #f0f0f0);
+                box-shadow: 5px 5px 15px #d9d9d9, 
+                            -5px -5px 15px #ffffff;
+                transition: all 0.3s ease;
+                text-align: center;
+                height: 100%;
+                cursor: pointer;
+                border: none;
+            }
+            .char-btn:hover {
+                transform: translateY(-5px);
+                box-shadow: 8px 8px 20px #d0d0d0, 
+                            -8px -8px 20px #ffffff;
+            }
+            .char-btn:active {
+                transform: translateY(0);
+                box-shadow: 3px 3px 10px #d9d9d9, 
+                            -3px -3px 10px #ffffff;
+            }
+            .char-btn h3 {
+                margin: 0 0 10px 0;
+                color: #333;
+            }
+            .char-btn p {
+                margin: 0;
+                color: #666;
+                font-size: 0.9em;
+            }
+            .btn-icon {
+                font-size: 36px;
+                margin-bottom: 15px;
+            }
+            .create-btn {
+                background: linear-gradient(145deg, #4CAF50, #43A047);
+                color: white !important;
+            }
+            .create-btn h3, .create-btn p {
+                color: white !important;
+            }
+            .premade-btn-1 { background: linear-gradient(145deg, #2196F3, #1E88E5); }
+            .premade-btn-2 { background: linear-gradient(145deg, #9C27B0, #8E24AA); }
+            .premade-btn-3 { background: linear-gradient(145deg, #FF9800, #FB8C00); }
+            .premade-btn-1 h3, .premade-btn-1 p,
+            .premade-btn-2 h3, .premade-btn-2 p,
+            .premade-btn-3 h3, .premade-btn-3 p {
+                color: white !important;
             }
         </style>
     """, unsafe_allow_html=True)
     
-    with st.container():
-        # Кнопка создания персонажа
-        st.markdown('<div class="btn-container">', unsafe_allow_html=True)
-        if st.button("Создать своего персонажа", key="create_custom"):
+    # Основные кнопки в 2 колонки
+    col_main1, col_main2 = st.columns([1, 1], gap="large")
+    
+    with col_main1:
+        # Создание своего персонажа
+        if st.button("", key="create_custom_main"):
             st.session_state.character_type = "custom"
             st.session_state.character_created = True
             st.rerun()
-        st.markdown('<div class="big-button create-btn">Создать своего персонажа</div>', unsafe_allow_html=True)
-        
-        st.divider()
-        
-        # Кнопки готовых персонажей
+        st.markdown("""
+            <button class="char-btn create-btn">
+                <div class="btn-icon">✨</div>
+                <h3>Создать своего персонажа</h3>
+                <p>Полная кастомизация характера и стиля</p>
+            </button>
+        """, unsafe_allow_html=True)
+    
+    with col_main2:
+        # Готовые персонажи заголовок
         st.subheader("Или выберите готового:")
         
-        col1, col2, col3 = st.columns(3)
+        # Три персонажа в ряд
+        col1, col2, col3 = st.columns(3, gap="medium")
+        
         with col1:
-            if st.button("Персонаж 1", key="premade_1"):
+            if st.button("", key="premade_1_main"):
                 st.session_state.character_type = "premade_1"
                 st.session_state.character_created = True
                 st.rerun()
-            st.markdown('<div class="big-button premade-btn">Энергичный экстраверт</div>', unsafe_allow_html=True)
-            st.caption("Любит активный отдых, легко заводит знакомства")
+            st.markdown("""
+                <button class="char-btn premade-btn-1">
+                    <div class="btn-icon">⚡</div>
+                    <h3>Энергичный экстраверт</h3>
+                    <p>Любит активный отдых</p>
+                </button>
+            """, unsafe_allow_html=True)
         
         with col2:
-            if st.button("Персонаж 2", key="premade_2"):
+            if st.button("", key="premade_2_main"):
                 st.session_state.character_type = "premade_2"
                 st.session_state.character_created = True
                 st.rerun()
-            st.markdown('<div class="big-button premade-btn">Романтичный интроверт</div>', unsafe_allow_html=True)
-            st.caption("Ценит глубокие разговоры, любит искусство")
+            st.markdown("""
+                <button class="char-btn premade-btn-2">
+                    <div class="btn-icon">🌹</div>
+                    <h3>Романтичный интроверт</h3>
+                    <p>Ценит глубокие разговоры</p>
+                </button>
+            """, unsafe_allow_html=True)
         
         with col3:
-            if st.button("Персонаж 3", key="premade_3"):
+            if st.button("", key="premade_3_main"):
                 st.session_state.character_type = "premade_3"
                 st.session_state.character_created = True
                 st.rerun()
-            st.markdown('<div class="big-button premade-btn">Загадочный артистичный</div>', unsafe_allow_html=True)
-            st.caption("Творческая личность с необычным взглядом")
-        
-        st.markdown('</div>', unsafe_allow_html=True)
+            st.markdown("""
+                <button class="char-btn premade-btn-3">
+                    <div class="btn-icon">🎨</div>
+                    <h3>Загадочный артистичный</h3>
+                    <p>Творческий взгляд на мир</p>
+                </button>
+            """, unsafe_allow_html=True)
 
-# --- 5. Создание кастомного персонажа (следующая страница) ---
+# --- 5. Создание кастомного персонажа ---
 if st.session_state.get("character_created", False) and st.session_state.character_type == "custom":
     if "personality_saved" not in st.session_state:
         st.session_state.personality_saved = False
@@ -173,21 +200,19 @@ if st.session_state.get("character_created", False) and st.session_state.charact
                     border-radius: 12px;
                     padding: 20px;
                     margin-bottom: 25px;
+                    box-shadow: 2px 2px 8px rgba(0,0,0,0.1);
                 }
                 .slider-header {
                     display: flex;
                     justify-content: space-between;
                     margin-bottom: 10px;
                     font-weight: bold;
-                }
-                .icon {
-                    font-size: 24px;
-                    margin: 0 10px;
+                    color: #444;
                 }
             </style>
         """, unsafe_allow_html=True)
         
-        # Инициализация значений в session_state
+        # Инициализация значений
         if "mbti_ei" not in st.session_state:
             st.session_state.mbti_ei = 50
         if "mbti_ns" not in st.session_state:
@@ -198,7 +223,7 @@ if st.session_state.get("character_created", False) and st.session_state.charact
             st.session_state.mbti_jp = 50
         
         # Первая строка слайдеров
-        col1, col2 = st.columns(2)
+        col1, col2 = st.columns(2, gap="medium")
         with col1:
             with st.container():
                 st.markdown('<div class="slider-container">', unsafe_allow_html=True)
@@ -224,7 +249,7 @@ if st.session_state.get("character_created", False) and st.session_state.charact
                 st.markdown('</div>', unsafe_allow_html=True)
         
         # Вторая строка слайдеров
-        col3, col4 = st.columns(2)
+        col3, col4 = st.columns(2, gap="medium")
         with col3:
             with st.container():
                 st.markdown('<div class="slider-container">', unsafe_allow_html=True)
