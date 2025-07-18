@@ -75,16 +75,41 @@ if not st.session_state.form_saved:
         st.markdown('</div>', unsafe_allow_html=True)
 
 # --- 3. Этап: выбор характера (до чата) ---
+# --- 3. Этап: выбор характера (с визуальной сеткой и подписями) ---
 if st.session_state.form_saved and "personality_saved" not in st.session_state:
     st.title("Выберите характер персонажа")
 
-    col1, col2 = st.columns(2)
-    with col1:
-        mbti_ei = st.slider("Экстраверт — Интроверт", 0, 100, 50)
-        mbti_ns = st.slider("Реалист — Мечтатель", 0, 100, 50)
-    with col2:
-        mbti_tf = st.slider("Рациональный — Эмоциональный", 0, 100, 50)
-        mbti_jp = st.slider("Структурный — Спонтанный", 0, 100, 50)
+    st.markdown("""
+        <style>
+            .slider-labels {
+                display: flex;
+                justify-content: space-between;
+                margin-bottom: -12px;
+                font-weight: 500;
+            }
+            .slider-block {
+                margin: 35px 0;
+            }
+        </style>
+    """, unsafe_allow_html=True)
+
+    def labeled_slider(label_left, label_right, key):
+        st.markdown(f"""
+        <div class="slider-block">
+            <div class="slider-labels">
+                <span>{label_left}</span>
+                <span>{label_right}</span>
+            </div>
+        </div>
+        """, unsafe_allow_html=True)
+        return st.slider(
+            label=" ", min_value=0, max_value=100, step=25, value=50, key=key, label_visibility="collapsed"
+        )
+
+    mbti_ei = labeled_slider("Экстраверт", "Интроверт", "mbti_ei")
+    mbti_ns = labeled_slider("Реалист", "Мечтатель", "mbti_ns")
+    mbti_tf = labeled_slider("Рациональный", "Эмоциональный", "mbti_tf")
+    mbti_jp = labeled_slider("Структурный", "Спонтанный", "mbti_jp")
 
     selected_gender = st.radio("Выберите пол персонажа", ["Мужской", "Женский"], horizontal=True)
 
