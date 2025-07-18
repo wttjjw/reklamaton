@@ -540,7 +540,6 @@ if st.session_state.get("character_created", False) and st.session_state.charact
                     key=f"slider_{param['key']}",
                     label_visibility="collapsed",
                     step=1,
-                    format=""
                 )
                 st.session_state.char_settings[param["key"]] = val
                 st.markdown(
