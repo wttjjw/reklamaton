@@ -932,10 +932,11 @@ if st.session_state.get("personality_saved", False) or (
         messages = [{"role": "system", "content": SYSTEM_PROMPT}]
         for m in st.session_state.msgs:
             if m["role"] == "user":
-                # Если хочешь имя пользователя в промпте:
-                messages.append({"role": "user", "content": f"{m['username']}: {m['content']}"})
+                username = m.get("username", st.session_state.user_name)  # если нет — дефолтное
+                messages.append({"role": "user", "content": f"{username}: {m['content']}"})
             else:
                 messages.append({"role": "assistant", "content": m["content"]})
+
 
         try:
             resp = client.chat.completions.create(
