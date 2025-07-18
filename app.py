@@ -1,6 +1,7 @@
-# app.py — DreamDate AI (Streamlit + Groq)
-import random
+# app.py — DreamDate AI (Streamlit + Groq)
+
 import datetime
+import random
 import streamlit as st
 from openai import OpenAI  # openai>=1.1.0
 
@@ -11,7 +12,7 @@ client = OpenAI(
 )
 MODEL = "llama3-70b-8192"
 
-# --- Состояние анкеты ---
+# --- Состояние ---
 if "form_saved" not in st.session_state:
     st.session_state.form_saved = False
 if "msgs" not in st.session_state:
@@ -23,19 +24,19 @@ with st.sidebar:
     gender   = st.selectbox("Пол персонажа", ["Девушка", "Парень", "Небинарный"])
     age      = st.slider("Возраст", 18, 60, 25)
     city     = st.text_input("Город/часовой пояс", "Москва")
-    
+
     st.markdown("### Внешний вайб")
     fashion  = st.selectbox("Стиль одежды", ["Casual", "Спорт‑шик", "Elegant", "Dark‑academia", "Soft‑girl"])
     vibe     = st.selectbox("Визуальный вайб", ["Солнечный", "Таинственный", "Гик", "Арт‑бохо"])
-    
+
     st.markdown("### Хобби & интересы")
     hobbies  = st.text_input("Хобби (через запятую)", "кино, бег, комиксы")
     music    = st.text_input("Любимая музыка/группы", "The 1975, Arctic Monkeys")
-    
+
     st.markdown("### Характер")
     traits   = st.multiselect("Черты", ["Юмористичный", "Романтичный", "Sassy", "Интроверт", "Экстраверт"])
     temper   = st.selectbox("Темперамент", ["Спокойный", "Энергичный", "Сбалансированный"])
-    
+
     st.markdown("### Красные флаги")
     dislikes = st.text_input("Что бот не любит", "опоздания, грубость")
 
@@ -68,29 +69,14 @@ if not st.session_state.form_saved:
         default_birthdate = datetime.date(2000, 1, 1)
         max_birthdate = datetime.date(2007, 12, 31)
         birthdate = st.date_input("Дата рождения", value=default_birthdate, max_value=max_birthdate, key="birthdate")
- male_names = ["Илья", "Максим", "Артём", "Лев", "Кирилл", "Миша", "Саша", "Егор", "Никита", "Тимур"]
-    female_names = ["Аня", "Лера", "Катя", "Софа", "Маша", "Даша", "Оля", "Ксюша", "Ира", "Лиза"]
 
-    if st.button("Сохранить характер"):
-        st.session_state.personality_saved = True
-        st.session_state.mbti_ei = mbti_ei
-        st.session_state.mbti_ns = mbti_ns
-        st.session_state.mbti_tf = mbti_tf
-        st.session_state.mbti_jp = mbti_jp
-        st.session_state.selected_gender = selected_gender
-            if selected_gender == "Мужской":
-                st.session_state.bot_name = random.choice(male_names)
-            else:
-                st.session_state.bot_name = random.choice(female_names)
-            
         if st.button("Сохранить анкету"):
             st.session_state.form_saved = True
             st.session_state.user_name = name
 
         st.markdown('</div>', unsafe_allow_html=True)
 
-# --- 3. Этап: выбор характера (до чата) ---
-# --- 3. Этап: выбор характера (с визуальной сеткой и подписями) ---
+# --- 3. Этап: выбор характера ---
 if st.session_state.form_saved and "personality_saved" not in st.session_state:
     st.title("Выберите характер персонажа")
 
@@ -128,6 +114,9 @@ if st.session_state.form_saved and "personality_saved" not in st.session_state:
 
     selected_gender = st.radio("Выберите пол персонажа", ["Мужской", "Женский"], horizontal=True)
 
+    male_names = ["Илья", "Максим", "Артём", "Лев", "Кирилл", "Миша", "Саша", "Егор", "Никита", "Тимур"]
+    female_names = ["Аня", "Лера", "Катя", "Софа", "Маша", "Даша", "Оля", "Ксюша", "Ира", "Лиза"]
+
     if st.button("Сохранить характер"):
         st.session_state.personality_saved = True
         st.session_state.mbti_ei = mbti_ei
@@ -136,9 +125,13 @@ if st.session_state.form_saved and "personality_saved" not in st.session_state:
         st.session_state.mbti_jp = mbti_jp
         st.session_state.selected_gender = selected_gender
 
-# --- 4. Чат и логика взаимодействия ---
+        if selected_gender == "Мужской":
+            st.session_state.bot_name = random.choice(male_names)
+        else:
+            st.session_state.bot_name = random.choice(female_names)
+
+# --- 4. Чат ---
 if st.session_state.get("personality_saved", False):
-    # Текстовое описание MBTI черт
     mbti_text = f"""
     MBTI черты: {'Экстраверт' if st.session_state.mbti_ei > 50 else 'Интроверт'}, 
     {'Мечтатель' if st.session_state.mbti_ns > 50 else 'Реалист'}, 
@@ -147,8 +140,11 @@ if st.session_state.get("personality_saved", False):
     Стиль общения: {st.session_state.selected_gender.lower()}.
     """
 
+    bot_name = st.session_state.get("bot_name", "Партнёр")
+
     SYSTEM_PROMPT = f"""
-    Ты — {gender.lower()} {age} лет из {city}. Внешний стиль: {fashion}, вайб: {vibe}.
+    Ты — {gender.lower()} по имени {bot_name}, тебе {age} лет, ты из {city}.
+    Внешний стиль: {fashion}, вайб: {vibe}.
     Увлечения: {hobbies}. Любимая музыка: {music}.
     Характер: {', '.join(traits) or 'нейтральный'}, темперамент {temper.lower()}.
     Тебе не нравятся: {dislikes}.
@@ -156,7 +152,6 @@ if st.session_state.get("personality_saved", False):
     Общайся в чате, как на первом свидании в Тиндере: флиртуй, задавай вопросы, поддерживай тему.
     """
 
-    # --- Чат: Ввод пользователя ---
     user_input = st.chat_input("Напиши сообщение идеальному партнёру…")
     if user_input:
         username = st.session_state.user_name
@@ -172,16 +167,15 @@ if st.session_state.get("personality_saved", False):
                 max_tokens=256
             )
             bot = resp.choices[0].message.content.strip()
-            st.session_state.msgs.append({"role": "assistant", "content": bot})
+            bot_message = f"**{bot_name}:** {bot}"
+            st.session_state.msgs.append({"role": "assistant", "content": bot_message})
         except Exception as e:
             st.error(f"Groq error: {e}")
 
-    # --- Вывод чата ---
     for m in st.session_state.msgs:
         with st.chat_message(m["role"]):
             st.markdown(m["content"])
 
-    # --- Feedback ---
     st.divider()
     if st.button("Получить фидбек о моём стиле общения"):
         user_dialog = "\n".join(
