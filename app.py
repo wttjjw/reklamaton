@@ -922,10 +922,21 @@ if st.session_state.get("personality_saved", False) or (
     user_input = st.chat_input(f"Напишите {name} сообщение...")
     if user_input:
         username = st.session_state.user_name
-        user_message = f"{user_input}"
-        st.session_state.msgs.append({"role": "user", "content": user_message})
+        user_message = {
+            "role": "user",
+            "username": username,
+            "content": user_input
+        }
+        st.session_state.msgs.append(user_message)
 
-        messages = [{"role": "system", "content": SYSTEM_PROMPT}] + st.session_state.msgs
+        messages = [{"role": "system", "content": SYSTEM_PROMPT}]
+        for m in st.session_state.msgs:
+            if m["role"] == "user":
+                # Если хочешь имя пользователя в промпте:
+                messages.append({"role": "user", "content": f"{m['username']}: {m['content']}"})
+            else:
+                messages.append({"role": "assistant", "content": m["content"]})
+
         try:
             resp = client.chat.completions.create(
                 model=MODEL,
@@ -943,12 +954,13 @@ if st.session_state.get("personality_saved", False) or (
     
     for m in st.session_state.msgs:
         if m["role"] == "user":
-            st.markdown(f"""
+           st.markdown(f"""
                 <div class="message-container">
                     <div class="message-name">Вы</div>
-                    <div class="user-message">{m["content"].split(':', 1)[1].strip()}</div>
+                    <div class="user-message">{m["content"].strip()}</div>
                 </div>
             """, unsafe_allow_html=True)
+
         else:
             st.markdown(f"""
                 <div class="message-container">
