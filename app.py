@@ -28,7 +28,8 @@ if "char_settings" not in st.session_state:
         "music": [],
         "traits": [],
         "temper": "Сбалансированный",
-        "dislikes": []
+        "dislikes": [],
+        "style": "Дружелюбный"
     }
 
 # --- Глобальный стиль с градиентным фоном ---
@@ -217,6 +218,89 @@ st.markdown("""
             margin-bottom: 5px;
             font-size: 1.1rem;
         }
+        .chat-container {
+            max-height: 500px;
+            overflow-y: auto;
+            padding: 10px;
+            border-radius: 16px;
+            background: rgba(255, 255, 255, 0.7);
+            margin-bottom: 20px;
+        }
+        .user-message {
+            background: linear-gradient(135deg, #6a11cb, #2575fc);
+            color: white;
+            border-radius: 18px 18px 4px 18px;
+            padding: 12px 18px;
+            margin: 10px 0;
+            max-width: 80%;
+            align-self: flex-end;
+        }
+        .bot-message {
+            background: rgba(255, 255, 255, 0.9);
+            color: #333;
+            border-radius: 18px 18px 18px 4px;
+            padding: 12px 18px;
+            margin: 10px 0;
+            max-width: 80%;
+            align-self: flex-start;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        .message-container {
+            display: flex;
+            flex-direction: column;
+            margin-bottom: 15px;
+        }
+        .user-container {
+            align-items: flex-end;
+        }
+        .bot-container {
+            align-items: flex-start;
+        }
+        .message-name {
+            font-weight: bold;
+            margin-bottom: 4px;
+            font-size: 0.9rem;
+        }
+        .character-card {
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 16px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.05);
+            display: flex;
+            align-items: center;
+        }
+        .avatar {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            margin-right: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 40px;
+        }
+        .character-info {
+            flex-grow: 1;
+        }
+        .character-name {
+            font-size: 1.5rem;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        .character-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 10px;
+        }
+        .character-tag {
+            background: rgba(156, 39, 176, 0.15);
+            color: #6A1B9A;
+            border-radius: 16px;
+            padding: 6px 12px;
+            font-size: 0.9rem;
+        }
     </style>
 """, unsafe_allow_html=True)
 
@@ -368,174 +452,58 @@ if st.session_state.get("character_created", False) and st.session_state.charact
         # --- Характер ---
         st.markdown("### 🧠 Характер персонажа")
         
-        # MBTI характеристики в 2 ряда
+        # Слайдеры для характеристик
         st.markdown("**Экстраверт vs Интроверт**")
+        ei_value = st.slider("", 0, 100, 50, key="mbti_ei", label_visibility="collapsed")
         col1, col2, col3 = st.columns(3)
-        with col1:
-            if st.button("", key="mbti_ei_0"):
-                st.session_state.mbti_ei = 20
-                st.rerun()
-            st.markdown("""
-                <div class="mbti-option">
-                    <div class="mbti-icon">👥</div>
-                    <div class="mbti-title">Экстраверт</div>
-                    <div>Общительный, энергичный</div>
-                </div>
-            """, unsafe_allow_html=True)
-        with col2:
-            if st.button("", key="mbti_ei_1"):
-                st.session_state.mbti_ei = 50
-                st.rerun()
-            st.markdown("""
-                <div class="mbti-option">
-                    <div class="mbti-icon">⚖️</div>
-                    <div class="mbti-title">Сбалансированный</div>
-                    <div>Адаптивный, универсальный</div>
-                </div>
-            """, unsafe_allow_html=True)
-        with col3:
-            if st.button("", key="mbti_ei_2"):
-                st.session_state.mbti_ei = 80
-                st.rerun()
-            st.markdown("""
-                <div class="mbti-option">
-                    <div class="mbti-icon">🧘</div>
-                    <div class="mbti-title">Интроверт</div>
-                    <div>Созерцательный, глубокий</div>
-                </div>
-            """, unsafe_allow_html=True)
+        col1.markdown("<div style='text-align: center;'>Экстраверт</div>", unsafe_allow_html=True)
+        col2.markdown(f"<div style='text-align: center; font-weight: bold;'>{ei_value}</div>", unsafe_allow_html=True)
+        col3.markdown("<div style='text-align: center;'>Интроверт</div>", unsafe_allow_html=True)
         
         st.markdown("**Реалист vs Мечтатель**")
+        ns_value = st.slider("", 0, 100, 50, key="mbti_ns", label_visibility="collapsed")
         col1, col2, col3 = st.columns(3)
-        with col1:
-            if st.button("", key="mbti_ns_0"):
-                st.session_state.mbti_ns = 20
-                st.rerun()
-            st.markdown("""
-                <div class="mbti-option">
-                    <div class="mbti-icon">📐</div>
-                    <div class="mbti-title">Реалист</div>
-                    <div>Практичный, конкретный</div>
-                </div>
-            """, unsafe_allow_html=True)
-        with col2:
-            if st.button("", key="mbti_ns_1"):
-                st.session_state.mbti_ns = 50
-                st.rerun()
-            st.markdown("""
-                <div class="mbti-option">
-                    <div class="mbti-icon">⚖️</div>
-                    <div class="mbti-title">Сбалансированный</div>
-                    <div>Гибкий, адаптивный</div>
-                </div>
-            """, unsafe_allow_html=True)
-        with col3:
-            if st.button("", key="mbti_ns_2"):
-                st.session_state.mbti_ns = 80
-                st.rerun()
-            st.markdown("""
-                <div class="mbti-option">
-                    <div class="mbti-icon">🌈</div>
-                    <div class="mbti-title">Мечтатель</div>
-                    <div>Творческий, инновационный</div>
-                </div>
-            """, unsafe_allow_html=True)
+        col1.markdown("<div style='text-align: center;'>Реалист</div>", unsafe_allow_html=True)
+        col2.markdown(f"<div style='text-align: center; font-weight: bold;'>{ns_value}</div>", unsafe_allow_html=True)
+        col3.markdown("<div style='text-align: center;'>Мечтатель</div>", unsafe_allow_html=True)
         
         st.markdown("**Рациональный vs Эмоциональный**")
+        tf_value = st.slider("", 0, 100, 50, key="mbti_tf", label_visibility="collapsed")
         col1, col2, col3 = st.columns(3)
-        with col1:
-            if st.button("", key="mbti_tf_0"):
-                st.session_state.mbti_tf = 20
-                st.rerun()
-            st.markdown("""
-                <div class="mbti-option">
-                    <div class="mbti-icon">📊</div>
-                    <div class="mbti-title">Рациональный</div>
-                    <div>Логичный, аналитичный</div>
-                </div>
-            """, unsafe_allow_html=True)
-        with col2:
-            if st.button("", key="mbti_tf_1"):
-                st.session_state.mbti_tf = 50
-                st.rerun()
-            st.markdown("""
-                <div class="mbti-option">
-                    <div class="mbti-icon">⚖️</div>
-                    <div class="mbti-title">Сбалансированный</div>
-                    <div>Уравновешенный, объективный</div>
-                </div>
-            """, unsafe_allow_html=True)
-        with col3:
-            if st.button("", key="mbti_tf_2"):
-                st.session_state.mbti_tf = 80
-                st.rerun()
-            st.markdown("""
-                <div class="mbti-option">
-                    <div class="mbti-icon">❤️</div>
-                    <div class="mbti-title">Эмоциональный</div>
-                    <div>Чуткий, эмпатичный</div>
-                </div>
-            """, unsafe_allow_html=True)
+        col1.markdown("<div style='text-align: center;'>Рациональный</div>", unsafe_allow_html=True)
+        col2.markdown(f"<div style='text-align: center; font-weight: bold;'>{tf_value}</div>", unsafe_allow_html=True)
+        col3.markdown("<div style='text-align: center;'>Эмоциональный</div>", unsafe_allow_html=True)
         
         st.markdown("**Структурный vs Спонтанный**")
+        jp_value = st.slider("", 0, 100, 50, key="mbti_jp", label_visibility="collapsed")
         col1, col2, col3 = st.columns(3)
-        with col1:
-            if st.button("", key="mbti_jp_0"):
-                st.session_state.mbti_jp = 20
-                st.rerun()
-            st.markdown("""
-                <div class="mbti-option">
-                    <div class="mbti-icon">📅</div>
-                    <div class="mbti-title">Структурный</div>
-                    <div>Организованный, плановый</div>
-                </div>
-            """, unsafe_allow_html=True)
-        with col2:
-            if st.button("", key="mbti_jp_1"):
-                st.session_state.mbti_jp = 50
-                st.rerun()
-            st.markdown("""
-                <div class="mbti-option">
-                    <div class="mbti-icon">⚖️</div>
-                    <div class="mbti-title">Сбалансированный</div>
-                    <div>Адаптивный, гибкий</div>
-                </div>
-            """, unsafe_allow_html=True)
-        with col3:
-            if st.button("", key="mbti_jp_2"):
-                st.session_state.mbti_jp = 80
-                st.rerun()
-            st.markdown("""
-                <div class="mbti-option">
-                    <div class="mbti-icon">🎲</div>
-                    <div class="mbti-title">Спонтанный</div>
-                    <div>Импульсивный, свободный</div>
-                </div>
-            """, unsafe_allow_html=True)
+        col1.markdown("<div style='text-align: center;'>Структурный</div>", unsafe_allow_html=True)
+        col2.markdown(f"<div style='text-align: center; font-weight: bold;'>{jp_value}</div>", unsafe_allow_html=True)
+        col3.markdown("<div style='text-align: center;'>Спонтанный</div>", unsafe_allow_html=True)
         
         # Стиль общения
         st.markdown("### 💬 Стиль общения")
-        genders = ["Мужской", "Женский"]
-        cols = st.columns(2)
-        for i, gender in enumerate(genders):
+        styles = ["Дружелюбный", "Флиртующий", "Прямолинейный", "Загадочный", "Интеллектуальный"]
+        cols = st.columns(len(styles))
+        for i, style in enumerate(styles):
             with cols[i]:
-                if st.button(gender, key=f"comm_{gender}"):
-                    st.session_state.selected_gender = gender
+                if st.button(style, key=f"style_{style}"):
+                    st.session_state.char_settings["style"] = style
                     st.rerun()
-                selected = st.session_state.get('selected_gender', 'Мужской') == gender
+                selected = st.session_state.char_settings["style"] == style
                 color = "#6a11cb" if selected else "#f0f0f0"
                 text_color = "white" if selected else "#333"
                 st.markdown(f"""
                     <div style="
                         background: {'linear-gradient(145deg, #6a11cb, #2575fc)' if selected else '#f0f0f0'};
                         border-radius: 16px;
-                        padding: 20px;
+                        padding: 15px 5px;
                         text-align: center;
                         color: {text_color};
                         font-weight: bold;
-                        font-size: 1.2rem;
+                        font-size: 1rem;
                     ">
-                        {gender}
+                        {style}
                     </div>
                 """, unsafe_allow_html=True)
         
@@ -654,7 +622,7 @@ if st.session_state.get("character_created", False) and st.session_state.charact
                 """, unsafe_allow_html=True)
         
         # --- Блок "Красные флаги" ---
-        st.markdown("### 🚩 Красные флаги")
+        st.markdown("### 🚩 Что вам не нравится?")
         
         st.markdown("**Что не нравится:**")
         dislikes_options = ["Опоздания", "Грубость", "Ложь", "Нарциссизм", "Эгоизм", "Пассивность", "Агрессия"]
@@ -683,6 +651,71 @@ if st.session_state.get("character_created", False) and st.session_state.charact
 if st.session_state.get("personality_saved", False) or (
     st.session_state.get("character_created", False) and st.session_state.character_type != "custom"
 ):
+    # Карточка персонажа
+    with st.container():
+        st.markdown('<div class="character-card">', unsafe_allow_html=True)
+        
+        # Определение аватара в зависимости от типа персонажа
+        if st.session_state.character_type == "premade_1":
+            avatar = "⚡"
+            name = "Алексей"
+        elif st.session_state.character_type == "premade_2":
+            avatar = "🌹"
+            name = "Анна"
+        elif st.session_state.character_type == "premade_3":
+            avatar = "🎨"
+            name = "Макс"
+        else:
+            gender = st.session_state.char_settings["gender"]
+            if gender == "Девушка":
+                avatar = "👩"
+                name = "София"
+            elif gender == "Парень":
+                avatar = "👨"
+                name = "Марк"
+            else:
+                avatar = "👤"
+                name = "Тейлор"
+        
+        st.markdown(f'<div class="avatar" style="background: linear-gradient(145deg, #6a11cb, #2575fc); color: white;">{avatar}</div>', unsafe_allow_html=True)
+        
+        st.markdown('<div class="character-info">', unsafe_allow_html=True)
+        st.markdown(f'<div class="character-name">{name}</div>', unsafe_allow_html=True)
+        
+        # Описание персонажа
+        if st.session_state.character_type == "premade_1":
+            desc = "Энергичный экстраверт, любит спорт и активный отдых"
+        elif st.session_state.character_type == "premade_2":
+            desc = "Романтичная интровертка, ценит искусство и глубокие разговоры"
+        elif st.session_state.character_type == "premade_3":
+            desc = "Загадочный артистичный тип, полон творческих идей"
+        else:
+            desc = f"{st.session_state.char_settings['age']} лет, {st.session_state.char_settings['city']}"
+        
+        st.markdown(f'<div>{desc}</div>', unsafe_allow_html=True)
+        
+        # Теги персонажа
+        st.markdown('<div class="character-tags">', unsafe_allow_html=True)
+        if st.session_state.character_type == "premade_1":
+            tags = ["Экстраверт", "Спорт", "Энергичный"]
+        elif st.session_state.character_type == "premade_2":
+            tags = ["Романтик", "Искусство", "Интроверт"]
+        elif st.session_state.character_type == "premade_3":
+            tags = ["Творческий", "Необычный", "Сюрпризы"]
+        else:
+            tags = []
+            if st.session_state.char_settings["traits"]:
+                tags.extend(st.session_state.char_settings["traits"][:2])
+            if st.session_state.char_settings["hobbies"]:
+                tags.append(st.session_state.char_settings["hobbies"][0])
+            if st.session_state.char_settings["temper"]:
+                tags.append(st.session_state.char_settings["temper"])
+        
+        for tag in tags[:3]:
+            st.markdown(f'<div class="character-tag">{tag}</div>', unsafe_allow_html=True)
+        
+        st.markdown('</div></div></div>', unsafe_allow_html=True)
+    
     # Для готовых персонажей устанавливаем предустановки
     if st.session_state.character_type.startswith("premade"):
         if st.session_state.character_type == "premade_1":
@@ -691,7 +724,6 @@ if st.session_state.get("personality_saved", False) or (
             st.session_state.mbti_ns = 30
             st.session_state.mbti_tf = 60
             st.session_state.mbti_jp = 70
-            st.session_state.selected_gender = "Мужской"
             st.session_state.char_settings = {
                 "gender": "Парень",
                 "age": "23-27",
@@ -702,7 +734,8 @@ if st.session_state.get("personality_saved", False) or (
                 "music": ["Рок", "Электроника"],
                 "traits": ["Экстраверт", "Уверенный"],
                 "temper": "Энергичный",
-                "dislikes": ["Лень", "Пассивность"]
+                "dislikes": ["Лень", "Пассивность"],
+                "style": "Прямолинейный"
             }
         elif st.session_state.character_type == "premade_2":
             # Романтичный интроверт
@@ -710,7 +743,6 @@ if st.session_state.get("personality_saved", False) or (
             st.session_state.mbti_ns = 80
             st.session_state.mbti_tf = 70
             st.session_state.mbti_jp = 40
-            st.session_state.selected_gender = "Женский"
             st.session_state.char_settings = {
                 "gender": "Девушка",
                 "age": "23-27",
@@ -721,7 +753,8 @@ if st.session_state.get("personality_saved", False) or (
                 "music": ["Инди", "Классика"],
                 "traits": ["Романтичный", "Интроверт"],
                 "temper": "Спокойный",
-                "dislikes": ["Грубость", "Нарциссизм"]
+                "dislikes": ["Грубость", "Нарциссизм"],
+                "style": "Романтичный"
             }
         elif st.session_state.character_type == "premade_3":
             # Загадочный артистичный
@@ -729,7 +762,6 @@ if st.session_state.get("personality_saved", False) or (
             st.session_state.mbti_ns = 65
             st.session_state.mbti_tf = 75
             st.session_state.mbti_jp = 60
-            st.session_state.selected_gender = "Небинарный"
             st.session_state.char_settings = {
                 "gender": "Небинарный",
                 "age": "23-27",
@@ -740,7 +772,8 @@ if st.session_state.get("personality_saved", False) or (
                 "music": ["Инди", "Джаз", "Экспериментальная"],
                 "traits": ["Творческий", "Мечтатель"],
                 "temper": "Сбалансированный",
-                "dislikes": ["Ограничения", "Консерватизм"]
+                "dislikes": ["Ограничения", "Консерватизм"],
+                "style": "Загадочный"
             }
 
     # Текстовое описание характеристик
@@ -749,7 +782,7 @@ if st.session_state.get("personality_saved", False) or (
     {'Мечтатель' if st.session_state.get('mbti_ns', 50) > 50 else 'Реалист'}, 
     {'Эмоциональный' if st.session_state.get('mbti_tf', 50) > 50 else 'Рациональный'}, 
     {'Спонтанный' if st.session_state.get('mbti_jp', 50) > 50 else 'Структурный'}.
-    Стиль общения: {st.session_state.get('selected_gender', 'Нейтральный').lower()}.
+    Стиль общения: {st.session_state.char_settings.get("style", "Дружелюбный").lower()}.
     """
     
     # Форматирование настроек персонажа
@@ -790,13 +823,29 @@ if st.session_state.get("personality_saved", False) or (
             st.error(f"Groq error: {e}")
 
     # --- Вывод чата ---
+    st.markdown('<div class="chat-container">', unsafe_allow_html=True)
+    
     for m in st.session_state.msgs:
-        with st.chat_message(m["role"]):
-            st.markdown(m["content"])
+        if m["role"] == "user":
+            st.markdown(f"""
+                <div class="message-container user-container">
+                    <div class="message-name">Вы</div>
+                    <div class="user-message">{m["content"].split(':', 1)[1].strip()}</div>
+                </div>
+            """, unsafe_allow_html=True)
+        else:
+            st.markdown(f"""
+                <div class="message-container bot-container">
+                    <div class="message-name">{name}</div>
+                    <div class="bot-message">{m["content"]}</div>
+                </div>
+            """, unsafe_allow_html=True)
+    
+    st.markdown('</div>', unsafe_allow_html=True)
 
     # --- Feedback ---
     st.divider()
-    if st.button("Получить фидбек о моём стиле общения"):
+    if st.button("Получить фидбек о моём стиле общения", use_container_width=True):
         user_dialog = "\n".join(
             [m["content"] for m in st.session_state.msgs if "user_name" in st.session_state and m["role"] == "user"]
         )[:4000]
