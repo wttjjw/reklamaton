@@ -480,16 +480,17 @@ if st.session_state.get("character_created", False) and st.session_state.charact
 
         # --- Характер ---
         def get_trait_text(val, left, right):
-        if val == 1:
-            return f"крайний {left.lower()}"
-        elif val == 2:
-            return f"скорее {left.lower()}"
-        elif val == 3:
-            return "сбалансированный"
-        elif val == 4:
-            return f"скорее {right.lower()}"
-        else:
-            return f"крайний {right.lower()}"
+            if val == 1:
+                return f"крайний {left.lower()}"
+            elif val == 2:
+                return f"скорее {left.lower()}"
+            elif val == 3:
+                return "сбалансированный"
+            elif val == 4:
+                return f"скорее {right.lower()}"
+            else:
+                return f"крайний {right.lower()}"
+
 
         
         with st.container():
