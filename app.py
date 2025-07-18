@@ -527,16 +527,16 @@ if st.session_state.get("character_created", False) and st.session_state.charact
             ]
             for param in char_params:
                 st.markdown(f'<div class="slider-header" style="text-align:left; color:{param["color"]};">{param["label"]}</div>', unsafe_allow_html=True)
-                options = [f"{i} {'✅' if st.session_state.get(param['key'], 3) == i else ''}" for i in range(1, 6)]
-                idx = st.session_state.get(param["key"], 3) - 1
+                # значения для радио (без галочек, чтобы избежать путаницы)
+                options = [str(i) for i in range(1, 6)]
+                # Получаем текущее значение из session_state, либо дефолт (3)
+                cur_value = int(st.session_state.get(param["key"], 3))
+                idx = cur_value - 1
                 selected = st.radio(
-                    "", options=options, index=idx, key=param["key"],
-                    horizontal=True,
-                    label_visibility="collapsed"
+                    "", options=options, index=idx, key=param["key"], horizontal=True, label_visibility="collapsed"
                 )
-                # update value in session_state
-                st.session_state[param["key"]] = int(selected.split()[0])
-                # подписи
+                # Обновляем session_state — ВСЕГДА число!
+                st.session_state[param["key"]] = int(selected)
                 st.markdown(
                     f'''
                     <div style="display:flex; justify-content:space-between; color:#666; font-size:0.97rem; margin-top:-10px; margin-bottom:18px;">
