@@ -410,23 +410,19 @@ if st.session_state.get("character_created", False) and st.session_state.charact
             for i, gender in enumerate(genders):
                 with cols[i]:
                     selected = st.session_state.char_settings["gender"] == gender
-                    btn = st.button(
-                        gender,
-                        key=f"gender_{gender}",
-                        use_container_width=True,
-                        help=f"Выбрать: {gender}"
-                    )
+                    btn = st.button(gender, key=f"gender_{gender}", use_container_width=True)
                     if btn:
                         st.session_state.char_settings["gender"] = gender
                         st.rerun()
-                    bg = "linear-gradient(145deg, #9C27B0, #6A1B9A)" if selected else "rgba(156, 39, 176, 0.15)"
                     st.markdown(
                         f"""
-                        <div class="tag {'selected' if selected else ''}" 
-                        style="background: {bg}; {'color: white;' if selected else 'color: #6A1B9A;'}">
-                        {gender}
-                        </div>
-                        """, unsafe_allow_html=True)
+                        <style>
+                        [data-testid="stButton"] button#{f"gender_{gender}".replace(' ', '_')} {{
+                            {"background: linear-gradient(145deg, #9C27B0, #6A1B9A); color: white; font-weight: 700; border-radius: 20px; border: 2px solid #fff; box-shadow: 0 4px 16px #9C27B040; margin-bottom: 10px; min-width: 120px;" if selected else "background: #fff; color: #6A1B9A; font-weight: 500; border-radius: 20px; border: 2px solid #eee; margin-bottom: 10px; min-width: 120px;" }
+                        }}
+                        </style>
+                        """, unsafe_allow_html=True,
+                    )
 
             # Возраст
             st.markdown('<div class="slider-header"><span>🎂</span> Возраст</div>', unsafe_allow_html=True)
@@ -435,23 +431,19 @@ if st.session_state.get("character_created", False) and st.session_state.charact
             for i, age in enumerate(ages):
                 with cols[i]:
                     selected = st.session_state.char_settings["age"] == age
-                    btn = st.button(
-                        age,
-                        key=f"age_{age}",
-                        use_container_width=True,
-                        help=f"Выбрать возраст: {age}"
-                    )
+                    btn = st.button(age, key=f"age_{age}", use_container_width=True)
                     if btn:
                         st.session_state.char_settings["age"] = age
                         st.rerun()
-                    bg = "linear-gradient(145deg, #2196F3, #0D47A1)" if selected else "rgba(33, 150, 243, 0.15)"
                     st.markdown(
                         f"""
-                        <div class="tag {'selected' if selected else ''}" 
-                        style="background: {bg}; {'color: white;' if selected else 'color: #0D47A1;'}">
-                        {age}
-                        </div>
-                        """, unsafe_allow_html=True)
+                        <style>
+                        [data-testid="stButton"] button#{f"age_{age}".replace(' ', '_')} {{
+                            {"background: linear-gradient(145deg, #2196F3, #0D47A1); color: white; font-weight: 700; border-radius: 20px; border: 2px solid #fff; box-shadow: 0 4px 16px #2196F340; margin-bottom: 10px; min-width: 120px;" if selected else "background: #fff; color: #0D47A1; font-weight: 500; border-radius: 20px; border: 2px solid #eee; margin-bottom: 10px; min-width: 120px;" }
+                        }}
+                        </style>
+                        """, unsafe_allow_html=True,
+                    )
 
             # Город
             st.markdown('<div class="slider-header"><span>🏙️</span> Город</div>', unsafe_allow_html=True)
@@ -460,23 +452,19 @@ if st.session_state.get("character_created", False) and st.session_state.charact
             for i, city in enumerate(cities):
                 with cols[i % 3]:
                     selected = st.session_state.char_settings["city"] == city
-                    btn = st.button(
-                        city,
-                        key=f"city_{city}",
-                        use_container_width=True,
-                        help=f"Выбрать город: {city}"
-                    )
+                    btn = st.button(city, key=f"city_{city}", use_container_width=True)
                     if btn:
                         st.session_state.char_settings["city"] = city
                         st.rerun()
-                    bg = "linear-gradient(145deg, #4CAF50, #2E7D32)" if selected else "rgba(76, 175, 80, 0.15)"
                     st.markdown(
                         f"""
-                        <div class="tag {'selected' if selected else ''}" 
-                        style="background: {bg}; {'color: white;' if selected else 'color: #1B5E20;'}">
-                        {city}
-                        </div>
-                        """, unsafe_allow_html=True)
+                        <style>
+                        [data-testid="stButton"] button#{f"city_{city}".replace(' ', '_')} {{
+                            {"background: linear-gradient(145deg, #4CAF50, #2E7D32); color: white; font-weight: 700; border-radius: 20px; border: 2px solid #fff; box-shadow: 0 4px 16px #4CAF5040; margin-bottom: 10px; min-width: 120px;" if selected else "background: #fff; color: #1B5E20; font-weight: 500; border-radius: 20px; border: 2px solid #eee; margin-bottom: 10px; min-width: 120px;" }
+                        }}
+                        </style>
+                        """, unsafe_allow_html=True,
+                    )
             st.markdown('</div>', unsafe_allow_html=True)  # конец секции
 
         # --- Характер ---
@@ -486,28 +474,28 @@ if st.session_state.get("character_created", False) and st.session_state.charact
 
             st.markdown('<div class="slider-container">', unsafe_allow_html=True)
             st.markdown('<div class="slider-header"><span>🔊</span> Экстраверт vs Интроверт</div>', unsafe_allow_html=True)
-            ei_value = st.slider("", 0, 100, 50, key="mbti_ei", label_visibility="collapsed")
+            st.slider("", 0, 100, 50, key="mbti_ei", label_visibility="collapsed")
             st.markdown('<div class="slider-values">', unsafe_allow_html=True)
             st.markdown('<div>Общительный</div><div>Созерцательный</div>', unsafe_allow_html=True)
             st.markdown('</div></div>', unsafe_allow_html=True)
 
             st.markdown('<div class="slider-container">', unsafe_allow_html=True)
             st.markdown('<div class="slider-header"><span>🌈</span> Реалист vs Мечтатель</div>', unsafe_allow_html=True)
-            ns_value = st.slider("", 0, 100, 50, key="mbti_ns", label_visibility="collapsed")
+            st.slider("", 0, 100, 50, key="mbti_ns", label_visibility="collapsed")
             st.markdown('<div class="slider-values">', unsafe_allow_html=True)
             st.markdown('<div>Практичный</div><div>Творческий</div>', unsafe_allow_html=True)
             st.markdown('</div></div>', unsafe_allow_html=True)
 
             st.markdown('<div class="slider-container">', unsafe_allow_html=True)
             st.markdown('<div class="slider-header"><span>💖</span> Рациональный vs Эмоциональный</div>', unsafe_allow_html=True)
-            tf_value = st.slider("", 0, 100, 50, key="mbti_tf", label_visibility="collapsed")
+            st.slider("", 0, 100, 50, key="mbti_tf", label_visibility="collapsed")
             st.markdown('<div class="slider-values">', unsafe_allow_html=True)
             st.markdown('<div>Логичный</div><div>Чувствительный</div>', unsafe_allow_html=True)
             st.markdown('</div></div>', unsafe_allow_html=True)
 
             st.markdown('<div class="slider-container">', unsafe_allow_html=True)
             st.markdown('<div class="slider-header"><span>📅</span> Структурный vs Спонтанный</div>', unsafe_allow_html=True)
-            jp_value = st.slider("", 0, 100, 50, key="mbti_jp", label_visibility="collapsed")
+            st.slider("", 0, 100, 50, key="mbti_jp", label_visibility="collapsed")
             st.markdown('<div class="slider-values">', unsafe_allow_html=True)
             st.markdown('<div>Организованный</div><div>Импульсивный</div>', unsafe_allow_html=True)
             st.markdown('</div></div>', unsafe_allow_html=True)
@@ -524,26 +512,22 @@ if st.session_state.get("character_created", False) and st.session_state.charact
             for i, style in enumerate(styles):
                 with cols[i]:
                     selected = st.session_state.char_settings["style"] == style
-                    btn = st.button(
-                        style,
-                        key=f"style_{style}",
-                        use_container_width=True,
-                        help=f"Выбрать стиль: {style}"
-                    )
+                    btn = st.button(style, key=f"style_{style}", use_container_width=True)
                     if btn:
                         st.session_state.char_settings["style"] = style
                         st.rerun()
-                    bg = "linear-gradient(145deg, #6a11cb, #2575fc)" if selected else "rgba(106, 17, 203, 0.15)"
                     st.markdown(
                         f"""
-                        <div class="tag {'selected' if selected else ''}" 
-                        style="background: {bg}; {'color: white;' if selected else 'color: #6a11cb;'}">
-                        {style}
-                        </div>
-                        """, unsafe_allow_html=True)
+                        <style>
+                        [data-testid="stButton"] button#{f"style_{style}".replace(' ', '_')} {{
+                            {"background: linear-gradient(145deg, #6a11cb, #2575fc); color: white; font-weight: 700; border-radius: 20px; border: 2px solid #fff; box-shadow: 0 4px 16px #6a11cb40; margin-bottom: 10px; min-width: 120px;" if selected else "background: #fff; color: #6a11cb; font-weight: 500; border-radius: 20px; border: 2px solid #eee; margin-bottom: 10px; min-width: 120px;" }
+                        }}
+                        </style>
+                        """, unsafe_allow_html=True,
+                    )
             st.markdown('</div>', unsafe_allow_html=True)  # конец секции
 
-        # --- Интересы (хобби) ---
+        # --- Интересы (хобби/музыка) ---
         with st.container():
             st.markdown('<div class="section">', unsafe_allow_html=True)
             st.markdown('<div class="section-title"><span>🎯</span> Мне интересно</div>', unsafe_allow_html=True)
@@ -555,26 +539,22 @@ if st.session_state.get("character_created", False) and st.session_state.charact
             for i, hobby in enumerate(hobbies_options):
                 with cols[i % 3]:
                     selected = hobby in st.session_state.char_settings["hobbies"]
-                    btn = st.button(
-                        hobby + (" ✅" if selected else ""),
-                        key=f"hobby_{hobby}",
-                        use_container_width=True,
-                        help=f"Добавить/убрать: {hobby}"
-                    )
+                    btn = st.button(hobby + (" ✅" if selected else ""), key=f"hobby_{hobby}", use_container_width=True)
                     if btn:
                         if selected:
                             st.session_state.char_settings["hobbies"].remove(hobby)
                         else:
                             st.session_state.char_settings["hobbies"].append(hobby)
                         st.rerun()
-                    bg = "linear-gradient(145deg, #2196F3, #0D47A1)" if selected else "rgba(33, 150, 243, 0.15)"
                     st.markdown(
                         f"""
-                        <div class="tag {'selected' if selected else ''}" 
-                        style="background: {bg}; {'color: white;' if selected else 'color: #0D47A1;'}">
-                        {hobby}
-                        </div>
-                        """, unsafe_allow_html=True)
+                        <style>
+                        [data-testid="stButton"] button#{f"hobby_{hobby}".replace(' ', '_')} {{
+                            {"background: linear-gradient(145deg, #2196F3, #0D47A1); color: white; font-weight: 700; border-radius: 20px; border: 2px solid #fff; box-shadow: 0 4px 16px #2196F340; margin-bottom: 10px; min-width: 120px;" if selected else "background: #fff; color: #0D47A1; font-weight: 500; border-radius: 20px; border: 2px solid #eee; margin-bottom: 10px; min-width: 120px;" }
+                        }}
+                        </style>
+                        """, unsafe_allow_html=True,
+                    )
 
             # Музыка
             st.markdown('<div class="slider-header"><span>🎵</span> Музыкальные предпочтения</div>', unsafe_allow_html=True)
@@ -583,26 +563,22 @@ if st.session_state.get("character_created", False) and st.session_state.charact
             for i, music in enumerate(music_options):
                 with cols[i % 3]:
                     selected = music in st.session_state.char_settings["music"]
-                    btn = st.button(
-                        music + (" ✅" if selected else ""),
-                        key=f"music_{music}",
-                        use_container_width=True,
-                        help=f"Добавить/убрать: {music}"
-                    )
+                    btn = st.button(music + (" ✅" if selected else ""), key=f"music_{music}", use_container_width=True)
                     if btn:
                         if selected:
                             st.session_state.char_settings["music"].remove(music)
                         else:
                             st.session_state.char_settings["music"].append(music)
                         st.rerun()
-                    bg = "linear-gradient(145deg, #FF9800, #EF6C00)" if selected else "rgba(255, 152, 0, 0.15)"
                     st.markdown(
                         f"""
-                        <div class="tag {'selected' if selected else ''}" 
-                        style="background: {bg}; {'color: white;' if selected else 'color: #E65100;'}">
-                        {music}
-                        </div>
-                        """, unsafe_allow_html=True)
+                        <style>
+                        [data-testid="stButton"] button#{f"music_{music}".replace(' ', '_')} {{
+                            {"background: linear-gradient(145deg, #FF9800, #EF6C00); color: white; font-weight: 700; border-radius: 20px; border: 2px solid #fff; box-shadow: 0 4px 16px #FF980040; margin-bottom: 10px; min-width: 120px;" if selected else "background: #fff; color: #E65100; font-weight: 500; border-radius: 20px; border: 2px solid #eee; margin-bottom: 10px; min-width: 120px;" }
+                        }}
+                        </style>
+                        """, unsafe_allow_html=True,
+                    )
             st.markdown('</div>', unsafe_allow_html=True)  # конец секции
 
         # --- Внешний вайб ---
@@ -617,23 +593,19 @@ if st.session_state.get("character_created", False) and st.session_state.charact
             for i, fashion in enumerate(fashion_options):
                 with cols[i % 4]:
                     selected = fashion == st.session_state.char_settings["fashion"]
-                    btn = st.button(
-                        fashion,
-                        key=f"fashion_{fashion}",
-                        use_container_width=True,
-                        help=f"Стиль одежды: {fashion}"
-                    )
+                    btn = st.button(fashion, key=f"fashion_{fashion}", use_container_width=True)
                     if btn:
                         st.session_state.char_settings["fashion"] = fashion
                         st.rerun()
-                    bg = "linear-gradient(145deg, #4CAF50, #2E7D32)" if selected else "rgba(76, 175, 80, 0.15)"
                     st.markdown(
                         f"""
-                        <div class="tag {'selected' if selected else ''}" 
-                        style="background: {bg}; {'color: white;' if selected else 'color: #1B5E20;'}">
-                        {fashion}
-                        </div>
-                        """, unsafe_allow_html=True)
+                        <style>
+                        [data-testid="stButton"] button#{f"fashion_{fashion}".replace(' ', '_')} {{
+                            {"background: linear-gradient(145deg, #4CAF50, #2E7D32); color: white; font-weight: 700; border-radius: 20px; border: 2px solid #fff; box-shadow: 0 4px 16px #4CAF5040; margin-bottom: 10px; min-width: 120px;" if selected else "background: #fff; color: #1B5E20; font-weight: 500; border-radius: 20px; border: 2px solid #eee; margin-bottom: 10px; min-width: 120px;" }
+                        }}
+                        </style>
+                        """, unsafe_allow_html=True,
+                    )
 
             # Визуальный вайб
             st.markdown('<div class="slider-header"><span>🌟</span> Визуальный вайб</div>', unsafe_allow_html=True)
@@ -642,23 +614,19 @@ if st.session_state.get("character_created", False) and st.session_state.charact
             for i, vibe in enumerate(vibe_options):
                 with cols[i % 4]:
                     selected = vibe == st.session_state.char_settings["vibe"]
-                    btn = st.button(
-                        vibe,
-                        key=f"vibe_{vibe}",
-                        use_container_width=True,
-                        help=f"Вайб: {vibe}"
-                    )
+                    btn = st.button(vibe, key=f"vibe_{vibe}", use_container_width=True)
                     if btn:
                         st.session_state.char_settings["vibe"] = vibe
                         st.rerun()
-                    bg = "linear-gradient(145deg, #9C27B0, #6A1B9A)" if selected else "rgba(156, 39, 176, 0.15)"
                     st.markdown(
                         f"""
-                        <div class="tag {'selected' if selected else ''}" 
-                        style="background: {bg}; {'color: white;' if selected else 'color: #6A1B9A;'}">
-                        {vibe}
-                        </div>
-                        """, unsafe_allow_html=True)
+                        <style>
+                        [data-testid="stButton"] button#{f"vibe_{vibe}".replace(' ', '_')} {{
+                            {"background: linear-gradient(145deg, #9C27B0, #6A1B9A); color: white; font-weight: 700; border-radius: 20px; border: 2px solid #fff; box-shadow: 0 4px 16px #9C27B040; margin-bottom: 10px; min-width: 120px;" if selected else "background: #fff; color: #6A1B9A; font-weight: 500; border-radius: 20px; border: 2px solid #eee; margin-bottom: 10px; min-width: 120px;" }
+                        }}
+                        </style>
+                        """, unsafe_allow_html=True,
+                    )
             st.markdown('</div>', unsafe_allow_html=True)  # конец секции
 
         # --- Черты характера ---
@@ -673,26 +641,22 @@ if st.session_state.get("character_created", False) and st.session_state.charact
             for i, trait in enumerate(traits_options):
                 with cols[i % 4]:
                     selected = trait in st.session_state.char_settings["traits"]
-                    btn = st.button(
-                        trait + (" ✅" if selected else ""),
-                        key=f"trait_{trait}",
-                        use_container_width=True,
-                        help=f"Добавить/убрать: {trait}"
-                    )
+                    btn = st.button(trait + (" ✅" if selected else ""), key=f"trait_{trait}", use_container_width=True)
                     if btn:
                         if selected:
                             st.session_state.char_settings["traits"].remove(trait)
                         else:
                             st.session_state.char_settings["traits"].append(trait)
                         st.rerun()
-                    bg = "linear-gradient(145deg, #9C27B0, #6A1B9A)" if selected else "rgba(156, 39, 176, 0.15)"
                     st.markdown(
                         f"""
-                        <div class="tag {'selected' if selected else ''}" 
-                        style="background: {bg}; {'color: white;' if selected else 'color: #6A1B9A;'}">
-                        {trait}
-                        </div>
-                        """, unsafe_allow_html=True)
+                        <style>
+                        [data-testid="stButton"] button#{f"trait_{trait}".replace(' ', '_')} {{
+                            {"background: linear-gradient(145deg, #9C27B0, #6A1B9A); color: white; font-weight: 700; border-radius: 20px; border: 2px solid #fff; box-shadow: 0 4px 16px #9C27B040; margin-bottom: 10px; min-width: 120px;" if selected else "background: #fff; color: #6A1B9A; font-weight: 500; border-radius: 20px; border: 2px solid #eee; margin-bottom: 10px; min-width: 120px;" }
+                        }}
+                        </style>
+                        """, unsafe_allow_html=True,
+                    )
 
             # Темперамент
             st.markdown('<div class="slider-header"><span>🔥</span> Темперамент</div>', unsafe_allow_html=True)
@@ -701,23 +665,19 @@ if st.session_state.get("character_created", False) and st.session_state.charact
             for i, temper in enumerate(temper_options):
                 with cols[i % 5]:
                     selected = temper == st.session_state.char_settings["temper"]
-                    btn = st.button(
-                        temper,
-                        key=f"temper_{temper}",
-                        use_container_width=True,
-                        help=f"Темперамент: {temper}"
-                    )
+                    btn = st.button(temper, key=f"temper_{temper}", use_container_width=True)
                     if btn:
                         st.session_state.char_settings["temper"] = temper
                         st.rerun()
-                    bg = "linear-gradient(145deg, #2196F3, #0D47A1)" if selected else "rgba(33, 150, 243, 0.15)"
                     st.markdown(
                         f"""
-                        <div class="tag {'selected' if selected else ''}" 
-                        style="background: {bg}; {'color: white;' if selected else 'color: #0D47A1;'}">
-                        {temper}
-                        </div>
-                        """, unsafe_allow_html=True)
+                        <style>
+                        [data-testid="stButton"] button#{f"temper_{temper}".replace(' ', '_')} {{
+                            {"background: linear-gradient(145deg, #2196F3, #0D47A1); color: white; font-weight: 700; border-radius: 20px; border: 2px solid #fff; box-shadow: 0 4px 16px #2196F340; margin-bottom: 10px; min-width: 120px;" if selected else "background: #fff; color: #0D47A1; font-weight: 500; border-radius: 20px; border: 2px solid #eee; margin-bottom: 10px; min-width: 120px;" }
+                        }}
+                        </style>
+                        """, unsafe_allow_html=True,
+                    )
             st.markdown('</div>', unsafe_allow_html=True)  # конец секции
 
         # --- Красные флаги (личные антипатии) ---
@@ -731,26 +691,22 @@ if st.session_state.get("character_created", False) and st.session_state.charact
             for i, dislike in enumerate(dislikes_options):
                 with cols[i % 4]:
                     selected = dislike in st.session_state.char_settings["dislikes"]
-                    btn = st.button(
-                        dislike + (" ✅" if selected else ""),
-                        key=f"dislike_{dislike}",
-                        use_container_width=True,
-                        help=f"Добавить/убрать: {dislike}"
-                    )
+                    btn = st.button(dislike + (" ✅" if selected else ""), key=f"dislike_{dislike}", use_container_width=True)
                     if btn:
                         if selected:
                             st.session_state.char_settings["dislikes"].remove(dislike)
                         else:
                             st.session_state.char_settings["dislikes"].append(dislike)
                         st.rerun()
-                    bg = "linear-gradient(145deg, #F44336, #C62828)" if selected else "rgba(244, 67, 54, 0.15)"
                     st.markdown(
                         f"""
-                        <div class="tag {'selected' if selected else ''}" 
-                        style="background: {bg}; {'color: white;' if selected else 'color: #B71C1C;'}">
-                        {dislike}
-                        </div>
-                        """, unsafe_allow_html=True)
+                        <style>
+                        [data-testid="stButton"] button#{f"dislike_{dislike}".replace(' ', '_')} {{
+                            {"background: linear-gradient(145deg, #F44336, #C62828); color: white; font-weight: 700; border-radius: 20px; border: 2px solid #fff; box-shadow: 0 4px 16px #F4433640; margin-bottom: 10px; min-width: 120px;" if selected else "background: #fff; color: #B71C1C; font-weight: 500; border-radius: 20px; border: 2px solid #eee; margin-bottom: 10px; min-width: 120px;" }
+                        }}
+                        </style>
+                        """, unsafe_allow_html=True,
+                    )
             st.markdown('</div>', unsafe_allow_html=True)  # конец секции
 
         # Кнопка сохранения
@@ -759,6 +715,7 @@ if st.session_state.get("character_created", False) and st.session_state.charact
                     help="Сохранить все настройки персонажа и начать диалог"):
             st.session_state.personality_saved = True
             st.rerun()
+
 
 
 # --- 6. Чат и логика взаимодействия ---
