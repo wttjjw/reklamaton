@@ -17,47 +17,28 @@ if "character_created" not in st.session_state:
     st.session_state.character_created = False
 if "msgs" not in st.session_state:
     st.session_state.msgs = []
+if "char_settings" not in st.session_state:
+    st.session_state.char_settings = {}
 
-# --- 2. Анкета пользователя (sidebar) ---
-with st.sidebar:
-    st.header("Параметры анкеты")
-    gender = st.selectbox("Пол персонажа", ["Девушка", "Парень", "Небинарный"])
-    age = st.slider("Возраст", 18, 60, 25)
-    city = st.text_input("Город/часовой пояс", "Москва")
-    
-    st.markdown("### Внешний вайб")
-    fashion = st.selectbox("Стиль одежды", ["Casual", "Спорт‑шик", "Elegant", "Dark‑academia", "Soft‑girl"])
-    vibe = st.selectbox("Визуальный вайб", ["Солнечный", "Таинственный", "Гик", "Арт‑бохо"])
-    
-    st.markdown("### Хобби & интересы")
-    hobbies = st.text_input("Хобби (через запятую)", "кино, бег, комиксы")
-    music = st.text_input("Любимая музыка/группы", "The 1975, Arctic Monkeys")
-    
-    st.markdown("### Характер")
-    traits = st.multiselect("Черты", ["Юмористичный", "Романтичный", "Sassy", "Интроверт", "Экстраверт"])
-    temper = st.selectbox("Темперамент", ["Спокойный", "Энергичный", "Сбалансированный"])
-    
-    st.markdown("### Красные флаги")
-    dislikes = st.text_input("Что бот не любит", "опоздания, грубость")
-
-# --- 3. Центральная анкета пользователя (без зеленой шапки) ---
+# --- 3. Центральная анкета пользователя ---
 if not st.session_state.form_saved:
     st.title("DreamDate AI — тренируйся в дейтинге")
     
-    name = st.text_input("Имя", key="name", label_visibility="visible")
-    sex = st.selectbox("Пол", options=["Мужской", "Женский"], key="sex")
-    default_birthdate = datetime.date(2000, 1, 1)
-    max_birthdate = datetime.date(2007, 12, 31)
-    birthdate = st.date_input("Дата рождения", value=default_birthdate, 
-                            max_value=max_birthdate, key="birthdate")
-
-    if st.button("Сохранить анкету", type="primary"):
-        st.session_state.form_saved = True
-        st.session_state.user_name = name
-        # Сбрасываем предыдущие состояния
-        st.session_state.character_created = False
-        st.session_state.personality_saved = False
-        st.rerun()
+    with st.form("user_form"):
+        name = st.text_input("Имя", key="name", label_visibility="visible")
+        sex = st.selectbox("Пол", options=["Мужской", "Женский"], key="sex")
+        default_birthdate = datetime.date(2000, 1, 1)
+        max_birthdate = datetime.date(2007, 12, 31)
+        birthdate = st.date_input("Дата рождения", value=default_birthdate, 
+                                max_value=max_birthdate, key="birthdate")
+        
+        if st.form_submit_button("Сохранить анкету", type="primary"):
+            st.session_state.form_saved = True
+            st.session_state.user_name = name
+            # Сбрасываем предыдущие состояния
+            st.session_state.character_created = False
+            st.session_state.personality_saved = False
+            st.rerun()
 
 # --- 4. Выбор типа персонажа (стильные кликабельные кнопки) ---
 if st.session_state.form_saved and not st.session_state.character_created:
@@ -118,6 +99,44 @@ if st.session_state.form_saved and not st.session_state.character_created:
             .premade-btn-2 h3, .premade-btn-2 p,
             .premade-btn-3 h3, .premade-btn-3 p {
                 color: white !important;
+            }
+            .section {
+                background: #f9f9f9;
+                border-radius: 12px;
+                padding: 20px;
+                margin-bottom: 20px;
+                box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            }
+            .section-title {
+                margin-bottom: 15px;
+                padding-bottom: 10px;
+                border-bottom: 2px solid #eee;
+                color: #444;
+            }
+            .tag {
+                display: inline-block;
+                background: #e0e0e0;
+                border-radius: 16px;
+                padding: 6px 14px;
+                margin: 5px;
+                cursor: pointer;
+                transition: all 0.2s;
+            }
+            .tag:hover {
+                background: #d0d0d0;
+                transform: scale(1.05);
+            }
+            .tag.selected {
+                background: #4CAF50;
+                color: white;
+                font-weight: 500;
+            }
+            .tag.dislike {
+                background: #ffebee;
+            }
+            .tag.dislike.selected {
+                background: #f44336;
+                color: white;
             }
         </style>
     """, unsafe_allow_html=True)
@@ -191,26 +210,7 @@ if st.session_state.get("character_created", False) and st.session_state.charact
         st.session_state.personality_saved = False
     
     if not st.session_state.personality_saved:
-        st.title("Настройте характер персонажа")
-        
-        st.markdown("""
-            <style>
-                .slider-container {
-                    background: #f0f2f6;
-                    border-radius: 12px;
-                    padding: 20px;
-                    margin-bottom: 25px;
-                    box-shadow: 2px 2px 8px rgba(0,0,0,0.1);
-                }
-                .slider-header {
-                    display: flex;
-                    justify-content: space-between;
-                    margin-bottom: 10px;
-                    font-weight: bold;
-                    color: #444;
-                }
-            </style>
-        """, unsafe_allow_html=True)
+        st.title("Настройте персонажа")
         
         # Инициализация значений
         if "mbti_ei" not in st.session_state:
@@ -221,9 +221,44 @@ if st.session_state.get("character_created", False) and st.session_state.charact
             st.session_state.mbti_tf = 50
         if "mbti_jp" not in st.session_state:
             st.session_state.mbti_jp = 50
+        if "selected_gender" not in st.session_state:
+            st.session_state.selected_gender = "Мужской"
+        if "char_settings" not in st.session_state:
+            st.session_state.char_settings = {
+                "gender": "Девушка",
+                "age": 25,
+                "city": "Москва",
+                "fashion": "Casual",
+                "vibe": "Солнечный",
+                "hobbies": [],
+                "music": [],
+                "traits": [],
+                "temper": "Сбалансированный",
+                "dislikes": []
+            }
         
-        # Первая строка слайдеров
-        col1, col2 = st.columns(2, gap="medium")
+        # --- Основные настройки ---
+        with st.container():
+            col1, col2, col3 = st.columns(3)
+            with col1:
+                st.session_state.char_settings["gender"] = st.selectbox(
+                    "Пол персонажа", 
+                    ["Девушка", "Парень", "Небинарный"],
+                    index=["Девушка", "Парень", "Небинарный"].index(st.session_state.char_settings["gender"])
+                )
+            with col2:
+                st.session_state.char_settings["age"] = st.slider(
+                    "Возраст", 18, 60, st.session_state.char_settings["age"]
+                )
+            with col3:
+                st.session_state.char_settings["city"] = st.text_input(
+                    "Город/часовой пояс", 
+                    st.session_state.char_settings["city"]
+                )
+        
+        # --- Слайдеры характера ---
+        st.markdown("### Характер персонажа")
+        col1, col2 = st.columns(2)
         with col1:
             with st.container():
                 st.markdown('<div class="slider-container">', unsafe_allow_html=True)
@@ -248,8 +283,7 @@ if st.session_state.get("character_created", False) and st.session_state.charact
                 )
                 st.markdown('</div>', unsafe_allow_html=True)
         
-        # Вторая строка слайдеров
-        col3, col4 = st.columns(2, gap="medium")
+        col3, col4 = st.columns(2)
         with col3:
             with st.container():
                 st.markdown('<div class="slider-container">', unsafe_allow_html=True)
@@ -275,9 +309,7 @@ if st.session_state.get("character_created", False) and st.session_state.charact
                 st.markdown('</div>', unsafe_allow_html=True)
         
         # Выбор пола
-        st.markdown("### Пол персонажа")
-        if "selected_gender" not in st.session_state:
-            st.session_state.selected_gender = "Мужской"
+        st.markdown("### Стиль общения")
         st.session_state.selected_gender = st.radio(
             "", 
             ["Мужской", "Женский"], 
@@ -286,8 +318,139 @@ if st.session_state.get("character_created", False) and st.session_state.charact
             index=0 if st.session_state.selected_gender == "Мужской" else 1
         )
         
+        # --- Блок "Мне интересно" ---
+        st.markdown('<div class="section">', unsafe_allow_html=True)
+        st.markdown('<h3 class="section-title">🎯 Мне интересно</h3>', unsafe_allow_html=True)
+        
+        # Хобби
+        st.markdown("**Хобби:**")
+        hobbies_options = ["Кино", "Бег", "Комиксы", "Путешествия", "Фотография", "Кулинария", "Игры", "Чтение", "Йога"]
+        col1, col2, col3 = st.columns(3)
+        for i, hobby in enumerate(hobbies_options):
+            col = [col1, col2, col3][i % 3]
+            with col:
+                if st.button(hobby, key=f"hobby_{hobby}"):
+                    if hobby in st.session_state.char_settings["hobbies"]:
+                        st.session_state.char_settings["hobbies"].remove(hobby)
+                    else:
+                        st.session_state.char_settings["hobbies"].append(hobby)
+                    st.rerun()
+                st.markdown(f"""
+                    <div class="tag {'selected' if hobby in st.session_state.char_settings['hobbies'] else ''}">
+                        {hobby}
+                    </div>
+                """, unsafe_allow_html=True)
+        
+        # Музыка
+        st.markdown("**Музыкальные предпочтения:**")
+        music_options = ["Рок", "Поп", "Хип-хоп", "Электроника", "Джаз", "Классика", "Инди", "Метал", "R&B"]
+        col1, col2, col3 = st.columns(3)
+        for i, music in enumerate(music_options):
+            col = [col1, col2, col3][i % 3]
+            with col:
+                if st.button(music, key=f"music_{music}"):
+                    if music in st.session_state.char_settings["music"]:
+                        st.session_state.char_settings["music"].remove(music)
+                    else:
+                        st.session_state.char_settings["music"].append(music)
+                    st.rerun()
+                st.markdown(f"""
+                    <div class="tag {'selected' if music in st.session_state.char_settings['music'] else ''}">
+                        {music}
+                    </div>
+                """, unsafe_allow_html=True)
+        st.markdown('</div>', unsafe_allow_html=True)  # Закрываем section
+        
+        # --- Блок "Внешний вайб" ---
+        st.markdown('<div class="section">', unsafe_allow_html=True)
+        st.markdown('<h3 class="section-title">👗 Внешний вайб</h3>', unsafe_allow_html=True)
+        
+        # Стиль одежды
+        st.markdown("**Стиль одежды:**")
+        fashion_options = ["Casual", "Спорт-шик", "Elegant", "Dark-academia", "Soft-girl", "Бохо", "Минимализм"]
+        selected_fashion = st.session_state.char_settings["fashion"]
+        for i, fashion in enumerate(fashion_options):
+            if st.button(fashion, key=f"fashion_{fashion}"):
+                st.session_state.char_settings["fashion"] = fashion
+                st.rerun()
+            st.markdown(f"""
+                <div class="tag {'selected' if fashion == selected_fashion else ''}">
+                    {fashion}
+                </div>
+            """, unsafe_allow_html=True)
+        
+        # Визуальный вайб
+        st.markdown("**Визуальный вайб:**")
+        vibe_options = ["Солнечный", "Таинственный", "Гик", "Арт-бохо", "Романтичный", "Брутальный", "Утонченный"]
+        selected_vibe = st.session_state.char_settings["vibe"]
+        for i, vibe in enumerate(vibe_options):
+            if st.button(vibe, key=f"vibe_{vibe}"):
+                st.session_state.char_settings["vibe"] = vibe
+                st.rerun()
+            st.markdown(f"""
+                <div class="tag {'selected' if vibe == selected_vibe else ''}">
+                    {vibe}
+                </div>
+            """, unsafe_allow_html=True)
+        st.markdown('</div>', unsafe_allow_html=True)  # Закрываем section
+        
+        # --- Блок "Характер" ---
+        st.markdown('<div class="section">', unsafe_allow_html=True)
+        st.markdown('<h3 class="section-title">😊 Черты характера</h3>', unsafe_allow_html=True)
+        
+        # Черты характера
+        st.markdown("**Основные черты:**")
+        traits_options = ["Юмористичный", "Романтичный", "Sassy", "Интроверт", "Экстраверт", "Добрый", "Уверенный", "Скромный"]
+        for i, trait in enumerate(traits_options):
+            if st.button(trait, key=f"trait_{trait}"):
+                if trait in st.session_state.char_settings["traits"]:
+                    st.session_state.char_settings["traits"].remove(trait)
+                else:
+                    st.session_state.char_settings["traits"].append(trait)
+                st.rerun()
+            st.markdown(f"""
+                <div class="tag {'selected' if trait in st.session_state.char_settings['traits'] else ''}">
+                    {trait}
+                </div>
+            """, unsafe_allow_html=True)
+        
+        # Темперамент
+        st.markdown("**Темперамент:**")
+        temper_options = ["Спокойный", "Энергичный", "Сбалансированный", "Импульсивный", "Флегматичный"]
+        selected_temper = st.session_state.char_settings["temper"]
+        for i, temper in enumerate(temper_options):
+            if st.button(temper, key=f"temper_{temper}"):
+                st.session_state.char_settings["temper"] = temper
+                st.rerun()
+            st.markdown(f"""
+                <div class="tag {'selected' if temper == selected_temper else ''}">
+                    {temper}
+                </div>
+            """, unsafe_allow_html=True)
+        st.markdown('</div>', unsafe_allow_html=True)  # Закрываем section
+        
+        # --- Блок "Красные флаги" ---
+        st.markdown('<div class="section">', unsafe_allow_html=True)
+        st.markdown('<h3 class="section-title">🚩 Красные флаги</h3>', unsafe_allow_html=True)
+        
+        st.markdown("**Что не нравится:**")
+        dislikes_options = ["Опоздания", "Грубость", "Ложь", "Нарциссизм", "Эгоизм", "Пассивность", "Агрессия"]
+        for i, dislike in enumerate(dislikes_options):
+            if st.button(dislike, key=f"dislike_{dislike}"):
+                if dislike in st.session_state.char_settings["dislikes"]:
+                    st.session_state.char_settings["dislikes"].remove(dislike)
+                else:
+                    st.session_state.char_settings["dislikes"].append(dislike)
+                st.rerun()
+            st.markdown(f"""
+                <div class="tag dislike {'selected' if dislike in st.session_state.char_settings['dislikes'] else ''}">
+                    {dislike}
+                </div>
+            """, unsafe_allow_html=True)
+        st.markdown('</div>', unsafe_allow_html=True)  # Закрываем section
+        
         # Кнопка сохранения
-        if st.button("Сохранить характер", type="primary"):
+        if st.button("Сохранить персонажа", type="primary", use_container_width=True):
             st.session_state.personality_saved = True
             st.rerun()
 
@@ -298,23 +461,62 @@ if st.session_state.get("personality_saved", False) or (
     # Для готовых персонажей устанавливаем предустановки
     if st.session_state.character_type.startswith("premade"):
         if st.session_state.character_type == "premade_1":
-            st.session_state.mbti_ei = 80  # Экстраверт
-            st.session_state.mbti_ns = 30  # Реалист
-            st.session_state.mbti_tf = 60  # Эмоциональный
-            st.session_state.mbti_jp = 70  # Спонтанный
+            # Энергичный экстраверт
+            st.session_state.mbti_ei = 80
+            st.session_state.mbti_ns = 30
+            st.session_state.mbti_tf = 60
+            st.session_state.mbti_jp = 70
             st.session_state.selected_gender = "Мужской"
+            st.session_state.char_settings = {
+                "gender": "Парень",
+                "age": 28,
+                "city": "Москва",
+                "fashion": "Спорт-шик",
+                "vibe": "Энергичный",
+                "hobbies": ["Спорт", "Путешествия", "Кино"],
+                "music": ["Рок", "Электроника"],
+                "traits": ["Экстраверт", "Уверенный"],
+                "temper": "Энергичный",
+                "dislikes": ["Лень", "Пассивность"]
+            }
         elif st.session_state.character_type == "premade_2":
-            st.session_state.mbti_ei = 20  # Интроверт
-            st.session_state.mbti_ns = 80  # Мечтатель
-            st.session_state.mbti_tf = 70  # Эмоциональный
-            st.session_state.mbti_jp = 40  # Структурный
+            # Романтичный интроверт
+            st.session_state.mbti_ei = 20
+            st.session_state.mbti_ns = 80
+            st.session_state.mbti_tf = 70
+            st.session_state.mbti_jp = 40
             st.session_state.selected_gender = "Женский"
+            st.session_state.char_settings = {
+                "gender": "Девушка",
+                "age": 24,
+                "city": "Санкт-Петербург",
+                "fashion": "Романтичный",
+                "vibe": "Нежный",
+                "hobbies": ["Чтение", "Искусство", "Музыка"],
+                "music": ["Инди", "Классика"],
+                "traits": ["Романтичный", "Интроверт"],
+                "temper": "Спокойный",
+                "dislikes": ["Грубость", "Нарциссизм"]
+            }
         elif st.session_state.character_type == "premade_3":
-            st.session_state.mbti_ei = 50  # Нейтральный
-            st.session_state.mbti_ns = 65  # Склонен к мечтательности
-            st.session_state.mbti_tf = 75  # Эмоциональный
-            st.session_state.mbti_jp = 60  # Спонтанный
+            # Загадочный артистичный
+            st.session_state.mbti_ei = 50
+            st.session_state.mbti_ns = 65
+            st.session_state.mbti_tf = 75
+            st.session_state.mbti_jp = 60
             st.session_state.selected_gender = "Небинарный"
+            st.session_state.char_settings = {
+                "gender": "Небинарный",
+                "age": 26,
+                "city": "Калининград",
+                "fashion": "Бохо",
+                "vibe": "Загадочный",
+                "hobbies": ["Искусство", "Фотография", "Путешествия"],
+                "music": ["Инди", "Джаз", "Экспериментальная"],
+                "traits": ["Творческий", "Мечтатель"],
+                "temper": "Сбалансированный",
+                "dislikes": ["Ограничения", "Консерватизм"]
+            }
 
     # Текстовое описание характеристик
     mbti_text = f"""
@@ -324,12 +526,20 @@ if st.session_state.get("personality_saved", False) or (
     {'Спонтанный' if st.session_state.get('mbti_jp', 50) > 50 else 'Структурный'}.
     Стиль общения: {st.session_state.get('selected_gender', 'Нейтральный').lower()}.
     """
+    
+    # Форматирование настроек персонажа
+    settings = st.session_state.char_settings
+    hobbies_str = ", ".join(settings["hobbies"]) if settings["hobbies"] else "нет"
+    music_str = ", ".join(settings["music"]) if settings["music"] else "нет"
+    traits_str = ", ".join(settings["traits"]) if settings["traits"] else "нейтральный"
+    dislikes_str = ", ".join(settings["dislikes"]) if settings["dislikes"] else "нет"
 
     SYSTEM_PROMPT = f"""
-    Ты — {gender.lower()} {age} лет из {city}. Внешний стиль: {fashion}, вайб: {vibe}.
-    Увлечения: {hobbies}. Любимая музыка: {music}.
-    Характер: {', '.join(traits) or 'нейтральный'}, темперамент {temper.lower()}.
-    Тебе не нравятся: {dislikes}.
+    Ты — {settings['gender'].lower()} {settings['age']} лет из {settings['city']}. 
+    Внешний стиль: {settings['fashion']}, вайб: {settings['vibe']}.
+    Увлечения: {hobbies_str}. Любимая музыка: {music_str}.
+    Характер: {traits_str}, темперамент {settings['temper'].lower()}.
+    Тебе не нравятся: {dislikes_str}.
     {mbti_text}
     Общайся в чате, как на первом свидании в Тиндере: флиртуй, задавай вопросы, поддерживай тему.
     """
