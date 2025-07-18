@@ -722,7 +722,43 @@ if st.session_state.get("character_created", False) and st.session_state.charact
 
         # --- Красные флаги (личные антипатии) ---
         with st.container():
-            st.markdown('<div class="section">', unsafe_allow_html=True
+            st.markdown('<div class="section">', unsafe_allow_html=True)
+            st.markdown('<div class="section-title"><span>🚩</span> Что вам не нравится?</div>', unsafe_allow_html=True)
+
+            st.markdown('<div class="slider-header"><span>⛔</span> Личные антипатии</div>', unsafe_allow_html=True)
+            dislikes_options = ["Опоздания", "Грубость", "Ложь", "Нарциссизм", "Эгоизм", "Пассивность", "Агрессия"]
+            cols = st.columns(4)
+            for i, dislike in enumerate(dislikes_options):
+                with cols[i % 4]:
+                    selected = dislike in st.session_state.char_settings["dislikes"]
+                    btn = st.button(
+                        dislike + (" ✅" if selected else ""),
+                        key=f"dislike_{dislike}",
+                        use_container_width=True,
+                        help=f"Добавить/убрать: {dislike}"
+                    )
+                    if btn:
+                        if selected:
+                            st.session_state.char_settings["dislikes"].remove(dislike)
+                        else:
+                            st.session_state.char_settings["dislikes"].append(dislike)
+                        st.rerun()
+                    bg = "linear-gradient(145deg, #F44336, #C62828)" if selected else "rgba(244, 67, 54, 0.15)"
+                    st.markdown(
+                        f"""
+                        <div class="tag {'selected' if selected else ''}" 
+                        style="background: {bg}; {'color: white;' if selected else 'color: #B71C1C;'}">
+                        {dislike}
+                        </div>
+                        """, unsafe_allow_html=True)
+            st.markdown('</div>', unsafe_allow_html=True)  # конец секции
+
+        # Кнопка сохранения
+        if st.button("💾 Сохранить персонажа", key="save_character", 
+                    use_container_width=True, type="primary", 
+                    help="Сохранить все настройки персонажа и начать диалог"):
+            st.session_state.personality_saved = True
+            st.rerun()
 
 
 # --- 6. Чат и логика взаимодействия ---
