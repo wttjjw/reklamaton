@@ -137,7 +137,7 @@ st.markdown("""
             backdrop-filter: blur(8px);
             margin: 2rem auto;
             padding: 2.5rem;
-            max-width: 1000px;  /* Увеличили с 900px до 1000px */
+            max-width: 1100px;  /* Увеличили с 900px до 1000px */
         }
         
         h1, h2, h3 {
