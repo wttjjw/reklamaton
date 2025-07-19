@@ -2,35 +2,6 @@ import datetime
 import streamlit as st
 from openai import OpenAI  # openai>=1.1.0
 
-# --- Глобальный стиль: зелёные кнопки ---
-st.markdown("""
-    <style>
-        button[data-testid^="button-"] {
-            background: #fff;
-            color: #00DC00;
-            font-weight: 500;
-            border-radius: 20px;
-            border: 2px solid #00DC00;
-            min-width: 120px;
-            margin-bottom: 10px;
-            transition: all 0.25s;
-        }
-
-        button[data-testid^="button-"]:hover {
-            background-color: #e0ffe0;
-            transform: translateY(-2px);
-        }
-
-        button[data-testid^="button-"]:disabled {
-            background: #00DC00;
-            color: white;
-            font-weight: 700;
-            border: 2px solid white;
-            box-shadow: 0 4px 16px rgba(0, 220, 0, 0.4);
-        }
-    </style>
-""", unsafe_allow_html=True)
-
 # --- Кнопка назад ---
 def back_button(label="←", target=None, key_suffix=""):
     btn_key = f"back_button_{key_suffix}"
@@ -64,24 +35,17 @@ def back_button(label="←", target=None, key_suffix=""):
         st.session_state.msgs = []
         st.rerun()
 
-    # Стилизация только этой кнопки
-    st.markdown(f"""
-        <style>
-        button[data-testid="button-{btn_key}"] {{
-            border-radius: 50%;
-            width: 40px;
-            height: 40px;
-            font-size: 20px;
-            font-weight: bold;
-            background-color: #fff;
-            border: 2px solid #ccc;
-            color: #444;
-            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
-        }}
-        button[data-testid="button-{btn_key}"]:hover {{
-            background-color: #f0f0f0;
-            transform: scale(1.05);
-        }}
+   button[kind="primary"] {
+    background: linear-gradient(145deg, #00DC00, #00AA00);
+    color: white;
+    font-weight: 700;
+    border-radius: 20px;
+    border: 2px solid #fff;
+}
+button[kind="primary"]:hover {
+    background-color: #00C400;
+}
+
         </style>
     """, unsafe_allow_html=True)
 
@@ -385,6 +349,25 @@ st.markdown("""
             transform: translateY(-5px) !important;
             box-shadow: 0 12px 25px rgba(255, 152, 0, 0.4) !important;
         }
+                .feedback-btn:hover {
+            transform: translateY(-5px) !important;
+            box-shadow: 0 12px 25px rgba(255, 152, 0, 0.4) !important;
+        }
+
+        button[kind="primary"] {
+            background: linear-gradient(145deg, #00DC00, #00AA00);
+            color: white;
+            font-weight: 700;
+            border-radius: 20px;
+            border: 2px solid #fff;
+        }
+
+        button[kind="primary"]:hover {
+            background-color: #00C400;
+        }
+    </style>
+""", unsafe_allow_html=True)
+
     </style>
 """, unsafe_allow_html=True)
 
@@ -407,27 +390,21 @@ if not st.session_state.form_saved:
     """, unsafe_allow_html=True)
 
     # --- Пол (вне формы) ---
-st.markdown("**Ваш пол:**")
-col1, col2 = st.columns(2)
+    st.markdown("**Ваш пол:**")
+    col1, col2 = st.columns(2)
+    with col1:
+        if st.button("Мужской", use_container_width=True, key="gender_male"):
+            st.session_state["sex"] = "Мужской"
+    with col2:
+        if st.button("Женский", use_container_width=True, key="gender_female"):
+            st.session_state["sex"] = "Женский"
 
-selected_male = st.session_state.get("sex") == "Мужской"
-selected_female = st.session_state.get("sex") == "Женский"
-
-with col1:
-    if st.button("Мужской", use_container_width=True, key="gender_male", disabled=selected_male):
-        st.session_state["sex"] = "Мужской"
-
-with col2:
-    if st.button("Женский", use_container_width=True, key="gender_female", disabled=selected_female):
-        st.session_state["sex"] = "Женский"
-
-if "sex" in st.session_state:
-    st.markdown(
-        f"<div style='text-align:center; margin-top:10px;'>Вы выбрали: <b>{st.session_state['sex']}</b></div>",
-        unsafe_allow_html=True
-    )
-elif st.session_state.submit_attempted:
-    st.warning("Пожалуйста, выберите пол")
+    if "sex" in st.session_state:
+        st.markdown(
+            f"<div style='text-align:center; margin-top:10px;'>Вы выбрали: <b>{st.session_state['sex']}</b></div>",
+            unsafe_allow_html=True)
+    elif st.session_state.submit_attempted:
+        st.warning("Пожалуйста, выберите пол")
 
     # --- Форма (имя и возраст + кнопка) ---
     with st.form("user_form"):
