@@ -299,27 +299,26 @@ st.markdown("""
 if not st.session_state.form_saved:
     st.title("✨ DreamDate AI — тренируйся в дейтинге")
 
+    # --- Выбор пола (вне формы) ---
+    st.markdown("**Ваш пол:**")
+    col1, col2 = st.columns(2)
+    with col1:
+        if st.button("Мужской", use_container_width=True, key="gender_male"):
+            st.session_state["sex"] = "Мужской"
+    with col2:
+        if st.button("Женский", use_container_width=True, key="gender_female"):
+            st.session_state["sex"] = "Женский"
+
+    if "sex" in st.session_state:
+        st.markdown(f"<div style='text-align:center; margin-top:10px;'>Вы выбрали: <b>{st.session_state['sex']}</b></div>", unsafe_allow_html=True)
+    else:
+        st.warning("Пожалуйста, выберите пол")
+
+    # --- Форма с именем, возрастом и отправкой ---
     with st.form("user_form"):
-        # --- Ввод имени ---
         name = st.text_input("Ваше имя", key="name", label_visibility="visible",
                              placeholder="Как к вам обращаться?")
 
-        # --- Выбор пола (внутри формы, сразу после имени) ---
-        st.markdown("**Ваш пол:**")
-        col1, col2 = st.columns(2)
-        with col1:
-            if st.form_submit_button("Мужской", use_container_width=True, key="gender_male"):
-                st.session_state["sex"] = "Мужской"
-        with col2:
-            if st.form_submit_button("Женский", use_container_width=True, key="gender_female"):
-                st.session_state["sex"] = "Женский"
-
-        if "sex" in st.session_state:
-            st.markdown(f"<div style='text-align:center; margin-top:10px;'>Вы выбрали: <b>{st.session_state['sex']}</b></div>", unsafe_allow_html=True)
-        else:
-            st.warning("Пожалуйста, выберите пол")
-
-        # --- Возраст ---
         age_input = st.text_input("Сколько вам лет?", placeholder="Введите число от 18 до 65")
         if age_input:
             try:
@@ -333,7 +332,7 @@ if not st.session_state.form_saved:
         else:
             age = None
 
-        # --- Кнопка отправки ---
+        # Только одна настоящая кнопка отправки формы:
         if st.form_submit_button("Сохранить анкету", type="primary", use_container_width=True):
             if not name or not age or "sex" not in st.session_state:
                 st.warning("Пожалуйста, заполните все поля корректно")
