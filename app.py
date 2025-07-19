@@ -138,10 +138,9 @@ st.markdown("""
             margin: 2rem auto;
             padding: 2.5rem;
             max-width: 1100px;
-            min-height: 100vh;   /* Заполняет весь экран по высоте */
-            height: auto;        /* Пусть растёт по содержимому */
-            overflow-y: visible; /* Снимает ограничения */
-            padding-bottom: 5rem; /* Добавляет воздуха снизу — можно больше */
+            /* min-height и height убери! */
+            overflow-y: visible;
+            padding-bottom: 3.5rem;   /* Достаточно для чата, input и тени */
         }
         
         h1, h2, h3 {
@@ -308,11 +307,13 @@ st.markdown("""
             background: rgba(255, 255, 255, 0.85);
             border-radius: 24px;
             padding: 25px;
-            margin-bottom: 20px;
+            margin-bottom: 30px;
             box-shadow: 0 8px 25px rgba(0,0,0,0.1);
-            max-height: 800px;  /* Увеличили с 500px до 600px */
-            overflow-y: auto;
+            /* max-height: 600px; -- убрано! */
+            overflow-y: visible;
+            padding-bottom: 1.5rem;   /* небольшой запас, если нужно */
         }
+
         
         .message-container {
             margin-bottom: 20px;
@@ -370,7 +371,7 @@ if "submit_attempted" not in st.session_state:
     st.session_state.submit_attempted = False
 
 if not st.session_state.form_saved:
-    st.title("✨ DreamDate AI — тренируйся в дейтинге")
+    st.title("DreamDate AI — тренируйся в дейтинге")
 
     # --- Убираем "Press Enter to submit form" ---
     st.markdown("""
@@ -435,7 +436,7 @@ if st.session_state.form_saved and not st.session_state.character_created:
 
 
 if st.session_state.form_saved and not st.session_state.character_created:
-    st.title("👥 Выберите тип персонажа")
+    st.title("Выберите тип персонажа")
     
     # Кнопка создания персонажа
     st.markdown("""
