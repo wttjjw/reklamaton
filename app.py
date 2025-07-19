@@ -296,6 +296,11 @@ st.markdown("""
 """, unsafe_allow_html=True)
 
 # --- 3. Центральная анкета пользователя ---
+if "form_saved" not in st.session_state:
+    st.session_state.form_saved = False
+if "submit_attempted" not in st.session_state:
+    st.session_state.submit_attempted = False
+
 if not st.session_state.form_saved:
     st.title("✨ DreamDate AI — тренируйся в дейтинге")
 
@@ -311,15 +316,16 @@ if not st.session_state.form_saved:
 
     if "sex" in st.session_state:
         st.markdown(f"<div style='text-align:center; margin-top:10px;'>Вы выбрали: <b>{st.session_state['sex']}</b></div>", unsafe_allow_html=True)
-    else:
+    elif st.session_state.submit_attempted:
         st.warning("Пожалуйста, выберите пол")
 
-    # --- Форма с именем, возрастом и отправкой ---
+    # --- Форма ---
     with st.form("user_form"):
         name = st.text_input("Ваше имя", key="name", label_visibility="visible",
                              placeholder="Как к вам обращаться?")
-
         age_input = st.text_input("Сколько вам лет?", placeholder="Введите число от 18 до 65")
+
+        age = None
         if age_input:
             try:
                 age = int(age_input)
@@ -328,12 +334,10 @@ if not st.session_state.form_saved:
                     age = None
             except ValueError:
                 st.warning("Введите только число")
-                age = None
-        else:
-            age = None
 
-        # Только одна настоящая кнопка отправки формы:
         if st.form_submit_button("Сохранить анкету", type="primary", use_container_width=True):
+            st.session_state.submit_attempted = True  # <- отмечаем, что была попытка
+
             if not name or not age or "sex" not in st.session_state:
                 st.warning("Пожалуйста, заполните все поля корректно")
             else:
