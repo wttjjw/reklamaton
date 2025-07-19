@@ -304,36 +304,39 @@ if "submit_attempted" not in st.session_state:
 if not st.session_state.form_saved:
     st.title("✨ DreamDate AI — тренируйся в дейтинге")
 
-    # --- Выбор пола (вне формы) ---
-    st.markdown("**Ваш пол:**")
-    col1, col2 = st.columns(2)
-    with col1:
-        if st.button("Мужской", use_container_width=True, key="gender_male"):
-            st.session_state["sex"] = "Мужской"
-    with col2:
-        if st.button("Женский", use_container_width=True, key="gender_female"):
-            st.session_state["sex"] = "Женский"
-
-    if "sex" in st.session_state:
-        st.markdown(f"<div style='text-align:center; margin-top:10px;'>Вы выбрали: <b>{st.session_state['sex']}</b></div>", unsafe_allow_html=True)
-    elif st.session_state.submit_attempted:
-        st.warning("Пожалуйста, выберите пол")
+    # --- Убираем хинт "Press Enter to submit form" ---
+    st.markdown("""
+        <style>
+            div[data-baseweb="input"] > div > div:nth-child(2) {
+                display: none !important;
+            }
+        </style>
+    """, unsafe_allow_html=True)
 
     # --- Форма ---
     with st.form("user_form"):
-        # ⛔️ Блокируем отправку формы по Enter
-        st.markdown("""
-            <script>
-                document.addEventListener("keydown", function(event) {
-                    if (event.key === "Enter" && event.target.tagName === "INPUT") {
-                        event.preventDefault();
-                    }
-                });
-            </script>
-        """, unsafe_allow_html=True)
-
+        # Имя
         name = st.text_input("Ваше имя", key="name", label_visibility="visible",
                              placeholder="Как к вам обращаться?")
+
+        # Пол
+        st.markdown("**Ваш пол:**")
+        col1, col2 = st.columns(2)
+        with col1:
+            if st.form_submit_button("Мужской", use_container_width=True, key="gender_male"):
+                st.session_state["sex"] = "Мужской"
+        with col2:
+            if st.form_submit_button("Женский", use_container_width=True, key="gender_female"):
+                st.session_state["sex"] = "Женский"
+
+        if "sex" in st.session_state:
+            st.markdown(
+                f"<div style='text-align:center; margin-top:10px;'>Вы выбрали: <b>{st.session_state['sex']}</b></div>",
+                unsafe_allow_html=True)
+        elif st.session_state.submit_attempted:
+            st.warning("Пожалуйста, выберите пол")
+
+        # Возраст
         age_input = st.text_input("Сколько вам лет?", placeholder="Введите число от 18 до 65")
 
         age = None
@@ -346,8 +349,9 @@ if not st.session_state.form_saved:
             except ValueError:
                 st.warning("Введите только число")
 
-        # 👇 Кнопка сохранения анкеты
-        if st.form_submit_button("Сохранить анкету", type="primary", use_container_width=True):
+        # Кнопка отправки анкеты
+        submitted = st.form_submit_button("Сохранить анкету", type="primary", use_container_width=True)
+        if submitted:
             st.session_state.submit_attempted = True
 
             if not name or not age or "sex" not in st.session_state:
