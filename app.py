@@ -42,6 +42,15 @@ if "character_created" not in st.session_state:
     st.session_state.character_created = False
 if "msgs" not in st.session_state:
     st.session_state.msgs = []
+
+# Если пользователь вернулся назад, сбрасываем чат и сохранённого персонажа
+if (
+    st.session_state.get("character_created") is False and 
+    st.session_state.get("personality_saved") is True
+):
+    st.session_state.msgs = []
+    st.session_state.personality_saved = False
+    
 if "char_settings" not in st.session_state:
     st.session_state.char_settings = {
         "gender": "Девушка",
