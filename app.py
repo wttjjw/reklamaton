@@ -3,31 +3,17 @@ import streamlit as st
 from openai import OpenAI  # openai>=1.1.0
 
 # --- Кнопка назад ---
-def back_button(label="←", target=None, key_suffix=""):
-    st.markdown("""
-        <style>
-            .back-circle {
-                background-color: #ffffff;
-                border: 2px solid #ccc;
-                border-radius: 50%;
-                width: 40px;
-                height: 40px;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                font-size: 18px;
-                font-weight: bold;
-                color: #444;
-                cursor: pointer;
-                box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
-                transition: all 0.2s ease;
-            }
-            .back-circle:hover {
-                background-color: #f0f0f0;
-                transform: scale(1.05);
-            }
-        </style>
-    """, unsafe_allow_html=True)
+def back_button(target=None, key_suffix=""):
+    btn_key = f"back_button_{key_suffix}"
+
+    col1, col2 = st.columns([1, 9])
+    with col1:
+        clicked = st.button("←", key=btn_key)
+
+        if clicked:
+            if target:
+                for k, v in target.items():
+                    st.session_state[k] = v
 
     col1, col2 = st.columns([1, 9])
     with col1:
