@@ -2,6 +2,16 @@ import datetime
 import streamlit as st
 from openai import OpenAI  # openai>=1.1.0
 
+# --- Кнопка назад ---
+def back_button(label="← Назад", target=None):
+    col1, _ = st.columns([1, 8])
+    with col1:
+        if st.button(label, key=f"back_{label}", use_container_width=True):
+            if target:
+                for k, v in target.items():
+                    st.session_state[k] = v
+            st.rerun()
+
 # --- UTILS ---
 def get_trait_text(val, left, right):
     if val == 1:
@@ -362,6 +372,8 @@ if not st.session_state.form_saved:
 
 
 # --- 4. Выбор типа персонажа ---
+back_button(target={"character_created": False})
+
 if st.session_state.form_saved and not st.session_state.character_created:
     st.title("👥 Выберите тип персонажа")
     
