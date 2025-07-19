@@ -464,7 +464,8 @@ if st.session_state.form_saved and not st.session_state.character_created:
             st.rerun()
 
 # --- 5. Создание кастомного персонажа ---
-back_button(target={"character_created": False}, key_suffix="back_to_character_type")
+if st.session_state.get("character_created", False) and st.session_state.character_type == "custom":
+    back_button(target={"character_created": False}, key_suffix="back_to_character_type")
 
 if st.session_state.get("character_created", False) and st.session_state.character_type == "custom":
     if "personality_saved" not in st.session_state:
