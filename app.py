@@ -296,7 +296,7 @@ st.markdown("""
 """, unsafe_allow_html=True)
 
 # --- 3. Центральная анкета пользователя ---
-f not st.session_state.form_saved:
+if not st.session_state.form_saved:
     st.title("✨ DreamDate AI — тренируйся в дейтинге")
 
     # --- ВЫБОР ПОЛА (ВНЕ ФОРМЫ) ---
