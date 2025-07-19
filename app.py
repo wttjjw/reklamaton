@@ -4,14 +4,16 @@ from openai import OpenAI  # openai>=1.1.0
 
 # --- Кнопка назад ---
 def back_button(label="← Назад", target=None, key_suffix=""):
-    col1, _ = st.columns([1, 8])
-    unique_key = f"back_{label}_{hash(str(target))}_{key_suffix}"  # теперь с суффиксом
+    st.markdown('<div style="margin-bottom: 20px;">', unsafe_allow_html=True)
+    col1, col2 = st.columns([1, 9])
     with col1:
+        unique_key = f"back_{label}_{hash(str(target))}_{key_suffix}"
         if st.button(label, key=unique_key, use_container_width=True):
             if target:
                 for k, v in target.items():
                     st.session_state[k] = v
             st.rerun()
+    st.markdown('</div>', unsafe_allow_html=True)
 
 # --- UTILS ---
 def get_trait_text(val, left, right):
@@ -373,7 +375,8 @@ if not st.session_state.form_saved:
 
 
 # --- 4. Выбор типа персонажа ---
-back_button(target={"form_saved": False}, key_suffix="back_to_form")
+if st.session_state.form_saved and not st.session_state.character_created:
+    back_button(target={"form_saved": False}, key_suffix="back_to_form")
 
 
 if st.session_state.form_saved and not st.session_state.character_created:
@@ -470,10 +473,8 @@ if st.session_state.get("character_created", False) and st.session_state.charact
     if not st.session_state.personality_saved:
         st.title("Создайте своего персонажа")
 
+       
         # --- Основные настройки ---
-
-
-        
         with st.container():
             st.markdown('<div class="section">', unsafe_allow_html=True)
             st.markdown('<div class="section-title" style="text-align:left;">Основная информация</div>', unsafe_allow_html=True)
