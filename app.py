@@ -307,7 +307,19 @@ if not st.session_state.form_saved:
         with col2:
             sex = st.selectbox("Ваш пол", options=["Мужской", "Женский"], key="sex")
         
-            age = st.number_input("Сколько вам лет?", min_value=18, max_value=65, value=25, step=1)
+            age_input = st.text_input("Сколько вам лет?", placeholder="Введите число от 18 до 65")
+
+if age_input:
+    try:
+        age = int(age_input)
+        if age < 18 or age > 65:
+            st.warning("Возраст должен быть от 18 до 65 лет")
+            age = None
+    except ValueError:
+        st.warning("Введите только число")
+        age = None
+else:
+    age = None
 
         
         if st.form_submit_button("Сохранить анкету", type="primary", use_container_width=True):
