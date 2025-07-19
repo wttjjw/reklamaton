@@ -304,7 +304,7 @@ if "submit_attempted" not in st.session_state:
 if not st.session_state.form_saved:
     st.title("✨ DreamDate AI — тренируйся в дейтинге")
 
-    # --- Убираем хинт "Press Enter to submit form" ---
+    # --- Убираем "Press Enter to submit form" ---
     st.markdown("""
         <style>
             div[data-baseweb="input"] > div > div:nth-child(2) {
@@ -313,30 +313,27 @@ if not st.session_state.form_saved:
         </style>
     """, unsafe_allow_html=True)
 
-    # --- Форма ---
+    # --- Пол (вне формы) ---
+    st.markdown("**Ваш пол:**")
+    col1, col2 = st.columns(2)
+    with col1:
+        if st.button("Мужской", use_container_width=True, key="gender_male"):
+            st.session_state["sex"] = "Мужской"
+    with col2:
+        if st.button("Женский", use_container_width=True, key="gender_female"):
+            st.session_state["sex"] = "Женский"
+
+    if "sex" in st.session_state:
+        st.markdown(
+            f"<div style='text-align:center; margin-top:10px;'>Вы выбрали: <b>{st.session_state['sex']}</b></div>",
+            unsafe_allow_html=True)
+    elif st.session_state.submit_attempted:
+        st.warning("Пожалуйста, выберите пол")
+
+    # --- Форма (имя и возраст + кнопка) ---
     with st.form("user_form"):
-        # Имя
         name = st.text_input("Ваше имя", key="name", label_visibility="visible",
                              placeholder="Как к вам обращаться?")
-
-        # Пол
-        st.markdown("**Ваш пол:**")
-        col1, col2 = st.columns(2)
-        with col1:
-            if st.form_submit_button("Мужской", use_container_width=True, key="gender_male"):
-                st.session_state["sex"] = "Мужской"
-        with col2:
-            if st.form_submit_button("Женский", use_container_width=True, key="gender_female"):
-                st.session_state["sex"] = "Женский"
-
-        if "sex" in st.session_state:
-            st.markdown(
-                f"<div style='text-align:center; margin-top:10px;'>Вы выбрали: <b>{st.session_state['sex']}</b></div>",
-                unsafe_allow_html=True)
-        elif st.session_state.submit_attempted:
-            st.warning("Пожалуйста, выберите пол")
-
-        # Возраст
         age_input = st.text_input("Сколько вам лет?", placeholder="Введите число от 18 до 65")
 
         age = None
@@ -349,7 +346,6 @@ if not st.session_state.form_saved:
             except ValueError:
                 st.warning("Введите только число")
 
-        # Кнопка отправки анкеты
         submitted = st.form_submit_button("Сохранить анкету", type="primary", use_container_width=True)
         if submitted:
             st.session_state.submit_attempted = True
@@ -363,6 +359,7 @@ if not st.session_state.form_saved:
                 st.session_state.character_created = False
                 st.session_state.personality_saved = False
                 st.rerun()
+
 
 # --- 4. Выбор типа персонажа ---
 if st.session_state.form_saved and not st.session_state.character_created:
