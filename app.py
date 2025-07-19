@@ -138,11 +138,13 @@ st.markdown("""
             margin: 2rem auto;
             padding: 2.5rem;
             max-width: 1100px;
-            /* min-height и height убери! */
             overflow-y: visible;
-            padding-bottom: 3.5rem;   /* Достаточно для чата, input и тени */
+            padding-bottom: 5.5rem !important;  /* увеличил до 5.5rem для гарантии */
         }
-        
+        .main, .block-container, body {
+            padding-bottom: 5.5rem !important;
+        }
+
         h1, h2, h3 {
             color: var(--primary);
             font-weight: 700;
