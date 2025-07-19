@@ -3,12 +3,12 @@ import streamlit as st
 from openai import OpenAI  # openai>=1.1.0
 
 # --- Кнопка назад ---
-def back_button(target=None, key_suffix=""):
+def back_button(label="←", target=None, key_suffix=""):
     btn_key = f"back_button_{key_suffix}"
 
     col1, col2 = st.columns([1, 9])
     with col1:
-        clicked = st.button("←", key=btn_key)
+        clicked = st.button(label, key=btn_key)
 
         if clicked:
             if target:
