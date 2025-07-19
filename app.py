@@ -3,7 +3,7 @@ import streamlit as st
 from openai import OpenAI  # openai>=1.1.0
 
 # --- Кнопка назад ---
-ddef back_button(label="← Назад", target=None, key_suffix=""):
+def back_button(label="← Назад", target=None, key_suffix=""):
     col1, _ = st.columns([1, 8])
     unique_key = f"back_{label}_{hash(str(target))}_{key_suffix}"  # теперь с суффиксом
     with col1:
