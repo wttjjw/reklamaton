@@ -307,7 +307,7 @@ if not st.session_state.form_saved:
         with col2:
             sex = st.selectbox("Ваш пол", options=["Мужской", "Женский"], key="sex")
         
-       age = st.number_input("Сколько вам лет?", min_value=18, max_value=65, value=25, step=1)
+            age = st.number_input("Сколько вам лет?", min_value=18, max_value=65, value=25, step=1)
 
         
         if st.form_submit_button("Сохранить анкету", type="primary", use_container_width=True):
