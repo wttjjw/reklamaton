@@ -300,22 +300,21 @@ if not st.session_state.form_saved:
     st.title("✨ DreamDate AI — тренируйся в дейтинге")
 
     with st.form("user_form"):
-        # --- Имя и пол ---
+        # --- Имя ---
         col1, col2 = st.columns(2)
         with col1:
-            name = st.text_input("Ваше имя", key="name", label_visibility="visible", 
+            name = st.text_input("Ваше имя", key="name", label_visibility="visible",
                                  placeholder="Как к вам обращаться?")
         with col2:
             st.markdown("Ваш пол:")
             sex_col1, sex_col2 = st.columns(2)
             with sex_col1:
-                if st.form_submit_button("Мужской", use_container_width=True, key="gender_male"):
+                if st.button("Мужской", use_container_width=True, key="gender_male"):
                     st.session_state["sex"] = "Мужской"
             with sex_col2:
-                if st.form_submit_button("Женский", use_container_width=True, key="gender_female"):
+                if st.button("Женский", use_container_width=True, key="gender_female"):
                     st.session_state["sex"] = "Женский"
 
-        # --- Отображение выбора пола ---
         if "sex" in st.session_state:
             st.markdown(f"<div style='text-align:center; margin-top:10px;'>Вы выбрали: <b>{st.session_state['sex']}</b></div>", unsafe_allow_html=True)
         else:
@@ -336,7 +335,7 @@ if not st.session_state.form_saved:
         else:
             age = None
 
-        # --- Кнопка сохранения анкеты ---
+        # --- Кнопка отправки формы ---
         if st.form_submit_button("Сохранить анкету", type="primary", use_container_width=True):
             if not name or not age or "sex" not in st.session_state:
                 st.warning("Пожалуйста, заполните все поля корректно")
