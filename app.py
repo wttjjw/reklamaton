@@ -2,35 +2,6 @@ import datetime
 import streamlit as st
 from openai import OpenAI  # openai>=1.1.0
 
-# --- Глобальный стиль: зелёные кнопки ---
-st.markdown("""
-    <style>
-        button[data-testid^="button-"] {
-            background: #fff;
-            color: #00DC00;
-            font-weight: 500;
-            border-radius: 20px;
-            border: 2px solid #00DC00;
-            min-width: 120px;
-            margin-bottom: 10px;
-            transition: all 0.25s;
-        }
-
-        button[data-testid^="button-"]:hover {
-            background-color: #e0ffe0;
-            transform: translateY(-2px);
-        }
-
-        button[data-testid^="button-"]:disabled {
-            background: #00DC00;
-            color: white;
-            font-weight: 700;
-            border: 2px solid white;
-            box-shadow: 0 4px 16px rgba(0, 220, 0, 0.4);
-        }
-    </style>
-""", unsafe_allow_html=True)
-
 # --- Кнопка назад ---
 def back_button(label="←", target=None, key_suffix=""):
     btn_key = f"back_button_{key_suffix}"
@@ -565,7 +536,8 @@ if st.session_state.get("character_created", False) and st.session_state.charact
             for i, gender in enumerate(genders):
                 with cols[i]:
                     selected = st.session_state.char_settings["gender"] == gender
-                    if st.button(gender, key=f"gender_{gender}", use_container_width=True, disabled=selected):
+                    btn = st.button(gender, key=f"gender_{gender}", use_container_width=True)
+                    if btn:
                         st.session_state.char_settings["gender"] = gender
                         st.rerun()
                     st.markdown(
