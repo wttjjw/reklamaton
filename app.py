@@ -137,7 +137,7 @@ st.markdown("""
             backdrop-filter: blur(8px);
             margin: 2rem auto;
             padding: 2.5rem;
-            max-width: 900px;
+            max-width: 1000px;  /* Увеличили с 900px до 1000px */
         }
         
         h1, h2, h3 {
@@ -304,9 +304,9 @@ st.markdown("""
             background: rgba(255, 255, 255, 0.85);
             border-radius: 24px;
             padding: 25px;
-            margin-bottom: 30px;
+            margin-bottom: 20px;
             box-shadow: 0 8px 25px rgba(0,0,0,0.1);
-            max-height: 500px;
+            max-height: 600px;  /* Увеличили с 500px до 600px */
             overflow-y: auto;
         }
         
