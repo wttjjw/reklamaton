@@ -368,6 +368,15 @@ st.markdown("""
     </style>
 """, unsafe_allow_html=True)
 
+st.markdown("""
+    <style>
+        div[data-testid="stChatInput"] {
+            padding-bottom: 36px !important;  /* Можно 48px, если хочется ещё больше воздуха */
+        }
+    </style>
+""", unsafe_allow_html=True)
+
+
 # --- 3. Центральная анкета пользователя ---
 if "form_saved" not in st.session_state:
     st.session_state.form_saved = False
