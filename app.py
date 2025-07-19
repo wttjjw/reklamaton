@@ -409,16 +409,12 @@ if not st.session_state.form_saved:
     # --- Пол (вне формы) ---
     st.markdown("**Ваш пол:**")
     col1, col2 = st.columns(2)
-    selected_male = st.session_state.get("sex") == "Мужской"
-    selected_female = st.session_state.get("sex") == "Женский"
-
-        with col1:
-            if st.button("Мужской", use_container_width=True, key="gender_male", disabled=selected_male):
-                st.session_state["sex"] = "Мужской"
-        
-        with col2:
-            if st.button("Женский", use_container_width=True, key="gender_female", disabled=selected_female):
-                st.session_state["sex"] = "Женский"
+     with col1:
+        if st.button("Мужской", use_container_width=True, key="gender_male"):
+            st.session_state["sex"] = "Мужской"
+    with col2:
+        if st.button("Женский", use_container_width=True, key="gender_female"):
+            st.session_state["sex"] = "Женский"
 
     if "sex" in st.session_state:
         st.markdown(
