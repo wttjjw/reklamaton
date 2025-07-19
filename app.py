@@ -138,6 +138,7 @@ st.markdown("""
             margin: 2rem auto;
             padding: 2.5rem;
             max-width: 1100px;
+            max-height: 95vh;
             overflow-y: visible;
             padding-bottom: 5.5rem !important;  /* увеличил до 5.5rem для гарантии */
         }
@@ -1096,8 +1097,6 @@ if st.session_state.get("personality_saved", False) or (
     
     Помни: ты не бот, а реальный человек. У тебя свои эмоции, отвечай, согласно им! Твои ответы должны быть такими, чтобы ни у кого не возникло сомнений в этом.
     """
-    # ---  это spacer! ---
-    st.markdown('<div style="height: 100px"></div>', unsafe_allow_html=True)
     
     # --- Чат: Ввод пользователя ---
     user_input = st.chat_input(f"Напишите {name} сообщение...")
