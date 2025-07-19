@@ -544,19 +544,13 @@ if st.session_state.get("character_created", False) and st.session_state.charact
                     )
             st.markdown('</div>', unsafe_allow_html=True)  # конец секции
 
-        # --- Характер ---
-       back_button(target={"character_created": False})
-        
+       # --- Характер ---
+        back_button(target={"character_created": False})
+
         with st.container():
             st.markdown('<div class="section">', unsafe_allow_html=True)
             st.markdown(
                 '<div class="section-title" style="text-align:left;">Характер персонажа</div>',
-                unsafe_allow_html=True
-            )
-            st.markdown(
-                '<div style="color:#666; font-size:1rem; margin-bottom:22px;">'
-                'Настройте характер по шкалам ниже: передвигайте ползунки, чтобы выбрать, к какому полюсу ближе ваш персонаж по каждой из четырёх черт.'
-                '</div>',
                 unsafe_allow_html=True
             )
         
