@@ -5,8 +5,9 @@ from openai import OpenAI  # openai>=1.1.0
 # --- Кнопка назад ---
 def back_button(label="← Назад", target=None):
     col1, _ = st.columns([1, 8])
+    unique_key = f"back_{label}_{hash(str(target))}"  # Уникальный ключ
     with col1:
-        if st.button(label, key=f"back_{label}", use_container_width=True):
+        if st.button(label, key=unique_key, use_container_width=True):
             if target:
                 for k, v in target.items():
                     st.session_state[k] = v
