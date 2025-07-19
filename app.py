@@ -356,6 +356,25 @@ st.markdown("""
             transform: translateY(-5px) !important;
             box-shadow: 0 12px 25px rgba(255, 152, 0, 0.4) !important;
         }
+                .feedback-btn:hover {
+            transform: translateY(-5px) !important;
+            box-shadow: 0 12px 25px rgba(255, 152, 0, 0.4) !important;
+        }
+
+        button[kind="primary"] {
+            background: linear-gradient(145deg, #00DC00, #00AA00);
+            color: white;
+            font-weight: 700;
+            border-radius: 20px;
+            border: 2px solid #fff;
+        }
+
+        button[kind="primary"]:hover {
+            background-color: #00C400;
+        }
+    </style>
+""", unsafe_allow_html=True)
+
     </style>
 """, unsafe_allow_html=True)
 
