@@ -9,29 +9,25 @@ def back_button(label="← Назад", target=None, key_suffix=""):
     with col1:
         unique_key = f"back_{label}_{hash(str(target))}_{key_suffix}"
         if st.button(label, key=unique_key, use_container_width=True):
-            if target:
-                for k, v in target.items():
-                    st.session_state[k] = v
-
-            # 🔄 Если выходим назад из кастомного персонажа, сбрасываем char_settings
-            if (
-                target.get("character_created") is False
-                and st.session_state.get("character_type") == "custom"
-            ):
+            # 💡 Если выходим из чата — сбрасываем переписку и личность
+            if target and ("character_created" in target and target["character_created"] is False):
+                st.session_state.msgs = []
+                st.session_state.personality_saved = False
                 st.session_state.char_settings = {
-                    "gender": "",
-                    "age": "",
-                    "city": "",
-                    "fashion": "",
-                    "vibe": "",
+                    "gender": "Девушка",
+                    "age": "23-27",
+                    "city": "Москва",
+                    "fashion": "Casual",
+                    "vibe": "Солнечный",
                     "hobbies": [],
                     "music": [],
                     "traits": [],
-                    "temper": "",
+                    "temper": "Сбалансированный",
                     "dislikes": [],
-                    "style": ""
+                    "style": "Дружелюбный"
                 }
-
+            for k, v in (target or {}).items():
+                st.session_state[k] = v
             st.rerun()
     st.markdown('</div>', unsafe_allow_html=True)
 
