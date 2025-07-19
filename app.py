@@ -310,7 +310,7 @@ st.markdown("""
             padding: 25px;
             margin-bottom: 20px;
             box-shadow: 0 8px 25px rgba(0,0,0,0.1);
-            max-height: 1000px;  /* Увеличили с 500px до 600px */
+            max-height: 800px;  /* Увеличили с 500px до 600px */
             overflow-y: auto;
         }
         
