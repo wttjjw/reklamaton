@@ -458,6 +458,8 @@ if st.session_state.form_saved and not st.session_state.character_created:
             st.rerun()
 
 # --- 5. Создание кастомного персонажа ---
+back_button(target={"character_created": False})
+
 if st.session_state.get("character_created", False) and st.session_state.character_type == "custom":
     if "personality_saved" not in st.session_state:
         st.session_state.personality_saved = False
@@ -543,8 +545,7 @@ if st.session_state.get("character_created", False) and st.session_state.charact
             st.markdown('</div>', unsafe_allow_html=True)  # конец секции
 
         # --- Характер ---
-       
-
+       back_button(target={"character_created": False})
         
         with st.container():
             st.markdown('<div class="section">', unsafe_allow_html=True)
