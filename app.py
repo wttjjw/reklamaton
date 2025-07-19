@@ -1061,7 +1061,7 @@ if st.session_state.get("personality_saved", False) or (
                 model=MODEL,
                 messages=[{"role": "system", "content": fb_prompt}],
                 temperature=0.5,
-                max_tokens=300
+                max_tokens=1000
             )
             with st.chat_message("assistant"):
                 st.subheader("📝 Фидбек от эксперта по общению:")
