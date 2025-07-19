@@ -303,31 +303,34 @@ if not st.session_state.form_saved:
         col1, col2 = st.columns(2)
         with col1:
             name = st.text_input("Ваше имя", key="name", label_visibility="visible", 
-                                placeholder="Как к вам обращаться?")
+                                 placeholder="Как к вам обращаться?")
         with col2:
             sex = st.selectbox("Ваш пол", options=["Мужской", "Женский"], key="sex")
-        
-            age_input = st.text_input("Сколько вам лет?", placeholder="Введите число от 18 до 65")
 
-if age_input:
-    try:
-        age = int(age_input)
-        if age < 18 or age > 65:
-            st.warning("Возраст должен быть от 18 до 65 лет")
+        age_input = st.text_input("Сколько вам лет?", placeholder="Введите число от 18 до 65")
+
+        if age_input:
+            try:
+                age = int(age_input)
+                if age < 18 or age > 65:
+                    st.warning("Возраст должен быть от 18 до 65 лет")
+                    age = None
+            except ValueError:
+                st.warning("Введите только число")
+                age = None
+        else:
             age = None
-    except ValueError:
-        st.warning("Введите только число")
-        age = None
-else:
-    age = None
 
-        
         if st.form_submit_button("Сохранить анкету", type="primary", use_container_width=True):
-            st.session_state.form_saved = True
-            st.session_state.user_name = name
-            st.session_state.character_created = False
-            st.session_state.personality_saved = False
-            st.rerun()
+            if not name or not age:
+                st.warning("Пожалуйста, заполните имя и корректный возраст")
+            else:
+                st.session_state.form_saved = True
+                st.session_state.user_name = name
+                st.session_state.user_age = age
+                st.session_state.character_created = False
+                st.session_state.personality_saved = False
+                st.rerun()
 
 # --- 4. Выбор типа персонажа ---
 if st.session_state.form_saved and not st.session_state.character_created:
