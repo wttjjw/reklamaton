@@ -371,7 +371,7 @@ st.markdown("""
 st.markdown("""
     <style>
         div[data-testid="stChatInput"] {
-            padding-bottom: 36px !important;  /* Можно 48px, если хочется ещё больше воздуха */
+            padding-bottom: 32px !important;  /* Можно 48px, если хочется ещё больше воздуха */
         }
     </style>
 """, unsafe_allow_html=True)
