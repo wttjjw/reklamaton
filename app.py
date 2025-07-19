@@ -5,35 +5,8 @@ from openai import OpenAI  # openai>=1.1.0
 # --- Кнопка назад ---
 def back_button(label="←", target=None, key_suffix=""):
     btn_key = f"back_button_{key_suffix}"
-    
-    # HTML с id
-    st.markdown(f"""
-        <div style="margin-bottom: 20px;">
-            <button id="back-button" onclick="document.querySelector('[data-testid=\'stForm\'] form').dispatchEvent(new Event('submit', {{ bubbles: true }}));">
-                {label}
-            </button>
-        </div>
-        <style>
-        #back-button {{
-            border-radius: 50%;
-            width: 40px;
-            height: 40px;
-            font-size: 20px;
-            font-weight: bold;
-            background-color: #fff;
-            border: 2px solid #ccc;
-            color: #444;
-            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
-            cursor: pointer;
-        }}
-        #back-button:hover {{
-            background-color: #f0f0f0;
-            transform: scale(1.05);
-        }}
-        </style>
-    """, unsafe_allow_html=True)
 
-    # Обработка клика
+    # Только кнопка через Streamlit, без HTML-дубликата
     if st.button(label, key=btn_key):
         if target:
             for k, v in target.items():
@@ -61,6 +34,28 @@ def back_button(label="←", target=None, key_suffix=""):
 
         st.session_state.msgs = []
         st.rerun()
+
+    # Стилизация только этой кнопки
+    st.markdown(f"""
+        <style>
+        button[data-testid="button-{btn_key}"] {{
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            font-size: 20px;
+            font-weight: bold;
+            background-color: #fff;
+            border: 2px solid #ccc;
+            color: #444;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+        }}
+        button[data-testid="button-{btn_key}"]:hover {{
+            background-color: #f0f0f0;
+            transform: scale(1.05);
+        }}
+        </style>
+    """, unsafe_allow_html=True)
+
 
 # --- UTILS ---
 def get_trait_text(val, left, right):
