@@ -3,12 +3,40 @@ import streamlit as st
 from openai import OpenAI  # openai>=1.1.0
 
 # --- Кнопка назад ---
-def back_button(label="← Назад", target=None, key_suffix=""):
-    st.markdown('<div style="margin-bottom: 20px;">', unsafe_allow_html=True)
+def back_button(label="←", target=None, key_suffix=""):
+    st.markdown("""
+        <style>
+            .back-circle {
+                background-color: #ffffff;
+                border: 2px solid #ccc;
+                border-radius: 50%;
+                width: 40px;
+                height: 40px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-size: 18px;
+                font-weight: bold;
+                color: #444;
+                cursor: pointer;
+                box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+                transition: all 0.2s ease;
+            }
+            .back-circle:hover {
+                background-color: #f0f0f0;
+                transform: scale(1.05);
+            }
+        </style>
+    """, unsafe_allow_html=True)
+
     col1, col2 = st.columns([1, 9])
     with col1:
         unique_key = f"back_{label}_{hash(str(target))}_{key_suffix}"
-        if st.button(label, key=unique_key, use_container_width=True):
+        clicked = st.button(" ", key=unique_key)
+        if clicked:
+            if target:
+                for k, v in target.items():
+                    st.session_state[k] = v
             # 💡 Если выходим из чата — сбрасываем переписку и личность
             if target and ("character_created" in target and target["character_created"] is False):
                 st.session_state.msgs = []
