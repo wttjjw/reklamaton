@@ -5,14 +5,41 @@ from openai import OpenAI  # openai>=1.1.0
 # --- Кнопка назад ---
 def back_button(label="←", target=None, key_suffix=""):
     btn_key = f"back_button_{key_suffix}"
-    clicked = st.button(label, key=btn_key)
+    
+    # HTML с id
+    st.markdown(f"""
+        <div style="margin-bottom: 20px;">
+            <button id="back-button" onclick="document.querySelector('[data-testid=\'stForm\'] form').dispatchEvent(new Event('submit', {{ bubbles: true }}));">
+                {label}
+            </button>
+        </div>
+        <style>
+        #back-button {{
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            font-size: 20px;
+            font-weight: bold;
+            background-color: #fff;
+            border: 2px solid #ccc;
+            color: #444;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+            cursor: pointer;
+        }}
+        #back-button:hover {{
+            background-color: #f0f0f0;
+            transform: scale(1.05);
+        }}
+        </style>
+    """, unsafe_allow_html=True)
 
-    if clicked:
+    # Обработка клика
+    if st.button(label, key=btn_key):
         if target:
             for k, v in target.items():
                 st.session_state[k] = v
 
-        # Если выходим из кастомного персонажа — сбрасываем чат и возвращаем дефолтные характеристики
+        # Если выходим из кастомного персонажа — сбрасываем чат и характеристики
         if (
             target.get("character_created") is False
             and st.session_state.get("character_type") == "custom"
@@ -34,29 +61,6 @@ def back_button(label="←", target=None, key_suffix=""):
 
         st.session_state.msgs = []
         st.rerun()
-
-    # Стилизация кнопки
-    st.markdown("""
-        <style>
-        button[kind="secondary"] {
-            border-radius: 50% !important;
-            width: 40px !important;
-            height: 40px !important;
-            font-size: 20px !important;
-            font-weight: bold !important;
-            background-color: #ffffff !important;
-            border: 2px solid #ccc !important;
-            color: #444 !important;
-            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1) !important;
-            margin-bottom: 0px !important;
-        }
-        button[kind="secondary"]:hover {
-            background-color: #f0f0f0 !important;
-            transform: scale(1.05);
-        }
-        </style>
-    """, unsafe_allow_html=True)
-
 
 # --- UTILS ---
 def get_trait_text(val, left, right):
