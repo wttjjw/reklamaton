@@ -820,6 +820,7 @@ if st.session_state.get("character_created", False) and st.session_state.charact
 
 
 # --- 6. Чат и логика взаимодействия ---
+# --- 6. Чат и логика взаимодействия ---
 if st.session_state.get("personality_saved", False) or (
     st.session_state.get("character_created", False) and st.session_state.character_type != "custom"
 ):
@@ -942,7 +943,6 @@ if st.session_state.get("personality_saved", False) or (
                 "style": "Загадочный"
             }
     
-        # Текстовое описание характеристик
     # Текстовое описание характеристик
     # Безопасное извлечение MBTI-параметров
     mbti_ei = st.session_state.char_settings.get("mbti_ei", st.session_state.get("mbti_ei", 3))
@@ -1022,8 +1022,28 @@ if st.session_state.get("personality_saved", False) or (
     Помни: ты не бот, а реальный человек. У тебя свои эмоции, отвечай, согласно им! Твои ответы должны быть такими, чтобы ни у кого не возникло сомнений в этом.
     """
 
-
-
+    # ГЕНЕРАЦИЯ ПРИВЕТСТВЕННОГО СООБЩЕНИЯ ПРИ ПЕРВОМ ВХОДЕ
+    if not st.session_state.msgs:
+        try:
+            # Формируем промпт для первого сообщения
+            welcome_prompt = SYSTEM_PROMPT + "\n\nТы пишешь первое сообщение в диалоге. Начни с теплого приветствия, представься и сделай легкий комплимент или задай открытый вопрос."
+            
+            # Генерируем приветствие
+            resp = client.chat.completions.create(
+                model=MODEL,
+                messages=[{"role": "system", "content": welcome_prompt}],
+                temperature=0.85,
+                max_tokens=150
+            )
+            welcome_msg = resp.choices[0].message.content.strip()
+            st.session_state.msgs.append({"role": "assistant", "content": welcome_msg})
+        except Exception as e:
+            st.error(f"Ошибка генерации приветствия: {e}")
+            # Запасное приветствие на случай ошибки
+            st.session_state.msgs.append({
+                "role": "assistant", 
+                "content": f"Привет! Я {name}, рад(а) познакомиться! Как твои дела? 😊"
+            })
 
     # --- Чат: Ввод пользователя ---
     user_input = st.chat_input(f"Напишите {name} сообщение...")
@@ -1057,27 +1077,27 @@ if st.session_state.get("personality_saved", False) or (
         except Exception as e:
             st.error(f"Groq error: {e}")
 
-    # --- Вывод чата ---
-    st.markdown('<div class="chat-container">', unsafe_allow_html=True)
-    
-    for m in st.session_state.msgs:
-        if m["role"] == "user":
-           st.markdown(f"""
-                <div class="message-container">
-                    <div class="message-name">Вы</div>
-                    <div class="user-message">{m["content"].strip()}</div>
-                </div>
-            """, unsafe_allow_html=True)
-
-        else:
-            st.markdown(f"""
-                <div class="message-container">
-                    <div class="message-name">{name}</div>
-                    <div class="bot-message">{m["content"]}</div>
-                </div>
-            """, unsafe_allow_html=True)
-    
-    st.markdown('</div>', unsafe_allow_html=True)
+    # --- ВЫВОД ЧАТА (ТОЛЬКО ЕСЛИ ЕСТЬ СООБЩЕНИЯ) ---
+    if st.session_state.msgs:
+        st.markdown('<div class="chat-container">', unsafe_allow_html=True)
+        
+        for m in st.session_state.msgs:
+            if m["role"] == "user":
+                st.markdown(f"""
+                    <div class="message-container">
+                        <div class="message-name">Вы</div>
+                        <div class="user-message">{m["content"].strip()}</div>
+                    </div>
+                """, unsafe_allow_html=True)
+            else:
+                st.markdown(f"""
+                    <div class="message-container">
+                        <div class="message-name">{name}</div>
+                        <div class="bot-message">{m["content"]}</div>
+                    </div>
+                """, unsafe_allow_html=True)
+        
+        st.markdown('</div>', unsafe_allow_html=True)
 
     # --- Feedback ---
     if st.button("📝 Получить фидбек о моём стиле общения", key="feedback_btn", 
