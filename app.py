@@ -826,31 +826,30 @@ if st.session_state.get("personality_saved", False) or (
 ):
     if st.session_state.character_type.startswith("premade"):
         back_button(target={"character_created": False}, key_suffix="back_from_premade_chat")
-        
-    # Карточка персонажа
-    with st.container():
-        st.markdown('<div class="character-card">', unsafe_allow_html=True)
-        
-        # Определение аватара в зависимости от типа персонажа
-        if st.session_state.character_type == "premade_1":
-            avatar = "⚡"
-            name = "Алексей"
-            color = "linear-gradient(145deg, #2196F3, #0D47A1)"
-            desc = "Энергичный экстраверт, любит спорт и активный отдых"
-            tags = ["Экстраверт", "Спорт", "Энергичный"]
-        elif st.session_state.character_type == "premade_2":
-            avatar = "🌹"
-            name = "Анна"
-            color = "linear-gradient(145deg, #9C27B0, #6A1B9A)"
-            desc = "Романтичная интровертка, ценит искусство и глубокие разговоры"
-            tags = ["Романтик", "Искусство", "Интроверт"]
-        elif st.session_state.character_type == "premade_3":
-            avatar = "🎨"
-            name = "Макс"
-            color = "linear-gradient(145deg, #FF9800, #EF6C00)"
-            desc = "Творческая личность с необычным взглядом на мир"
-            tags = ["Творческий", "Необычный", "Сюрпризы"]
-        else:
+    
+    # Карточка персонажа - ИСПРАВЛЕННЫЙ БЛОК
+    st.markdown('<div class="character-card">', unsafe_allow_html=True)
+    
+    # Определение аватара в зависимости от типа персонажа
+    if st.session_state.character_type == "premade_1":
+        avatar = "⚡"
+        name = "Алексей"
+        color = "linear-gradient(145deg, #2196F3, #0D47A1)"
+        desc = "Энергичный экстраверт, любит спорт и активный отдых"
+        tags = ["Экстраверт", "Спорт", "Энергичный"]
+    elif st.session_state.character_type == "premade_2":
+        avatar = "🌹"
+        name = "Анна"
+        color = "linear-gradient(145deg, #9C27B0, #6A1B9A)"
+        desc = "Романтичная интровертка, ценит искусство и глубокие разговоры"
+        tags = ["Романтик", "Искусство", "Интроверт"]
+    elif st.session_state.character_type == "premade_3":
+        avatar = "🎨"
+        name = "Макс"
+        color = "linear-gradient(145deg, #FF9800, #EF6C00)"
+        desc = "Творческая личность с необычным взглядом на мир"
+        tags = ["Творческий", "Необычный", "Сюрпризы"]
+    else:
             gender = st.session_state.char_settings["gender"]
             if gender == "Девушка":
                 avatar = "👩"
@@ -874,14 +873,15 @@ if st.session_state.get("personality_saved", False) or (
             if st.session_state.char_settings["temper"]:
                 tags.append(st.session_state.char_settings["temper"])
         
-        st.markdown(f'<div class="character-avatar" style="background: {color};">{avatar}</div>', unsafe_allow_html=True)
-        st.markdown(f'<div class="character-name">{name}</div>', unsafe_allow_html=True)
-        st.markdown(f'<div class="character-desc">{desc}</div>', unsafe_allow_html=True)
-        
-        st.markdown('<div class="character-tags">', unsafe_allow_html=True)
-        for tag in tags[:3]:
-            st.markdown(f'<div class="character-tag">{tag}</div>', unsafe_allow_html=True)
-        st.markdown('</div></div>', unsafe_allow_html=True)
+    st.markdown(f'<div class="character-avatar" style="background: {color};">{avatar}</div>', unsafe_allow_html=True)
+    st.markdown(f'<div class="character-name">{name}</div>', unsafe_allow_html=True)
+    st.markdown(f'<div class="character-desc">{desc}</div>', unsafe_allow_html=True)
+    
+    st.markdown('<div class="character-tags">', unsafe_allow_html=True)
+    for tag in tags[:3]:
+        st.markdown(f'<div class="character-tag">{tag}</div>', unsafe_allow_html=True)
+    st.markdown('</div>', unsafe_allow_html=True)  # закрываем character-tags
+    st.markdown('</div>', unsafe_allow_html=True)  # закрываем character-card
     
     # Для готовых персонажей устанавливаем предустановки
     if st.session_state.character_type.startswith("premade"):
