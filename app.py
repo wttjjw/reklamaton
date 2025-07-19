@@ -35,17 +35,24 @@ def back_button(label="←", target=None, key_suffix=""):
         st.session_state.msgs = []
         st.rerun()
 
-   button[kind="primary"] {
-    background: linear-gradient(145deg, #00DC00, #00AA00);
-    color: white;
-    font-weight: 700;
-    border-radius: 20px;
-    border: 2px solid #fff;
-}
-button[kind="primary"]:hover {
-    background-color: #00C400;
-}
-
+    # Стилизация только этой кнопки
+    st.markdown(f"""
+        <style>
+        button[data-testid="button-{btn_key}"] {{
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            font-size: 20px;
+            font-weight: bold;
+            background-color: #fff;
+            border: 2px solid #ccc;
+            color: #444;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+        }}
+        button[data-testid="button-{btn_key}"]:hover {{
+            background-color: #f0f0f0;
+            transform: scale(1.05);
+        }}
         </style>
     """, unsafe_allow_html=True)
 
@@ -349,25 +356,6 @@ st.markdown("""
             transform: translateY(-5px) !important;
             box-shadow: 0 12px 25px rgba(255, 152, 0, 0.4) !important;
         }
-                .feedback-btn:hover {
-            transform: translateY(-5px) !important;
-            box-shadow: 0 12px 25px rgba(255, 152, 0, 0.4) !important;
-        }
-
-        button[kind="primary"] {
-            background: linear-gradient(145deg, #00DC00, #00AA00);
-            color: white;
-            font-weight: 700;
-            border-radius: 20px;
-            border: 2px solid #fff;
-        }
-
-        button[kind="primary"]:hover {
-            background-color: #00C400;
-        }
-    </style>
-""", unsafe_allow_html=True)
-
     </style>
 """, unsafe_allow_html=True)
 
