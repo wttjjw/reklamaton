@@ -321,6 +321,17 @@ if not st.session_state.form_saved:
 
     # --- Форма ---
     with st.form("user_form"):
+        # ⛔️ Блокируем отправку формы по Enter
+        st.markdown("""
+            <script>
+                document.addEventListener("keydown", function(event) {
+                    if (event.key === "Enter" && event.target.tagName === "INPUT") {
+                        event.preventDefault();
+                    }
+                });
+            </script>
+        """, unsafe_allow_html=True)
+
         name = st.text_input("Ваше имя", key="name", label_visibility="visible",
                              placeholder="Как к вам обращаться?")
         age_input = st.text_input("Сколько вам лет?", placeholder="Введите число от 18 до 65")
@@ -335,8 +346,9 @@ if not st.session_state.form_saved:
             except ValueError:
                 st.warning("Введите только число")
 
+        # 👇 Кнопка сохранения анкеты
         if st.form_submit_button("Сохранить анкету", type="primary", use_container_width=True):
-            st.session_state.submit_attempted = True  # <- отмечаем, что была попытка
+            st.session_state.submit_attempted = True
 
             if not name or not age or "sex" not in st.session_state:
                 st.warning("Пожалуйста, заполните все поля корректно")
