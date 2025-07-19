@@ -121,24 +121,6 @@ st.markdown("""
             --light: #f8f9fa;
             --dark: #212529;
         }
-
-        .character-tags {
-            display: flex;
-            flex-direction: column;
-            gap: 18px;      /* увеличь, если хочется больше воздуха */
-            align-items: flex-start;
-            margin-top: 20px;
-        }
-        .character-tag {
-            background: rgba(106, 17, 203, 0.15);
-            color: var(--primary);
-            border-radius: 20px;
-            padding: 12px 30px;
-            font-size: 1.18rem;
-            font-weight: 600;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
-            margin-bottom: 0px;  /* убери, если уже есть gap */
-        }
         
         body {
             background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
