@@ -3,9 +3,9 @@ import streamlit as st
 from openai import OpenAI  # openai>=1.1.0
 
 # --- Кнопка назад ---
-def back_button(label="← Назад", target=None):
+ddef back_button(label="← Назад", target=None, key_suffix=""):
     col1, _ = st.columns([1, 8])
-    unique_key = f"back_{label}_{hash(str(target))}"  # Уникальный ключ
+    unique_key = f"back_{label}_{hash(str(target))}_{key_suffix}"  # теперь с суффиксом
     with col1:
         if st.button(label, key=unique_key, use_container_width=True):
             if target:
@@ -373,7 +373,7 @@ if not st.session_state.form_saved:
 
 
 # --- 4. Выбор типа персонажа ---
-back_button(target={"form_saved": False})
+back_button(target={"form_saved": False}, key_suffix="back_to_form")
 
 
 if st.session_state.form_saved and not st.session_state.character_created:
@@ -461,7 +461,7 @@ if st.session_state.form_saved and not st.session_state.character_created:
             st.rerun()
 
 # --- 5. Создание кастомного персонажа ---
-back_button(target={"character_created": False})
+back_button(target={"character_created": False}, key_suffix="back_to_character_type")
 
 if st.session_state.get("character_created", False) and st.session_state.character_type == "custom":
     if "personality_saved" not in st.session_state:
