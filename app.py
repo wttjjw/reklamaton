@@ -137,11 +137,11 @@ st.markdown("""
             backdrop-filter: blur(8px);
             margin: 2rem auto;
             padding: 2.5rem;
-            max-width: 1100px;  /* Увеличили с 900px до 1000px */
-            min-height: 85vh;  /* Минимальная высота - 85% высоты экрана */
-            height: auto;      /* Автоматическая высота по содержимому */
-            max-height: 95vh;  /* Максимальная высота - 95% высоты экрана */
-            overflow-y: auto;  /* Вертикальная прокрутка при необходимости */
+            max-width: 1100px;
+            min-height: 100vh;   /* Заполняет весь экран по высоте */
+            height: auto;        /* Пусть растёт по содержимому */
+            overflow-y: visible; /* Снимает ограничения */
+            padding-bottom: 5rem; /* Добавляет воздуха снизу — можно больше */
         }
         
         h1, h2, h3 {
@@ -310,7 +310,7 @@ st.markdown("""
             padding: 25px;
             margin-bottom: 20px;
             box-shadow: 0 8px 25px rgba(0,0,0,0.1);
-            max-height: 600px;  /* Увеличили с 500px до 600px */
+            max-height: 1000px;  /* Увеличили с 500px до 600px */
             overflow-y: auto;
         }
         
