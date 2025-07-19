@@ -312,7 +312,7 @@ st.markdown("""
             padding: 25px;
             margin-bottom: 30px;
             box-shadow: 0 8px 25px rgba(0,0,0,0.1);
-            /* max-height: 600px; -- убрано! */
+            max-height: 900px;
             overflow-y: visible;
             padding-bottom: 1.5rem;   /* небольшой запас, если нужно */
         }
