@@ -382,8 +382,6 @@ if st.session_state.form_saved and not st.session_state.character_created:
 if st.session_state.form_saved and not st.session_state.character_created:
     st.title("👥 Выберите тип персонажа")
     
-    back_button(target={"character_created": False})
-    
     # Кнопка создания персонажа
     st.markdown("""
         <div class="character-card" style="cursor:pointer;" onclick="this.nextElementSibling.click()">
