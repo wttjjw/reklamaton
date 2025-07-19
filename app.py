@@ -610,7 +610,75 @@ if st.session_state.get("character_created", False) and st.session_state.charact
                     )
             st.markdown('</div>', unsafe_allow_html=True)  # конец секции
 
-        # ... остальной код без изменений ...
+       # --- Характер ---
+        with st.container():
+            st.markdown('<div class="section">', unsafe_allow_html=True)
+            st.markdown(
+                '<div class="section-title" style="text-align:left;">Характер персонажа</div>',
+                unsafe_allow_html=True
+            )
+        
+            mbti_params = [
+                {
+                    "key": "mbti_ei",
+                    "label": "Экстраверт — Интроверт",
+                    "left": "Экстраверт",
+                    "right": "Интроверт",
+                    "desc": "Экстраверт — быстро сходится с людьми, любит активное общение. Интроверт — ценит спокойствие и приватность, предпочитает узкий круг общения."
+                },
+                {
+                    "key": "mbti_ns",
+                    "label": "Реалист — Мечтатель",
+                    "left": "Реалист",
+                    "right": "Мечтатель",
+                    "desc": "Реалист — предпочитает факты и конкретику, опирается на опыт. Мечтатель — полон идей, любит фантазировать и строить планы."
+                },
+                {
+                    "key": "mbti_tf",
+                    "label": "Рациональный — Эмоциональный",
+                    "left": "Рациональный",
+                    "right": "Эмоциональный",
+                    "desc": "Рациональный — опирается на логику, решения принимает разумом. Эмоциональный — ориентируется на чувства, важна эмпатия и настроение."
+                },
+                {
+                    "key": "mbti_jp",
+                    "label": "Структурный — Спонтанный",
+                    "left": "Структурный",
+                    "right": "Спонтанный",
+                    "desc": "Структурный — любит порядок, планирование, организованность. Спонтанный — легко меняет планы, открыт новым идеям и сюрпризам."
+                },
+            ]
+            for p in mbti_params:
+                if p["key"] not in st.session_state.char_settings:
+                    st.session_state.char_settings[p["key"]] = 3
+        
+            for param in mbti_params:
+                val = st.session_state.char_settings[param["key"]]
+                # --- Вывод цифры выбранного значения ---
+                val = st.slider(
+                    "",
+                    min_value=1, max_value=5,
+                    value=st.session_state.char_settings[param["key"]],
+                    key=f"slider_{param['key']}",
+                    label_visibility="collapsed",
+                    step=1
+
+                )
+                st.session_state.char_settings[param["key"]] = val
+                st.markdown(
+                    f'''
+                    <div style="display:flex; justify-content:space-between; color:#666; font-size:1.08rem; font-weight:600; margin-top:-12px; margin-bottom:0px;">
+                        <span>{param["left"]}</span>
+                        <span>{param["right"]}</span>
+                    </div>
+                    <div style="color:#B0B0B0; font-size:0.97rem; margin-bottom:24px; margin-top:3px;">
+                        {param["desc"]}
+                    </div>
+                    ''',
+                    unsafe_allow_html=True
+                )
+            st.markdown('</div>', unsafe_allow_html=True)
+
 
         # --- Интересы (хобби/музыка) - ИСПРАВЛЕНО ---
         with st.container():
