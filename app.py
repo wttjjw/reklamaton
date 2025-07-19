@@ -5,45 +5,58 @@ from openai import OpenAI  # openai>=1.1.0
 # --- Кнопка назад ---
 def back_button(label="←", target=None, key_suffix=""):
     btn_key = f"back_button_{key_suffix}"
+    clicked = st.button(label, key=btn_key)
 
-    col1, col2 = st.columns([1, 9])
-    with col1:
-        clicked = st.button(label, key=btn_key)
-
-        if clicked:
-            if target:
-                for k, v in target.items():
-                    st.session_state[k] = v
-
-    col1, col2 = st.columns([1, 9])
-    with col1:
-        unique_key = f"back_{label}_{hash(str(target))}_{key_suffix}"
-        clicked = st.button(" ", key=unique_key)
-        if clicked:
-            if target:
-                for k, v in target.items():
-                    st.session_state[k] = v
-            # 💡 Если выходим из чата — сбрасываем переписку и личность
-            if target and ("character_created" in target and target["character_created"] is False):
-                st.session_state.msgs = []
-                st.session_state.personality_saved = False
-                st.session_state.char_settings = {
-                    "gender": "Девушка",
-                    "age": "23-27",
-                    "city": "Москва",
-                    "fashion": "Casual",
-                    "vibe": "Солнечный",
-                    "hobbies": [],
-                    "music": [],
-                    "traits": [],
-                    "temper": "Сбалансированный",
-                    "dislikes": [],
-                    "style": "Дружелюбный"
-                }
-            for k, v in (target or {}).items():
+    if clicked:
+        if target:
+            for k, v in target.items():
                 st.session_state[k] = v
-            st.rerun()
-    st.markdown('</div>', unsafe_allow_html=True)
+
+        # Если выходим из кастомного персонажа — сбрасываем чат и возвращаем дефолтные характеристики
+        if (
+            target.get("character_created") is False
+            and st.session_state.get("character_type") == "custom"
+        ):
+            st.session_state.char_settings = {
+                "gender": "Девушка",
+                "age": "23-27",
+                "city": "Москва",
+                "fashion": "Casual",
+                "vibe": "Солнечный",
+                "hobbies": [],
+                "music": [],
+                "traits": [],
+                "temper": "Сбалансированный",
+                "dislikes": [],
+                "style": "Дружелюбный"
+            }
+            st.session_state.personality_saved = False
+
+        st.session_state.msgs = []
+        st.rerun()
+
+    # Стилизация кнопки
+    st.markdown("""
+        <style>
+        button[kind="secondary"] {
+            border-radius: 50% !important;
+            width: 40px !important;
+            height: 40px !important;
+            font-size: 20px !important;
+            font-weight: bold !important;
+            background-color: #ffffff !important;
+            border: 2px solid #ccc !important;
+            color: #444 !important;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1) !important;
+            margin-bottom: 0px !important;
+        }
+        button[kind="secondary"]:hover {
+            background-color: #f0f0f0 !important;
+            transform: scale(1.05);
+        }
+        </style>
+    """, unsafe_allow_html=True)
+
 
 # --- UTILS ---
 def get_trait_text(val, left, right):
