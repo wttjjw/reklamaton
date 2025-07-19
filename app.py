@@ -819,6 +819,9 @@ if st.session_state.get("character_created", False) and st.session_state.charact
 if st.session_state.get("personality_saved", False) or (
     st.session_state.get("character_created", False) and st.session_state.character_type != "custom"
 ):
+    if st.session_state.character_type.startswith("premade"):
+        back_button(target={"character_created": False}, key_suffix="back_from_premade_chat")
+        
     # Карточка персонажа
     with st.container():
         st.markdown('<div class="character-card">', unsafe_allow_html=True)
