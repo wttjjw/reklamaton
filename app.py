@@ -372,7 +372,8 @@ if not st.session_state.form_saved:
 
 
 # --- 4. Выбор типа персонажа ---
-back_button(target={"character_created": False})
+back_button(target={"form_saved": False})
+
 
 if st.session_state.form_saved and not st.session_state.character_created:
     st.title("👥 Выберите тип персонажа")
