@@ -138,6 +138,7 @@ st.markdown("""
             margin: 2rem auto;
             padding: 2.5rem;
             max-width: 1100px;
+            padding-bottom: 3.5rem !important;
             max-height: 95vh;
             overflow-y: visible;
             padding-bottom: 5.5rem !important;  /* увеличил до 5.5rem для гарантии */
