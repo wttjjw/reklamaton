@@ -564,10 +564,10 @@ if st.session_state.get("character_created", False) and st.session_state.charact
             cols = st.columns([1, 1])
             for i, gender in enumerate(genders):
                 with cols[i]:
-                   selected = st.session_state.char_settings["gender"] == gender
-                        if st.button(gender, key=f"gender_{gender}", use_container_width=True, disabled=selected):
-                            st.session_state.char_settings["gender"] = gender
-                            st.rerun()
+                    selected = st.session_state.char_settings["gender"] == gender
+                    if st.button(gender, key=f"gender_{gender}", use_container_width=True, disabled=selected):
+                        st.session_state.char_settings["gender"] = gender
+                        st.rerun()
                     st.markdown(
                         f"""
                         <style>
