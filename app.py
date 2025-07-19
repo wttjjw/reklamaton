@@ -932,14 +932,22 @@ if st.session_state.get("personality_saved", False) or (
                 "dislikes": ["Ограничения", "Консерватизм"],
                 "style": "Загадочный"
             }
-
+    
+        # Текстовое описание характеристик
     # Текстовое описание характеристик
+    # Безопасное извлечение MBTI-параметров
+    mbti_ei = st.session_state.char_settings.get("mbti_ei", st.session_state.get("mbti_ei", 3))
+    mbti_ns = st.session_state.char_settings.get("mbti_ns", st.session_state.get("mbti_ns", 3))
+    mbti_tf = st.session_state.char_settings.get("mbti_tf", st.session_state.get("mbti_tf", 3))
+    mbti_jp = st.session_state.char_settings.get("mbti_jp", st.session_state.get("mbti_jp", 3))
+    
     mbti_traits = [
-        f"Экстраверсия: {get_trait_text(st.session_state.char_settings['mbti_ei'], 'экстраверт', 'интроверт')}",
-        f"Мышление: {get_trait_text(st.session_state.char_settings['mbti_ns'], 'реалист', 'мечтатель')}",
-        f"Эмоции: {get_trait_text(st.session_state.char_settings['mbti_tf'], 'рациональный', 'эмоциональный')}",
-        f"Поведение: {get_trait_text(st.session_state.char_settings['mbti_jp'], 'структурный', 'спонтанный')}",
+        f"Экстраверсия: {get_trait_text(mbti_ei, 'экстраверт', 'интроверт')}",
+        f"Мышление: {get_trait_text(mbti_ns, 'реалист', 'мечтатель')}",
+        f"Эмоции: {get_trait_text(mbti_tf, 'рациональный', 'эмоциональный')}",
+        f"Поведение: {get_trait_text(mbti_jp, 'структурный', 'спонтанный')}",
     ]
+    
     mbti_text = ", ".join(mbti_traits) + f". Стиль общения: {st.session_state.char_settings.get('style', 'Дружелюбный').lower()}."
 
     
